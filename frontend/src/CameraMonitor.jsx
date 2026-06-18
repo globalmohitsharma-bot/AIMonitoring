@@ -1,57 +1,38 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import * as faceapi from 'face-api.js';
+import { shardBase64, modelManifest } from './tinyFaceDetectorModel.js';
 
 const DETECT_INTERVAL_MS = 1500;
-const MODEL_URL = '/models';
 
-// TensorFlow.js (inside face-api.js) doesn't send the ngrok session cookie when
-// fetching model shard files, so ngrok returns its tiny interstitial HTML instead
-// of the real 193 KB binary. TF.js then tries to parse that HTML as float32 data
-// and throws the "144 values expected, got 10" error.
-//
-// Fix: pre-fetch both files ourselves with credentials + bypass header, keep the
-// raw bytes in memory, then intercept every fetch call face-api.js makes and
-// serve from our in-memory cache instead of the network.
+// Model weights are bundled as base64 at build time (see scripts/generateModel.mjs).
+// No network request is made — completely bypasses ngrok/CDN interstitials.
 async function loadModelSafely() {
   if (faceapi.nets.tinyFaceDetector.isLoaded) return;
 
-  const bypassHeaders = { 'ngrok-skip-browser-warning': '1' };
-  const fetchOpts = { credentials: 'include', headers: bypassHeaders };
+  // Decode base64 → ArrayBuffer
+  const binary = atob(shardBase64);
+  const bytes  = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
 
-  // --- Step 1: fetch both files ourselves ---
-  const manifestRes = await fetch(`${MODEL_URL}/tiny_face_detector_model-weights_manifest.json`, fetchOpts);
-  if (!manifestRes.ok) throw new Error(`Manifest fetch failed: HTTP ${manifestRes.status}`);
-  const manifestJson = await manifestRes.json();
-
-  const shardName = manifestJson[0].paths[0]; // "tiny_face_detector_model-shard1"
-  const shardRes  = await fetch(`${MODEL_URL}/${shardName}`, fetchOpts);
-  if (!shardRes.ok) throw new Error(`Shard fetch failed: HTTP ${shardRes.status} (${shardRes.headers.get('content-type')})`);
-
-  const shardBuffer = await shardRes.arrayBuffer();
-  if (shardBuffer.byteLength < 50_000) {
-    throw new Error(`Shard too small (${shardBuffer.byteLength} B) — server returned non-binary data`);
-  }
-
-  // --- Step 2: build blob URLs so face-api.js can fetch from memory ---
   const shardBlobUrl = URL.createObjectURL(
-    new Blob([shardBuffer], { type: 'application/octet-stream' })
+    new Blob([bytes.buffer], { type: 'application/octet-stream' })
   );
-  const patchedManifest = [{ ...manifestJson[0], paths: [shardBlobUrl] }];
+  const patchedManifest = [{ ...modelManifest[0], paths: [shardBlobUrl] }];
   const manifestBlobUrl = URL.createObjectURL(
     new Blob([JSON.stringify(patchedManifest)], { type: 'application/json' })
   );
 
-  // --- Step 3: intercept fetch — redirect model file requests to our blobs ---
+  // Intercept face-api.js model fetches and serve blobs from memory
   const origFetch = window.fetch.bind(window);
   window.fetch = (url, opts = {}) => {
-    const urlStr = typeof url === 'string' ? url : url.url;
-    if (urlStr?.includes('tiny_face_detector_model-weights_manifest')) return origFetch(manifestBlobUrl, opts);
-    if (urlStr?.includes('tiny_face_detector_model-shard'))            return origFetch(shardBlobUrl, opts);
-    return origFetch(url, { ...opts, credentials: 'include', headers: { ...(opts.headers || {}), ...bypassHeaders } });
+    const s = typeof url === 'string' ? url : url?.url;
+    if (s?.includes('tiny_face_detector_model-weights_manifest')) return origFetch(manifestBlobUrl, opts);
+    if (s?.includes('tiny_face_detector_model-shard'))             return origFetch(shardBlobUrl, opts);
+    return origFetch(url, opts);
   };
 
   try {
-    await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+    await faceapi.nets.tinyFaceDetector.loadFromUri('blob-model');
   } finally {
     window.fetch = origFetch;
     URL.revokeObjectURL(shardBlobUrl);
