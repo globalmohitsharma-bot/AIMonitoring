@@ -7,12 +7,9 @@ export function useTabMonitor(sessionId, reportEvent) {
     const handler = () => {
       if (document.visibilityState === 'hidden') {
         switchCount.current += 1;
-        reportEvent(
-          sessionId,
-          0, // TabSwitch enum value
-          `Tab switch detected (#${switchCount.current})`,
-          'warning'
-        );
+        reportEvent(sessionId, 0, `Tab switch detected (#${switchCount.current})`, 'warning');
+      } else if (document.visibilityState === 'visible' && switchCount.current > 0) {
+        reportEvent(sessionId, 5, 'User returned to tab', 'info');
       }
     };
 

@@ -164,6 +164,60 @@ body {
 .event-type { color: #f1f5f9; font-weight: 600; }
 .event-msg  { color: #94a3b8; }
 
+/* ── Monitor table ───────────────────────────────── */
+.monitor-table-wrap {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid #334155;
+}
+.monitor-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+.monitor-table th {
+  background: #1e293b;
+  color: #94a3b8;
+  font-weight: 600;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid #334155;
+  white-space: nowrap;
+}
+.monitor-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #1e293b;
+  color: #e2e8f0;
+  vertical-align: middle;
+}
+.monitor-table tr:last-child td { border-bottom: none; }
+.monitor-table tr:nth-child(even) td { background: #0f1a2a; }
+.monitor-table tr.row-alert td { background: #1a0a0a; }
+
+.session-id-cell {
+  font-family: monospace;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.chip {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.chip-ok      { background: #14532d; color: #86efac; }
+.chip-alert   { background: #7f1d1d; color: #fca5a5; }
+.chip-warn    { background: #451a03; color: #fdba74; }
+.chip-unknown { background: #1e293b; color: #475569; }
+
+/* ── Event log (monitor — 4-col grid) ─────────── */
+.monitor-table ~ .event-log .event-item {
+  grid-template-columns: 70px 130px 100px 1fr;
+}
+
 /* ── Footer ──────────────────────────────────────── */
 .app-footer {
   text-align: center;

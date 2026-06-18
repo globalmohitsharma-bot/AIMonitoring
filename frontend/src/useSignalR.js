@@ -5,10 +5,14 @@ const HUB_URL = import.meta.env.DEV
   ? 'http://localhost:5165/hub/monitoring'
   : `${window.location.origin}/hub/monitoring`;
 
-export function useSignalR() {
+export function useSignalR(sessionId = null) {
   const connRef = useRef(null);
   const [connected, setConnected] = useState(false);
   const [events, setEvents] = useState([]);
+
+  const joinSession = useCallback((conn) => {
+    if (sessionId) conn.invoke('JoinSession', sessionId).catch(console.error);
+  }, [sessionId]);
 
   useEffect(() => {
     const conn = new signalR.HubConnectionBuilder()
@@ -20,17 +24,22 @@ export function useSignalR() {
       setEvents(prev => [evt, ...prev].slice(0, 100));
     });
 
+    conn.onreconnected(() => {
+      setConnected(true);
+      joinSession(conn);
+    });
+
     conn.start()
-      .then(() => setConnected(true))
+      .then(() => { setConnected(true); joinSession(conn); })
       .catch(console.error);
 
     connRef.current = conn;
     return () => conn.stop();
-  }, []);
+  }, [joinSession]);
 
-  const reportEvent = useCallback((sessionId, type, message, severity = 'warning') => {
+  const reportEvent = useCallback((sid, type, message, severity = 'warning') => {
     if (connRef.current?.state === signalR.HubConnectionState.Connected) {
-      connRef.current.invoke('ReportEvent', { sessionId, type, message, severity });
+      connRef.current.invoke('ReportEvent', { sessionId: sid, type, message, severity });
     }
   }, []);
 

@@ -19,7 +19,7 @@ function AlertBanner({ events }) {
 }
 
 export default function App() {
-  const { connected, events, reportEvent } = useSignalR();
+  const { connected, events, reportEvent } = useSignalR(SESSION_ID);
   const [monitoring, setMonitoring] = useState(false);
 
   useTabMonitor(SESSION_ID, reportEvent);
