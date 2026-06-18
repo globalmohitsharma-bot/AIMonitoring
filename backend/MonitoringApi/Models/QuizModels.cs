@@ -4,14 +4,18 @@ public class Question
 {
     public int Id { get; set; }
     public string Text { get; set; } = string.Empty;
-    public bool? CorrectAnswer { get; set; } // null = no right/wrong, just recording
+    public string Type { get; set; } = "yesno"; // "yesno" | "mcq"
+    public List<string> Options { get; set; } = [];
+    // yesno: "yes" | "no" | null (ungraded)
+    // mcq:   exact option text that is correct | null (ungraded)
+    public string? CorrectAnswer { get; set; }
 }
 
 public class QuizAnswer
 {
     public int QuestionId { get; set; }
     public string QuestionText { get; set; } = string.Empty;
-    public bool Answer { get; set; }
+    public string Answer { get; set; } = ""; // "yes"/"no" or selected option text
     public bool? IsCorrect { get; set; }
 }
 

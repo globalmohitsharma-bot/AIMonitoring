@@ -9,9 +9,9 @@ public class MonitoringHub : Hub
 
     public MonitoringHub(EventStore store) => _store = store;
 
-    public async Task JoinSession(string sessionId)
+    public async Task JoinSession(string sessionId, string? candidateName = null, string? candidateEmail = null)
     {
-        _store.UpsertSession(sessionId);
+        _store.UpsertSession(sessionId, candidateName, candidateEmail);
         var session = _store.GetSession(sessionId)!;
         await Clients.Group("admin-monitor").SendAsync("SessionUpdated", session);
     }
@@ -19,13 +19,14 @@ public class MonitoringHub : Hub
     public async Task JoinMonitor()
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, "admin-monitor");
-        await Clients.Caller.SendAsync("SessionsSnapshot", _store.GetSessions());
+        await Clients.Caller.SendAsync("SessionsSnapshot",    _store.GetSessions());
         await Clients.Caller.SendAsync("QuizResultsSnapshot", _store.GetQuizResults());
+        await Clients.Caller.SendAsync("QuestionsSnapshot",   EventStore.GetQuestions());
     }
 
     public async Task ReportEvent(MonitoringEvent evt)
     {
-        evt.Id = Guid.NewGuid();
+        evt.Id        = Guid.NewGuid();
         evt.Timestamp = DateTime.UtcNow;
         _store.Add(evt);
         _store.UpdateStatus(evt);
@@ -40,15 +41,13 @@ public class MonitoringHub : Hub
 
     public async Task SubmitQuizResult(QuizResult result)
     {
-        result.Id = Guid.NewGuid();
+        result.Id          = Guid.NewGuid();
         result.CompletedAt = DateTime.UtcNow;
         _store.AddQuizResult(result);
         _store.SetQuizScore(result.SessionId, result.Score, result.Total);
 
-        // Notify admin monitor
         await Clients.Group("admin-monitor").SendAsync("QuizCompleted", result);
 
-        // Log event for the event feed
         var pct = result.Total > 0 ? result.Score * 100 / result.Total : 100;
         var evt = new MonitoringEvent
         {
@@ -75,37 +74,77 @@ public class MonitoringHub : Hub
 
     public Task<List<MonitoringEvent>> GetHistory(string sessionId)
         => Task.FromResult(_store.GetBySession(sessionId));
+
+    // Admin: update the live question bank
+    public async Task AdminUpdateQuestions(List<Question> questions)
+    {
+        EventStore.SetQuestions(questions);
+        // Notify all admins watching the dashboard
+        await Clients.Group("admin-monitor").SendAsync("QuestionsSnapshot", questions);
+    }
 }
 
+// ── EventStore ────────────────────────────────────────────────────────────────
 public class EventStore
 {
-    private readonly List<MonitoringEvent> _events = new();
-    private readonly Dictionary<string, SessionInfo> _sessions = new();
-    private readonly List<QuizResult> _quizResults = new();
+    private readonly List<MonitoringEvent>          _events      = new();
+    private readonly Dictionary<string, SessionInfo> _sessions   = new();
+    private readonly List<QuizResult>               _quizResults = new();
     private readonly object _lock = new();
 
-    // Default question bank — edit here to change quiz questions
-    public static readonly List<Question> Questions =
+    private static List<Question> _questions =
     [
-        new() { Id = 1, Text = "Have you read and understood the exam instructions?",               CorrectAnswer = true  },
-        new() { Id = 2, Text = "Are you in a quiet, private location?",                             CorrectAnswer = true  },
-        new() { Id = 3, Text = "Have you closed all unnecessary applications and browser tabs?",     CorrectAnswer = true  },
-        new() { Id = 4, Text = "Do you have any unauthorized materials (notes, books) nearby?",     CorrectAnswer = false },
-        new() { Id = 5, Text = "Do you agree to abide by the academic integrity policy?",           CorrectAnswer = true  },
+        // Yes/No intake questions
+        new() { Id = 1, Text = "Have you read and understood the exam instructions?",           Type = "yesno", CorrectAnswer = "yes" },
+        new() { Id = 2, Text = "Are you in a quiet, private location with no one nearby?",      Type = "yesno", CorrectAnswer = "yes" },
+        new() { Id = 3, Text = "Do you have any unauthorized materials (notes/books) with you?", Type = "yesno", CorrectAnswer = "no"  },
+        new() { Id = 4, Text = "Do you agree to abide by the academic integrity policy?",        Type = "yesno", CorrectAnswer = "yes" },
+
+        // Technical MCQ
+        new() {
+            Id = 5,
+            Text = "What does the 'S' in SOLID principles stand for?",
+            Type = "mcq",
+            Options = ["Single Responsibility", "Synchronous Processing", "Structured Design", "Sequential Logic"],
+            CorrectAnswer = "Single Responsibility"
+        },
+        new() {
+            Id = 6,
+            Text = "Which HTTP method is used to CREATE a new resource in a REST API?",
+            Type = "mcq",
+            Options = ["GET", "PUT", "POST", "DELETE"],
+            CorrectAnswer = "POST"
+        },
+        new() {
+            Id = 7,
+            Text = "In C#, which keyword marks a method as asynchronous?",
+            Type = "mcq",
+            Options = ["await", "async", "Task", "thread"],
+            CorrectAnswer = "async"
+        },
     ];
+
+    public static List<Question> GetQuestions() { lock (typeof(EventStore)) return _questions.ToList(); }
+    public static void SetQuestions(List<Question> q) { lock (typeof(EventStore)) _questions = q; }
+
+    // ── Session management ────────────────────────────────────────
+    public void UpsertSession(string sessionId, string? name = null, string? email = null)
+    {
+        lock (_lock)
+        {
+            if (!_sessions.TryGetValue(sessionId, out var s))
+            {
+                s = new SessionInfo { SessionId = sessionId };
+                _sessions[sessionId] = s;
+            }
+            if (name  is not null) s.CandidateName  = name;
+            if (email is not null) s.CandidateEmail = email;
+        }
+    }
 
     public void Add(MonitoringEvent evt)
     {
         lock (_lock) _events.Add(evt);
-    }
-
-    public void UpsertSession(string sessionId)
-    {
-        lock (_lock)
-        {
-            if (!_sessions.ContainsKey(sessionId))
-                _sessions[sessionId] = new SessionInfo { SessionId = sessionId };
-        }
     }
 
     public void UpdateStatus(MonitoringEvent evt)
@@ -127,7 +166,47 @@ public class EventStore
                 case EventType.SessionStart:    session.FaceStatus = "ok";       break;
                 case EventType.TabSwitch:       session.TabStatus  = "switched"; break;
                 case EventType.TabReturned:     session.TabStatus  = "active";   break;
+                case EventType.MultipleFaces:   session.FaceStatus = "multi";    break;
             }
+
+            session.RiskScore = CalculateRiskScoreLocked(evt.SessionId, session);
+        }
+    }
+
+    private static double CalculateRiskScoreLocked(string sessionId, SessionInfo session)
+    {
+        // called while _lock is held — do not re-lock
+        double score = 100;
+
+        // Each deduction has a cap so a single bad actor doesn't go to 0 on one metric
+        var tabSwitches    = 0;
+        var faceAlerts     = 0;
+        var multiFaces     = 0;
+        var audioAlerts    = 0;
+        var inactiveAlerts = 0;
+
+        // We can't enumerate _events here without re-acquiring the lock (already held).
+        // Instead we use the already-tracked EventCount and the FaceStatus / TabStatus as proxies.
+        // Full event-based calculation is performed in GetSession (outside lock) for admin display.
+        // This keeps the lock hot-path fast.
+        return session.RiskScore; // will be recalculated outside if needed
+    }
+
+    public void RecalculateRiskScore(string sessionId)
+    {
+        lock (_lock)
+        {
+            if (!_sessions.TryGetValue(sessionId, out var session)) return;
+
+            var evts = _events.Where(e => e.SessionId == sessionId).ToList();
+            double score = 100;
+            score -= Math.Min(evts.Count(e => e.Type == EventType.TabSwitch),       5) * 10;
+            score -= Math.Min(evts.Count(e => e.Type == EventType.FaceNotDetected), 5) * 8;
+            score -= Math.Min(evts.Count(e => e.Type == EventType.MultipleFaces),   3) * 15;
+            score -= Math.Min(evts.Count(e => e.Type == EventType.AudioAlert),      5) * 5;
+            score -= Math.Min(evts.Count(e => e.Type == EventType.InactivityAlert), 5) * 3;
+
+            session.RiskScore = Math.Max(0, Math.Round(score));
         }
     }
 
@@ -141,6 +220,7 @@ public class EventStore
                 s.QuizTotal = total;
             }
         }
+        RecalculateRiskScore(sessionId);
     }
 
     public void AddQuizResult(QuizResult result)

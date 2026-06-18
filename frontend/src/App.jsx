@@ -1,17 +1,20 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSignalR } from './useSignalR';
-import { useTabMonitor } from './useTabMonitor';
-import { CameraMonitor } from './CameraMonitor';
-import { EventLog } from './EventLog';
-import { QuizPanel } from './QuizPanel';
+import { useSignalR }          from './useSignalR';
+import { useTabMonitor }       from './useTabMonitor';
+import { CameraMonitor }       from './CameraMonitor';
+import { EventLog }            from './EventLog';
+import { QuizPanel }           from './QuizPanel';
+import { AudioMonitor }        from './AudioMonitor';
+import { InactivityMonitor }   from './InactivityMonitor';
+import { ExamTimer }           from './ExamTimer';
+import CandidateRegistration   from './CandidateRegistration';
 import './App.css';
 
 const SESSION_ID = `session-${Date.now()}`;
 
-// Read resume match result stored by JobLanding before redirect
-const storedMatch = (() => {
-  try { return JSON.parse(sessionStorage.getItem('resumeMatch') || 'null'); } catch { return null; }
-})();
+// Read stored data from sessionStorage (set by JobLanding before redirect)
+const storedMatch     = (() => { try { return JSON.parse(sessionStorage.getItem('resumeMatch')     || 'null'); } catch { return null; } })();
+const storedCandidate = (() => { try { return JSON.parse(sessionStorage.getItem('candidateInfo') || 'null'); } catch { return null; } })();
 
 function ResumeBanner({ match }) {
   if (!match) return null;
@@ -19,9 +22,7 @@ function ResumeBanner({ match }) {
   return (
     <div className="resume-banner">
       <span>Resume match: <b style={{ color }}>{match.score}%</b></span>
-      <span className="resume-banner-skills">
-        Matched: {match.matched.join(', ')}
-      </span>
+      <span className="resume-banner-skills">Matched: {match.matched.join(', ')}</span>
     </div>
   );
 }
@@ -29,17 +30,28 @@ function ResumeBanner({ match }) {
 function AlertBanner({ events }) {
   const lastCritical = events.find(e => e.severity === 'error' || e.type === 0);
   if (!lastCritical) return null;
+  const msgs = {
+    0: 'Tab switch detected!',
+    1: 'Face not in frame!',
+    7: 'Multiple faces detected!',
+    8: 'Audio alert triggered!',
+    9: 'Inactivity detected!',
+  };
   return (
     <div className="alert-banner">
-      {lastCritical.type === 0 ? 'Tab switch detected!' : 'Face not in frame!'}
+      {msgs[lastCritical.type] ?? 'Alert!'}
       <span className="alert-time">{new Date(lastCritical.timestamp).toLocaleTimeString()}</span>
     </div>
   );
 }
 
 export default function App() {
-  const { connected, events, reportEvent, sendFrame, submitQuiz } = useSignalR(SESSION_ID);
-  const [monitoring, setMonitoring] = useState(false);
+  const [candidateInfo, setCandidateInfo] = useState(storedCandidate);
+  const [monitoring,    setMonitoring]    = useState(false);
+  const [examDone,      setExamDone]      = useState(false);
+
+  const { connected, events, reportEvent, sendFrame, submitQuiz } =
+    useSignalR(SESSION_ID, candidateInfo);
 
   useTabMonitor(SESSION_ID, reportEvent);
 
@@ -54,8 +66,34 @@ export default function App() {
     submitQuiz(result);
   }, [submitQuiz]);
 
-  const tabSwitches = events.filter(e => e.type === 0).length;
-  const faceAlerts  = events.filter(e => e.type === 1).length;
+  const handleTimerExpire = useCallback(() => {
+    reportEvent(SESSION_ID, 10, 'Exam time expired — session auto-ended', 'error');
+    setExamDone(true);
+    setMonitoring(false);
+  }, [reportEvent]);
+
+  const tabSwitches  = events.filter(e => e.type === 0).length;
+  const faceAlerts   = events.filter(e => e.type === 1).length;
+  const multiAlerts  = events.filter(e => e.type === 7).length;
+
+  // ── Candidate registration gate ────────────────────────────────
+  if (!candidateInfo) {
+    return <CandidateRegistration onComplete={setCandidateInfo} />;
+  }
+
+  // ── Time-up screen ─────────────────────────────────────────────
+  if (examDone) {
+    return (
+      <div className="app">
+        <div className="timeup-screen">
+          <div className="timeup-icon">⏰</div>
+          <h2>Time's Up!</h2>
+          <p>Your exam session has ended. Thank you, <b>{candidateInfo.name}</b>.</p>
+          <p className="timeup-sub">Results have been submitted to the proctor.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app">
@@ -67,8 +105,10 @@ export default function App() {
           </span>
         </div>
         <div className="header-right">
-          <div className="stat-pill">Tab Switches: <b>{tabSwitches}</b></div>
-          <div className="stat-pill">Face Alerts: <b>{faceAlerts}</b></div>
+          {monitoring && <ExamTimer durationMinutes={30} onExpire={handleTimerExpire} active={monitoring} />}
+          <div className="stat-pill">Switches: <b>{tabSwitches}</b></div>
+          <div className="stat-pill">Face: <b>{faceAlerts}</b></div>
+          {multiAlerts > 0 && <div className="stat-pill stat-danger">Multi-face: <b>{multiAlerts}</b></div>}
           <button
             className={`btn ${monitoring ? 'btn-stop' : 'btn-start'}`}
             onClick={() => setMonitoring(m => !m)}
@@ -81,11 +121,15 @@ export default function App() {
       <ResumeBanner match={storedMatch} />
       <AlertBanner events={events} />
 
+      {/* Headless monitors */}
+      <AudioMonitor      sessionId={SESSION_ID} reportEvent={reportEvent} active={monitoring} />
+      <InactivityMonitor sessionId={SESSION_ID} reportEvent={reportEvent} active={monitoring} />
+
       <main className="app-main">
         <section className="camera-section">
           <h2>Camera Feed</h2>
           <p className="section-desc">
-            Face detection runs every 1 s. Move out of frame to trigger an alert.
+            Hello <b>{candidateInfo.name}</b> — face detection runs every second. Stay in frame.
           </p>
           {monitoring ? (
             <CameraMonitor sessionId={SESSION_ID} reportEvent={reportEvent} sendFrame={sendFrame} />
@@ -103,7 +147,7 @@ export default function App() {
       </main>
 
       <footer className="app-footer">
-        Session ID: <code>{SESSION_ID}</code>
+        Session: <code>{SESSION_ID}</code> · Candidate: <code>{candidateInfo.email}</code>
       </footer>
     </div>
   );

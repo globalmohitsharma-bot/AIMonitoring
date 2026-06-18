@@ -5,14 +5,16 @@ const HUB_URL = import.meta.env.DEV
   ? 'http://localhost:5165/hub/monitoring'
   : `${window.location.origin}/hub/monitoring`;
 
-export function useSignalR(sessionId = null) {
+export function useSignalR(sessionId = null, candidateInfo = null) {
   const connRef = useRef(null);
   const [connected, setConnected] = useState(false);
-  const [events, setEvents] = useState([]);
+  const [events,    setEvents]    = useState([]);
 
   const joinSession = useCallback((conn) => {
-    if (sessionId) conn.invoke('JoinSession', sessionId).catch(console.error);
-  }, [sessionId]);
+    if (!sessionId) return;
+    conn.invoke('JoinSession', sessionId, candidateInfo?.name ?? null, candidateInfo?.email ?? null)
+        .catch(console.error);
+  }, [sessionId, candidateInfo?.name, candidateInfo?.email]);
 
   useEffect(() => {
     const conn = new signalR.HubConnectionBuilder()
@@ -55,5 +57,11 @@ export function useSignalR(sessionId = null) {
     }
   }, []);
 
-  return { connected, events, reportEvent, sendFrame, submitQuiz };
+  const updateQuestions = useCallback((questions) => {
+    if (connRef.current?.state === signalR.HubConnectionState.Connected) {
+      connRef.current.invoke('AdminUpdateQuestions', questions);
+    }
+  }, []);
+
+  return { connected, events, reportEvent, sendFrame, submitQuiz, updateQuestions };
 }

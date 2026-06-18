@@ -2,9 +2,10 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import * as faceapi from 'face-api.js';
 import { shardBase64, modelManifest } from './tinyFaceDetectorModel.js';
 
-const DETECT_INTERVAL_MS = 1000;
-const MISS_THRESHOLD     = 3;   // consecutive no-face frames before alert (~3 s)
-const HIT_THRESHOLD      = 2;   // consecutive face frames before confirmed
+const DETECT_INTERVAL_MS  = 1000;
+const MISS_THRESHOLD      = 3;   // consecutive no-face frames before alert (~3 s)
+const HIT_THRESHOLD       = 2;   // consecutive face frames before confirmed
+const MULTI_THRESHOLD     = 2;   // consecutive multi-face frames before alert
 
 async function loadModelSafely() {
   if (faceapi.nets.tinyFaceDetector.isLoaded) return;
@@ -26,10 +27,12 @@ export function CameraMonitor({ sessionId, reportEvent, sendFrame }) {
   const frameIntervalRef = useRef(null);
 
   // All detection tracking in refs — never read from React state inside the loop
-  const missStreak    = useRef(0);
-  const hitStreak     = useRef(0);
-  const faceConfirmed = useRef(false); // face seen at least once
-  const alertActive   = useRef(false); // currently in "no face" alert state
+  const missStreak       = useRef(0);
+  const hitStreak        = useRef(0);
+  const faceConfirmed    = useRef(false); // face seen at least once
+  const alertActive      = useRef(false); // currently in "no face" alert state
+  const multiStreak      = useRef(0);
+  const multiAlertActive = useRef(false);
 
   const [status,   setStatus]   = useState('loading');
   const [errorMsg, setErrorMsg] = useState('');
@@ -98,6 +101,21 @@ export function CameraMonitor({ sessionId, reportEvent, sendFrame }) {
           reportEvent(sessionId, 2, 'Face detected again — user returned to frame', 'info');
         }
       }
+
+      // ── Multiple faces ──
+      if (detections.length > 1) {
+        multiStreak.current += 1;
+        if (multiStreak.current >= MULTI_THRESHOLD && !multiAlertActive.current) {
+          multiAlertActive.current = true;
+          reportEvent(sessionId, 7, `Multiple faces detected (${detections.length}) — possible external assistance`, 'error');
+          setStatus('multi-face');
+        }
+      } else {
+        multiStreak.current = 0;
+        if (multiAlertActive.current) {
+          multiAlertActive.current = false;
+        }
+      }
     } else {
       // ── No face ──
       hitStreak.current = 0;
@@ -141,10 +159,11 @@ export function CameraMonitor({ sessionId, reportEvent, sendFrame }) {
   }, [runDetection, sessionId, sendFrame]);
 
   const statusStyles = {
-    loading:    { border: '3px solid #888',    label: 'Scanning for face...' },
-    face:       { border: '3px solid #22c55e', label: 'Face detected' },
-    'no-face':  { border: '3px solid #ef4444', label: 'No face in frame!' },
-    error:      { border: '3px solid #f97316', label: errorMsg || 'Camera error' },
+    loading:      { border: '3px solid #888',    label: 'Scanning for face...' },
+    face:         { border: '3px solid #22c55e', label: 'Face detected' },
+    'no-face':    { border: '3px solid #ef4444', label: 'No face in frame!' },
+    'multi-face': { border: '3px solid #f59e0b', label: 'Multiple faces detected!' },
+    error:        { border: '3px solid #f97316', label: errorMsg || 'Camera error' },
   };
   const s = statusStyles[status] ?? statusStyles.loading;
 

@@ -8,7 +8,7 @@ namespace MonitoringApi.Controllers;
 public class QuizController(EventStore store) : ControllerBase
 {
     [HttpGet("questions")]
-    public IActionResult GetQuestions() => Ok(EventStore.Questions);
+    public IActionResult GetQuestions() => Ok(EventStore.GetQuestions());
 
     [HttpGet("results")]
     public IActionResult GetResults() => Ok(store.GetQuizResults());
