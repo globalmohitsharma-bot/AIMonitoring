@@ -49,5 +49,11 @@ export function useSignalR(sessionId = null) {
     }
   }, []);
 
-  return { connected, events, reportEvent, sendFrame };
+  const submitQuiz = useCallback((result) => {
+    if (connRef.current?.state === signalR.HubConnectionState.Connected) {
+      connRef.current.invoke('SubmitQuizResult', result);
+    }
+  }, []);
+
+  return { connected, events, reportEvent, sendFrame, submitQuiz };
 }

@@ -218,6 +218,110 @@ body {
   grid-template-columns: 70px 130px 100px 1fr;
 }
 
+/* ── Quiz panel ──────────────────────────────────── */
+.quiz-panel {
+  background: #1e293b;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.quiz-title { font-size: 0.95rem; font-weight: 700; color: #f1f5f9; }
+.quiz-counter { font-size: 0.8rem; color: #94a3b8; }
+
+.quiz-progress-bar {
+  height: 4px;
+  background: #334155;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.quiz-progress-fill {
+  height: 100%;
+  background: #3b82f6;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.quiz-question-text {
+  font-size: 1rem;
+  color: #f1f5f9;
+  line-height: 1.5;
+  min-height: 48px;
+}
+
+.quiz-btn-row {
+  display: flex;
+  gap: 12px;
+}
+.quiz-btn {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.quiz-btn:hover  { opacity: 0.85; transform: translateY(-1px); }
+.quiz-btn:active { transform: translateY(0); }
+.quiz-btn-no  { background: #334155; color: #e2e8f0; }
+.quiz-btn-yes { background: #3b82f6; color: #fff; }
+
+/* Results */
+.quiz-answers-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.quiz-answer-row {
+  display: grid;
+  grid-template-columns: 20px 1fr 36px;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+}
+.qa-correct { background: #0c1a0c; }
+.qa-wrong   { background: #1a0a0a; }
+.qa-neutral { background: #1e293b; }
+
+.qa-icon { font-weight: 700; text-align: center; }
+.qa-correct .qa-icon { color: #86efac; }
+.qa-wrong   .qa-icon { color: #fca5a5; }
+.qa-neutral .qa-icon { color: #64748b; }
+
+.qa-text { color: #cbd5e1; }
+.qa-val  { text-align: right; color: #94a3b8; font-weight: 600; }
+
+.quiz-final-label {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 8px;
+  border-radius: 8px;
+}
+.quiz-ok   { background: #14532d; color: #86efac; }
+.quiz-warn { background: #451a03; color: #fdba74; }
+.quiz-fail { background: #450a0a; color: #fca5a5; }
+
+.quiz-score-badge {
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
 /* ── Session video cards ─────────────────────────── */
 .session-grid {
   display: grid;

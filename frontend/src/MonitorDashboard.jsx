@@ -14,7 +14,14 @@ function shortId(id) {
   return id.length > 18 ? '…' + id.slice(-14) : id;
 }
 
-function SessionCard({ session, frame }) {
+function QuizChip({ quiz }) {
+  if (!quiz) return <span className="chip chip-unknown">— Quiz pending</span>;
+  const pct = quiz.total > 0 ? Math.round(quiz.score / quiz.total * 100) : 100;
+  const cls = pct === 100 ? 'chip-ok' : pct >= 60 ? 'chip-warn' : 'chip-alert';
+  return <span className={`chip ${cls}`}>Quiz {quiz.score}/{quiz.total} ({pct}%)</span>;
+}
+
+function SessionCard({ session, frame, quiz }) {
   const faceOk = session.faceStatus === 'ok';
   const faceAlert = session.faceStatus === 'alert';
   const tabSwitched = session.tabStatus === 'switched';
@@ -45,6 +52,8 @@ function SessionCard({ session, frame }) {
             ? <span className="chip chip-warn">⚠ Tab Away</span>
             : <span className="chip chip-ok">✓ Tab Active</span>
           }
+
+          <QuizChip quiz={quiz} />
         </div>
         <div className="session-card-meta">
           {session.eventCount} event{session.eventCount !== 1 ? 's' : ''} · started {new Date(session.startedAt).toLocaleTimeString()}
@@ -56,10 +65,11 @@ function SessionCard({ session, frame }) {
 
 export default function MonitorDashboard() {
   const connRef = useRef(null);
-  const [connected, setConnected] = useState(false);
-  const [sessions, setSessions] = useState([]);
-  const [frames,   setFrames]   = useState({}); // { sessionId: base64 }
-  const [events,   setEvents]   = useState([]);
+  const [connected,   setConnected]   = useState(false);
+  const [sessions,    setSessions]    = useState([]);
+  const [frames,      setFrames]      = useState({}); // { sessionId: base64 }
+  const [events,      setEvents]      = useState([]);
+  const [quizResults, setQuizResults] = useState({}); // { sessionId: QuizResult }
 
   useEffect(() => {
     const conn = new signalR.HubConnectionBuilder()
@@ -83,6 +93,16 @@ export default function MonitorDashboard() {
 
     conn.on('VideoFrame', (sessionId, frameData) => {
       setFrames(prev => ({ ...prev, [sessionId]: frameData }));
+    });
+
+    conn.on('QuizResultsSnapshot', (results) => {
+      const map = {};
+      results.forEach(r => { map[r.sessionId] = r; });
+      setQuizResults(map);
+    });
+
+    conn.on('QuizCompleted', (result) => {
+      setQuizResults(prev => ({ ...prev, [result.sessionId]: result }));
     });
 
     conn.onreconnected(() => {
@@ -135,7 +155,7 @@ export default function MonitorDashboard() {
           ) : (
             <div className="session-grid">
               {sessions.map(s => (
-                <SessionCard key={s.sessionId} session={s} frame={frames[s.sessionId]} />
+                <SessionCard key={s.sessionId} session={s} frame={frames[s.sessionId]} quiz={quizResults[s.sessionId]} />
               ))}
             </div>
           )}

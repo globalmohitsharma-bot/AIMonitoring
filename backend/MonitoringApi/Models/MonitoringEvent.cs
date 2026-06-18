@@ -18,6 +18,8 @@ public class SessionInfo
     public string FaceStatus { get; set; } = "unknown"; // "ok" | "alert" | "unknown"
     public string TabStatus { get; set; } = "active";   // "active" | "switched"
     public int EventCount { get; set; }
+    public int? QuizScore { get; set; }
+    public int? QuizTotal { get; set; }
 }
 
 public enum EventType
@@ -28,4 +30,5 @@ public enum EventType
     SessionStart    = 3,
     SessionEnd      = 4,
     TabReturned     = 5,
+    QuizCompleted   = 6,
 }

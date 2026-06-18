@@ -9,7 +9,6 @@ public class MonitoringHub : Hub
 
     public MonitoringHub(EventStore store) => _store = store;
 
-    // Called by each tester on connect — registers their session
     public async Task JoinSession(string sessionId)
     {
         _store.UpsertSession(sessionId);
@@ -17,12 +16,11 @@ public class MonitoringHub : Hub
         await Clients.Group("admin-monitor").SendAsync("SessionUpdated", session);
     }
 
-    // Called by the /monitor admin page on connect
     public async Task JoinMonitor()
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, "admin-monitor");
-        // Send current snapshot so the dashboard populates immediately
         await Clients.Caller.SendAsync("SessionsSnapshot", _store.GetSessions());
+        await Clients.Caller.SendAsync("QuizResultsSnapshot", _store.GetQuizResults());
     }
 
     public async Task ReportEvent(MonitoringEvent evt)
@@ -32,9 +30,7 @@ public class MonitoringHub : Hub
         _store.Add(evt);
         _store.UpdateStatus(evt);
 
-        // Send back to the tester who reported it (their own event log)
         await Clients.Caller.SendAsync("EventReceived", evt);
-        // Broadcast to admin monitor
         await Clients.Group("admin-monitor").SendAsync("EventReceived", evt);
 
         var session = _store.GetSession(evt.SessionId);
@@ -42,7 +38,36 @@ public class MonitoringHub : Hub
             await Clients.Group("admin-monitor").SendAsync("SessionUpdated", session);
     }
 
-    // Relay a JPEG snapshot (base64, no data-url prefix) to the admin monitor
+    public async Task SubmitQuizResult(QuizResult result)
+    {
+        result.Id = Guid.NewGuid();
+        result.CompletedAt = DateTime.UtcNow;
+        _store.AddQuizResult(result);
+        _store.SetQuizScore(result.SessionId, result.Score, result.Total);
+
+        // Notify admin monitor
+        await Clients.Group("admin-monitor").SendAsync("QuizCompleted", result);
+
+        // Log event for the event feed
+        var pct = result.Total > 0 ? result.Score * 100 / result.Total : 100;
+        var evt = new MonitoringEvent
+        {
+            Id        = Guid.NewGuid(),
+            SessionId = result.SessionId,
+            Type      = EventType.QuizCompleted,
+            Timestamp = result.CompletedAt,
+            Message   = $"Quiz completed — {result.Score}/{result.Total} ({pct}%)",
+            Severity  = pct == 100 ? "info" : pct >= 60 ? "warning" : "error",
+        };
+        _store.Add(evt);
+        await Clients.Caller.SendAsync("EventReceived", evt);
+        await Clients.Group("admin-monitor").SendAsync("EventReceived", evt);
+
+        var session = _store.GetSession(result.SessionId);
+        if (session is not null)
+            await Clients.Group("admin-monitor").SendAsync("SessionUpdated", session);
+    }
+
     public async Task SendVideoFrame(string sessionId, string frameData)
     {
         await Clients.Group("admin-monitor").SendAsync("VideoFrame", sessionId, frameData);
@@ -56,7 +81,18 @@ public class EventStore
 {
     private readonly List<MonitoringEvent> _events = new();
     private readonly Dictionary<string, SessionInfo> _sessions = new();
+    private readonly List<QuizResult> _quizResults = new();
     private readonly object _lock = new();
+
+    // Default question bank — edit here to change quiz questions
+    public static readonly List<Question> Questions =
+    [
+        new() { Id = 1, Text = "Have you read and understood the exam instructions?",               CorrectAnswer = true  },
+        new() { Id = 2, Text = "Are you in a quiet, private location?",                             CorrectAnswer = true  },
+        new() { Id = 3, Text = "Have you closed all unnecessary applications and browser tabs?",     CorrectAnswer = true  },
+        new() { Id = 4, Text = "Do you have any unauthorized materials (notes, books) nearby?",     CorrectAnswer = false },
+        new() { Id = 5, Text = "Do you agree to abide by the academic integrity policy?",           CorrectAnswer = true  },
+    ];
 
     public void Add(MonitoringEvent evt)
     {
@@ -95,6 +131,28 @@ public class EventStore
         }
     }
 
+    public void SetQuizScore(string sessionId, int score, int total)
+    {
+        lock (_lock)
+        {
+            if (_sessions.TryGetValue(sessionId, out var s))
+            {
+                s.QuizScore = score;
+                s.QuizTotal = total;
+            }
+        }
+    }
+
+    public void AddQuizResult(QuizResult result)
+    {
+        lock (_lock) _quizResults.Add(result);
+    }
+
+    public List<QuizResult> GetQuizResults()
+    {
+        lock (_lock) return _quizResults.ToList();
+    }
+
     public SessionInfo? GetSession(string sessionId)
     {
         lock (_lock) return _sessions.TryGetValue(sessionId, out var s) ? s : null;
@@ -117,6 +175,6 @@ public class EventStore
 
     public void Clear()
     {
-        lock (_lock) { _events.Clear(); _sessions.Clear(); }
+        lock (_lock) { _events.Clear(); _sessions.Clear(); _quizResults.Clear(); }
     }
 }

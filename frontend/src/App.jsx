@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSignalR } from './useSignalR';
 import { useTabMonitor } from './useTabMonitor';
 import { CameraMonitor } from './CameraMonitor';
 import { EventLog } from './EventLog';
+import { QuizPanel } from './QuizPanel';
 import './App.css';
 
 const SESSION_ID = `session-${Date.now()}`;
@@ -19,7 +20,7 @@ function AlertBanner({ events }) {
 }
 
 export default function App() {
-  const { connected, events, reportEvent, sendFrame } = useSignalR(SESSION_ID);
+  const { connected, events, reportEvent, sendFrame, submitQuiz } = useSignalR(SESSION_ID);
   const [monitoring, setMonitoring] = useState(false);
 
   useTabMonitor(SESSION_ID, reportEvent);
@@ -31,8 +32,12 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monitoring]);
 
+  const handleQuizSubmit = useCallback((result) => {
+    submitQuiz(result);
+  }, [submitQuiz]);
+
   const tabSwitches = events.filter(e => e.type === 0).length;
-  const faceAlerts = events.filter(e => e.type === 1).length;
+  const faceAlerts  = events.filter(e => e.type === 1).length;
 
   return (
     <div className="app">
@@ -61,7 +66,7 @@ export default function App() {
         <section className="camera-section">
           <h2>Camera Feed</h2>
           <p className="section-desc">
-            Face detection runs every 1.5 s. Move out of frame to trigger an alert.
+            Face detection runs every 1 s. Move out of frame to trigger an alert.
           </p>
           {monitoring ? (
             <CameraMonitor sessionId={SESSION_ID} reportEvent={reportEvent} sendFrame={sendFrame} />
@@ -71,6 +76,9 @@ export default function App() {
         </section>
 
         <section className="log-section">
+          {monitoring && (
+            <QuizPanel sessionId={SESSION_ID} onSubmit={handleQuizSubmit} />
+          )}
           <EventLog events={events} />
         </section>
       </main>
