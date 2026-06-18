@@ -4,40 +4,19 @@ import { shardBase64, modelManifest } from './tinyFaceDetectorModel.js';
 
 const DETECT_INTERVAL_MS = 1500;
 
-// Model weights are bundled as base64 at build time (see scripts/generateModel.mjs).
-// No network request is made — completely bypasses ngrok/CDN interstitials.
+// Loads TinyFaceDetector weights from the bundled base64 string — zero network
+// requests. Uses faceapi.tf.io.decodeWeights (which handles uint8 quantization)
+// to build the NamedTensorMap, then calls loadFromWeightMap directly.
 async function loadModelSafely() {
   if (faceapi.nets.tinyFaceDetector.isLoaded) return;
 
-  // Decode base64 → ArrayBuffer
   const binary = atob(shardBase64);
   const bytes  = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
 
-  const shardBlobUrl = URL.createObjectURL(
-    new Blob([bytes.buffer], { type: 'application/octet-stream' })
-  );
-  const patchedManifest = [{ ...modelManifest[0], paths: [shardBlobUrl] }];
-  const manifestBlobUrl = URL.createObjectURL(
-    new Blob([JSON.stringify(patchedManifest)], { type: 'application/json' })
-  );
-
-  // Intercept face-api.js model fetches and serve blobs from memory
-  const origFetch = window.fetch.bind(window);
-  window.fetch = (url, opts = {}) => {
-    const s = typeof url === 'string' ? url : url?.url;
-    if (s?.includes('tiny_face_detector_model-weights_manifest')) return origFetch(manifestBlobUrl, opts);
-    if (s?.includes('tiny_face_detector_model-shard'))             return origFetch(shardBlobUrl, opts);
-    return origFetch(url, opts);
-  };
-
-  try {
-    await faceapi.nets.tinyFaceDetector.loadFromUri('blob-model');
-  } finally {
-    window.fetch = origFetch;
-    URL.revokeObjectURL(shardBlobUrl);
-    URL.revokeObjectURL(manifestBlobUrl);
-  }
+  const weightMap = faceapi.tf.io.decodeWeights(bytes.buffer, modelManifest[0].weights);
+  faceapi.nets.tinyFaceDetector.loadFromWeightMap(weightMap);
+  faceapi.tf.dispose(weightMap);
 }
 
 export function CameraMonitor({ sessionId, reportEvent }) {
