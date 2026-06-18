@@ -3,7 +3,11 @@ using MonitoringApi.Hubs;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<EventStore>();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    // Allow larger messages for JPEG frame snapshots (~20–50 KB each)
+    options.MaximumReceiveMessageSize = 131072; // 128 KB
+});
 builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>

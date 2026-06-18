@@ -43,5 +43,11 @@ export function useSignalR(sessionId = null) {
     }
   }, []);
 
-  return { connected, events, reportEvent };
+  const sendFrame = useCallback((sid, frameData) => {
+    if (connRef.current?.state === signalR.HubConnectionState.Connected) {
+      connRef.current.invoke('SendVideoFrame', sid, frameData);
+    }
+  }, []);
+
+  return { connected, events, reportEvent, sendFrame };
 }

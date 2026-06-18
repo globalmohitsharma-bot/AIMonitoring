@@ -19,7 +19,7 @@ function AlertBanner({ events }) {
 }
 
 export default function App() {
-  const { connected, events, reportEvent } = useSignalR(SESSION_ID);
+  const { connected, events, reportEvent, sendFrame } = useSignalR(SESSION_ID);
   const [monitoring, setMonitoring] = useState(false);
 
   useTabMonitor(SESSION_ID, reportEvent);
@@ -64,7 +64,7 @@ export default function App() {
             Face detection runs every 1.5 s. Move out of frame to trigger an alert.
           </p>
           {monitoring ? (
-            <CameraMonitor sessionId={SESSION_ID} reportEvent={reportEvent} />
+            <CameraMonitor sessionId={SESSION_ID} reportEvent={reportEvent} sendFrame={sendFrame} />
           ) : (
             <div className="camera-placeholder">Press Start Monitoring to enable camera</div>
           )}

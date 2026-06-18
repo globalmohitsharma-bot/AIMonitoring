@@ -42,6 +42,12 @@ public class MonitoringHub : Hub
             await Clients.Group("admin-monitor").SendAsync("SessionUpdated", session);
     }
 
+    // Relay a JPEG snapshot (base64, no data-url prefix) to the admin monitor
+    public async Task SendVideoFrame(string sessionId, string frameData)
+    {
+        await Clients.Group("admin-monitor").SendAsync("VideoFrame", sessionId, frameData);
+    }
+
     public Task<List<MonitoringEvent>> GetHistory(string sessionId)
         => Task.FromResult(_store.GetBySession(sessionId));
 }

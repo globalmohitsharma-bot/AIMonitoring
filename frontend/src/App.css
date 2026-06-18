@@ -218,6 +218,78 @@ body {
   grid-template-columns: 70px 130px 100px 1fr;
 }
 
+/* ── Session video cards ─────────────────────────── */
+.session-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.session-card {
+  background: #1e293b;
+  border: 2px solid #334155;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.session-card-alert {
+  border-color: #ef4444;
+  animation: pulse 1.5s infinite;
+}
+
+.session-thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #0f172a;
+  overflow: hidden;
+}
+.session-video-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.session-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  color: #475569;
+  text-align: center;
+  padding: 8px;
+}
+.session-alert-overlay {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.session-card-info {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.session-card-id {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.session-card-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.session-card-meta { font-size: 0.72rem; color: #475569; }
+
 /* ── Footer ──────────────────────────────────────── */
 .app-footer {
   text-align: center;

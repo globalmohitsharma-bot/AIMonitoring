@@ -17,10 +17,13 @@ async function loadModelSafely() {
   faceapi.nets.tinyFaceDetector.loadFromWeightMap(weightMap);
 }
 
-export function CameraMonitor({ sessionId, reportEvent }) {
-  const videoRef   = useRef(null);
-  const canvasRef  = useRef(null);
-  const intervalRef = useRef(null);
+const FRAME_INTERVAL_MS = 2000; // snapshot every 2 s
+
+export function CameraMonitor({ sessionId, reportEvent, sendFrame }) {
+  const videoRef        = useRef(null);
+  const canvasRef       = useRef(null);
+  const intervalRef     = useRef(null);
+  const frameIntervalRef = useRef(null);
 
   // All detection tracking in refs — never read from React state inside the loop
   const missStreak    = useRef(0);
@@ -112,14 +115,30 @@ export function CameraMonitor({ sessionId, reportEvent }) {
     startCamera();
     return () => {
       clearInterval(intervalRef.current);
+      clearInterval(frameIntervalRef.current);
       videoRef.current?.srcObject?.getTracks().forEach(t => t.stop());
     };
   }, [startCamera]);
 
   const handleVideoPlay = useCallback(() => {
     clearInterval(intervalRef.current);
+    clearInterval(frameIntervalRef.current);
+
     intervalRef.current = setInterval(runDetection, DETECT_INTERVAL_MS);
-  }, [runDetection]);
+
+    if (sendFrame) {
+      frameIntervalRef.current = setInterval(() => {
+        const video = videoRef.current;
+        if (!video || video.readyState < 2) return;
+        const w = 320;
+        const h = Math.round(w * (video.videoHeight || 240) / (video.videoWidth || 320));
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(video, 0, 0, w, h);
+        sendFrame(sessionId, c.toDataURL('image/jpeg', 0.4).split(',')[1]);
+      }, FRAME_INTERVAL_MS);
+    }
+  }, [runDetection, sessionId, sendFrame]);
 
   const statusStyles = {
     loading:    { border: '3px solid #888',    label: 'Scanning for face...' },
