@@ -12,8 +12,9 @@ async function loadModelSafely() {
   const bytes  = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
   const weightMap = faceapi.tf.io.decodeWeights(bytes.buffer, modelManifest[0].weights);
+  // loadFromWeightMap stores direct tensor references — do NOT dispose weightMap
+  // after this call or the model's parameters will point to freed GPU memory.
   faceapi.nets.tinyFaceDetector.loadFromWeightMap(weightMap);
-  faceapi.tf.dispose(weightMap);
 }
 
 export function CameraMonitor({ sessionId, reportEvent }) {
