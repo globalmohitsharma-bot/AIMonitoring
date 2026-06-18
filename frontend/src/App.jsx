@@ -8,6 +8,24 @@ import './App.css';
 
 const SESSION_ID = `session-${Date.now()}`;
 
+// Read resume match result stored by JobLanding before redirect
+const storedMatch = (() => {
+  try { return JSON.parse(sessionStorage.getItem('resumeMatch') || 'null'); } catch { return null; }
+})();
+
+function ResumeBanner({ match }) {
+  if (!match) return null;
+  const color = match.score >= 70 ? '#22c55e' : '#f59e0b';
+  return (
+    <div className="resume-banner">
+      <span>Resume match: <b style={{ color }}>{match.score}%</b></span>
+      <span className="resume-banner-skills">
+        Matched: {match.matched.join(', ')}
+      </span>
+    </div>
+  );
+}
+
 function AlertBanner({ events }) {
   const lastCritical = events.find(e => e.severity === 'error' || e.type === 0);
   if (!lastCritical) return null;
@@ -60,6 +78,7 @@ export default function App() {
         </div>
       </header>
 
+      <ResumeBanner match={storedMatch} />
       <AlertBanner events={events} />
 
       <main className="app-main">

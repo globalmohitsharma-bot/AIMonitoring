@@ -159,7 +159,7 @@ function Dashboard() {
           <div className="stat-pill">
             Alerts: <b style={{ color: alertCount > 0 ? '#f87171' : undefined }}>{alertCount}</b>
           </div>
-          <a href="/" className="btn btn-start" style={{ textDecoration: 'none', fontSize: '0.85rem' }}>
+          <a href="/exam" className="btn btn-start" style={{ textDecoration: 'none', fontSize: '0.85rem' }}>
             ← Tester View
           </a>
         </div>
