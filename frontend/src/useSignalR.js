@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import * as signalR from '@microsoft/signalr';
 
-const HUB_URL = 'http://localhost:5165/hub/monitoring';
+const HUB_URL = import.meta.env.DEV
+  ? 'http://localhost:5165/hub/monitoring'
+  : `${window.location.origin}/hub/monitoring`;
 
 export function useSignalR() {
   const connRef = useRef(null);

@@ -10,7 +10,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "http://localhost:3000")
+        policy.SetIsOriginAllowed(_ => true)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -20,8 +20,15 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseCors("ReactApp");
-app.UseHttpsRedirection();
+
+app.UseDefaultFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    ServeUnknownFileTypes = true,
+    DefaultContentType = "application/octet-stream"
+});
 app.MapControllers();
 app.MapHub<MonitoringHub>("/hub/monitoring");
+app.MapFallbackToFile("index.html");
 
 app.Run();
