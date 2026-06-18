@@ -218,6 +218,67 @@ body {
   grid-template-columns: 70px 130px 100px 1fr;
 }
 
+/* ── Password gate ───────────────────────────────── */
+.pw-overlay {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f172a;
+}
+.pw-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 14px;
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.pw-icon     { font-size: 2.4rem; margin-bottom: 4px; }
+.pw-title    { font-size: 1.3rem; font-weight: 700; color: #f8fafc; }
+.pw-subtitle { font-size: 0.85rem; color: #64748b; text-align: center; }
+
+.pw-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+}
+.pw-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #f1f5f9;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.pw-input:focus       { border-color: #3b82f6; }
+.pw-input-error       { border-color: #ef4444 !important; }
+
+.pw-error {
+  font-size: 0.8rem;
+  color: #f87171;
+  text-align: center;
+}
+.pw-btn { width: 100%; margin-top: 4px; padding: 10px; }
+
+@keyframes pw-shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-8px); }
+  40%       { transform: translateX(8px); }
+  60%       { transform: translateX(-6px); }
+  80%       { transform: translateX(6px); }
+}
+.pw-shake { animation: pw-shake 0.45s ease; }
+
 /* ── Quiz panel ──────────────────────────────────── */
 .quiz-panel {
   background: #1e293b;

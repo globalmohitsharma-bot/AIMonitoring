@@ -7,9 +7,54 @@ const HUB_URL = import.meta.env.DEV
 
 const TYPE_LABELS = {
   0: 'Tab Switch', 1: 'Face Lost', 2: 'Face Returned',
-  3: 'Session Start', 4: 'Session End', 5: 'Tab Returned',
+  3: 'Session Start', 4: 'Session End', 5: 'Tab Returned', 6: 'Quiz Completed',
 };
 
+const MONITOR_PASSWORD = 'Qazwsx';
+
+// ── Password gate ─────────────────────────────────────────────
+function PasswordGate({ onSuccess }) {
+  const [value, setValue] = useState('');
+  const [error, setError] = useState(false);
+  const [shake, setShake] = useState(false);
+
+  const submit = (e) => {
+    e.preventDefault();
+    if (value === MONITOR_PASSWORD) {
+      sessionStorage.setItem('monitor_auth', '1');
+      onSuccess();
+    } else {
+      setError(true);
+      setShake(true);
+      setValue('');
+      setTimeout(() => setShake(false), 500);
+    }
+  };
+
+  return (
+    <div className="pw-overlay">
+      <div className={`pw-card ${shake ? 'pw-shake' : ''}`}>
+        <div className="pw-icon">🔒</div>
+        <h2 className="pw-title">Admin Monitor</h2>
+        <p className="pw-subtitle">Enter password to access the dashboard</p>
+        <form onSubmit={submit} className="pw-form">
+          <input
+            type="password"
+            className={`pw-input ${error ? 'pw-input-error' : ''}`}
+            value={value}
+            onChange={e => { setValue(e.target.value); setError(false); }}
+            placeholder="Password"
+            autoFocus
+          />
+          {error && <p className="pw-error">Incorrect password — try again</p>}
+          <button type="submit" className="btn btn-start pw-btn">Enter</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ── Helper components ─────────────────────────────────────────
 function shortId(id) {
   return id.length > 18 ? '…' + id.slice(-14) : id;
 }
@@ -22,14 +67,13 @@ function QuizChip({ quiz }) {
 }
 
 function SessionCard({ session, frame, quiz }) {
-  const faceOk = session.faceStatus === 'ok';
-  const faceAlert = session.faceStatus === 'alert';
-  const tabSwitched = session.tabStatus === 'switched';
-  const hasAlert = faceAlert || tabSwitched;
+  const faceOk      = session.faceStatus === 'ok';
+  const faceAlert   = session.faceStatus === 'alert';
+  const tabSwitched = session.tabStatus  === 'switched';
+  const hasAlert    = faceAlert || tabSwitched;
 
   return (
     <div className={`session-card ${hasAlert ? 'session-card-alert' : ''}`}>
-      {/* Video thumbnail */}
       <div className="session-thumb">
         {frame
           ? <img src={`data:image/jpeg;base64,${frame}`} alt="live feed" className="session-video-img" />
@@ -39,20 +83,15 @@ function SessionCard({ session, frame, quiz }) {
         }
         {hasAlert && <div className="session-alert-overlay">⚠ Alert</div>}
       </div>
-
-      {/* Session info */}
       <div className="session-card-info">
         <div className="session-card-id">{shortId(session.sessionId)}</div>
         <div className="session-card-chips">
           {faceOk    && <span className="chip chip-ok">✓ Face OK</span>}
           {faceAlert && <span className="chip chip-alert">✗ No Face</span>}
           {!faceOk && !faceAlert && <span className="chip chip-unknown">— Scanning</span>}
-
           {tabSwitched
             ? <span className="chip chip-warn">⚠ Tab Away</span>
-            : <span className="chip chip-ok">✓ Tab Active</span>
-          }
-
+            : <span className="chip chip-ok">✓ Tab Active</span>}
           <QuizChip quiz={quiz} />
         </div>
         <div className="session-card-meta">
@@ -63,13 +102,14 @@ function SessionCard({ session, frame, quiz }) {
   );
 }
 
-export default function MonitorDashboard() {
+// ── Main dashboard (only mounts after auth) ───────────────────
+function Dashboard() {
   const connRef = useRef(null);
   const [connected,   setConnected]   = useState(false);
   const [sessions,    setSessions]    = useState([]);
-  const [frames,      setFrames]      = useState({}); // { sessionId: base64 }
+  const [frames,      setFrames]      = useState({});
   const [events,      setEvents]      = useState([]);
-  const [quizResults, setQuizResults] = useState({}); // { sessionId: QuizResult }
+  const [quizResults, setQuizResults] = useState({});
 
   useEffect(() => {
     const conn = new signalR.HubConnectionBuilder()
@@ -78,37 +118,22 @@ export default function MonitorDashboard() {
       .build();
 
     conn.on('SessionsSnapshot', (data) => setSessions(data));
-
-    conn.on('SessionUpdated', (session) => {
+    conn.on('SessionUpdated',   (session) => {
       setSessions(prev => {
         const idx = prev.findIndex(s => s.sessionId === session.sessionId);
         if (idx >= 0) { const next = [...prev]; next[idx] = session; return next; }
         return [...prev, session];
       });
     });
-
-    conn.on('EventReceived', (evt) => {
-      setEvents(prev => [evt, ...prev].slice(0, 200));
-    });
-
-    conn.on('VideoFrame', (sessionId, frameData) => {
-      setFrames(prev => ({ ...prev, [sessionId]: frameData }));
-    });
-
+    conn.on('EventReceived', (evt) => setEvents(prev => [evt, ...prev].slice(0, 200)));
+    conn.on('VideoFrame',    (sessionId, frameData) => setFrames(prev => ({ ...prev, [sessionId]: frameData })));
     conn.on('QuizResultsSnapshot', (results) => {
       const map = {};
       results.forEach(r => { map[r.sessionId] = r; });
       setQuizResults(map);
     });
-
-    conn.on('QuizCompleted', (result) => {
-      setQuizResults(prev => ({ ...prev, [result.sessionId]: result }));
-    });
-
-    conn.onreconnected(() => {
-      setConnected(true);
-      conn.invoke('JoinMonitor').catch(console.error);
-    });
+    conn.on('QuizCompleted', (result) => setQuizResults(prev => ({ ...prev, [result.sessionId]: result })));
+    conn.onreconnected(() => { setConnected(true); conn.invoke('JoinMonitor').catch(console.error); });
 
     conn.start()
       .then(() => { setConnected(true); conn.invoke('JoinMonitor').catch(console.error); })
@@ -141,13 +166,10 @@ export default function MonitorDashboard() {
       </header>
 
       <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px', flex: 1 }}>
-
-        {/* Video card grid */}
         <div>
           <h2 style={{ fontSize: '1rem', color: '#f1f5f9', marginBottom: '12px' }}>
             Live Feeds <span className="badge">{sessions.length}</span>
           </h2>
-
           {sessions.length === 0 ? (
             <div className="camera-placeholder">
               No sessions yet — share the tester URL and ask testers to click Start Monitoring
@@ -161,7 +183,6 @@ export default function MonitorDashboard() {
           )}
         </div>
 
-        {/* Live events feed */}
         <div>
           <h2 style={{ fontSize: '1rem', color: '#f1f5f9', marginBottom: '12px' }}>
             Live Events Feed <span className="badge">{events.length}</span>
@@ -184,4 +205,10 @@ export default function MonitorDashboard() {
       </div>
     </div>
   );
+}
+
+// ── Entry point — auth check before mounting Dashboard ────────
+export default function MonitorDashboard() {
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem('monitor_auth') === '1');
+  return authed ? <Dashboard /> : <PasswordGate onSuccess={() => setAuthed(true)} />;
 }
