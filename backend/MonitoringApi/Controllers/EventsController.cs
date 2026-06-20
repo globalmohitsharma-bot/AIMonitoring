@@ -22,9 +22,9 @@ public class EventsController : ControllerBase
 }
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/sessions")]
 public class SessionsController(EventStore store) : ControllerBase
 {
     [HttpGet]
-    public IActionResult GetAll() => Ok(store.GetSessions());
+    public IActionResult GetHistory() => Ok(store.GetSessionHistory());
 }
