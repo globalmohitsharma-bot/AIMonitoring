@@ -69,6 +69,7 @@ public class MonitoringHub : Hub
 
     public async Task SendVideoFrame(string sessionId, string frameData)
     {
+        _store.StoreFirstFrame(sessionId, frameData);
         await Clients.Group("admin-monitor").SendAsync("VideoFrame", sessionId, frameData);
     }
 
@@ -85,12 +86,124 @@ public class MonitoringHub : Hub
 }
 
 // ── EventStore ────────────────────────────────────────────────────────────────
+// ── Session history DTO ───────────────────────────────────────────────────────
+public class SessionHistoryDto
+{
+    public string   SessionId      { get; set; } = "";
+    public string?  CandidateName  { get; set; }
+    public string?  CandidateEmail { get; set; }
+    public DateTime StartedAt      { get; set; }
+    public double   RiskScore      { get; set; }
+    public int?     QuizScore      { get; set; }
+    public int?     QuizTotal      { get; set; }
+    public string?  Snapshot       { get; set; }
+}
+
 public class EventStore
 {
-    private readonly List<MonitoringEvent>          _events      = new();
-    private readonly Dictionary<string, SessionInfo> _sessions   = new();
-    private readonly List<QuizResult>               _quizResults = new();
+    private readonly List<MonitoringEvent>           _events      = new();
+    private readonly Dictionary<string, SessionInfo> _sessions    = new();
+    private readonly List<QuizResult>                _quizResults = new();
+    private readonly Dictionary<string, string>      _firstFrames = new();
     private readonly object _lock = new();
+
+    // ── Persistence ────────────────────────────────────
+    private static string DataDir =>
+        Path.Combine(Environment.GetEnvironmentVariable("HOME") ?? Directory.GetCurrentDirectory(), "data");
+    private string SessionsFile => Path.Combine(DataDir, "sessions.json");
+
+    public EventStore() { LoadPersistedSessions(); }
+
+    private void LoadPersistedSessions()
+    {
+        try
+        {
+            if (!File.Exists(SessionsFile)) return;
+            var json  = File.ReadAllText(SessionsFile);
+            var items = System.Text.Json.JsonSerializer.Deserialize<List<SessionHistoryDto>>(json);
+            if (items == null) return;
+            lock (_lock)
+            {
+                foreach (var item in items)
+                {
+                    _sessions[item.SessionId] = new SessionInfo
+                    {
+                        SessionId      = item.SessionId,
+                        CandidateName  = item.CandidateName,
+                        CandidateEmail = item.CandidateEmail,
+                        StartedAt      = item.StartedAt,
+                        RiskScore      = item.RiskScore,
+                        QuizScore      = item.QuizScore,
+                        QuizTotal      = item.QuizTotal,
+                        FaceStatus     = "ended",
+                        TabStatus      = "active",
+                    };
+                    if (item.Snapshot is not null)
+                        _firstFrames[item.SessionId] = item.Snapshot;
+                }
+            }
+        }
+        catch { }
+    }
+
+    private void PersistSessions()
+    {
+        try
+        {
+            Directory.CreateDirectory(DataDir);
+            List<SessionHistoryDto> items;
+            lock (_lock)
+            {
+                items = _sessions.Values
+                    .Select(s => new SessionHistoryDto
+                    {
+                        SessionId      = s.SessionId,
+                        CandidateName  = s.CandidateName,
+                        CandidateEmail = s.CandidateEmail,
+                        StartedAt      = s.StartedAt,
+                        RiskScore      = s.RiskScore,
+                        QuizScore      = s.QuizScore,
+                        QuizTotal      = s.QuizTotal,
+                        Snapshot       = _firstFrames.TryGetValue(s.SessionId, out var f) ? f : null,
+                    }).ToList();
+            }
+            var outJson = System.Text.Json.JsonSerializer.Serialize(items);
+            File.WriteAllText(SessionsFile, outJson);
+        }
+        catch { }
+    }
+
+    public void StoreFirstFrame(string sessionId, string frame)
+    {
+        bool stored = false;
+        lock (_lock)
+        {
+            if (!_firstFrames.ContainsKey(sessionId))
+            { _firstFrames[sessionId] = frame; stored = true; }
+        }
+        if (stored) Task.Run(PersistSessions);
+    }
+
+    public List<SessionHistoryDto> GetSessionHistory()
+    {
+        lock (_lock)
+        {
+            return _sessions.Values
+                .OrderByDescending(s => s.StartedAt)
+                .Select(s => new SessionHistoryDto
+                {
+                    SessionId      = s.SessionId,
+                    CandidateName  = s.CandidateName,
+                    CandidateEmail = s.CandidateEmail,
+                    StartedAt      = s.StartedAt,
+                    RiskScore      = s.RiskScore,
+                    QuizScore      = s.QuizScore,
+                    QuizTotal      = s.QuizTotal,
+                    Snapshot       = _firstFrames.TryGetValue(s.SessionId, out var f) ? f : null,
+                })
+                .ToList();
+        }
+    }
 
     private static List<Question> _questions =
     [
@@ -496,6 +609,7 @@ public class EventStore
             }
         }
         RecalculateRiskScore(sessionId);
+        Task.Run(PersistSessions);
     }
 
     public void AddQuizResult(QuizResult result)

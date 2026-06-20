@@ -1203,6 +1203,91 @@ body {
   padding-top: 4px;
 }
 
+/* ── Creator intro banner (landing page) ─────────── */
+.creator-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  max-width: 600px;
+  width: 100%;
+}
+.creator-photo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #3b82f6;
+  flex-shrink: 0;
+}
+.creator-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.creator-tagline {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin: 0;
+}
+.creator-tagline strong { color: #f1f5f9; }
+.creator-linkedin {
+  font-size: 0.8rem;
+  color: #60a5fa;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.creator-linkedin:hover { color: #93c5fd; text-decoration: underline; }
+
+/* ── Candidate history (monitor page) ────────────── */
+.candidate-history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+.cand-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.cand-snapshot {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  background: #0f172a;
+  display: block;
+}
+.cand-snapshot-placeholder {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  color: #475569;
+}
+.cand-info {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+.cand-name  { font-size: 0.88rem; font-weight: 700; color: #f1f5f9; }
+.cand-email { font-size: 0.72rem; color: #64748b; word-break: break-all; }
+.cand-date  { font-size: 0.7rem;  color: #475569; }
+.cand-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
+
 /* ── Footer ──────────────────────────────────────── */
 .app-footer {
   text-align: center;

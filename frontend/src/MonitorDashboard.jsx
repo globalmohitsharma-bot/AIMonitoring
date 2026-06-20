@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import * as signalR from '@microsoft/signalr';
 
-const HUB_URL = import.meta.env.DEV
+const HUB_URL  = import.meta.env.DEV
   ? 'http://localhost:5165/hub/monitoring'
   : `${window.location.origin}/hub/monitoring`;
+
+const API_BASE = import.meta.env.DEV ? 'http://localhost:5165' : '';
 
 const TYPE_LABELS = {
   0: 'Tab Switch', 1: 'Face Lost', 2: 'Face Returned',
@@ -272,6 +274,8 @@ function Dashboard() {
   const [quizResults, setQuizResults] = useState({});
   const [questions,   setQuestions]   = useState([]);
   const [soundOn,     setSoundOn]     = useState(true);
+  const [history,     setHistory]     = useState([]);
+  const [histOpen,    setHistOpen]    = useState(true);
 
   useEffect(() => {
     const conn = new signalR.HubConnectionBuilder()
@@ -305,6 +309,20 @@ function Dashboard() {
     connRef.current = conn;
     return () => conn.stop();
   }, []);
+
+  // Refresh candidate history from REST endpoint (persistent data)
+  const refreshHistory = useCallback(() => {
+    fetch(`${API_BASE}/api/sessions`)
+      .then(r => r.ok ? r.json() : [])
+      .then(data => setHistory(Array.isArray(data) ? data : []))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    refreshHistory();
+    const id = setInterval(refreshHistory, 30_000); // refresh every 30s
+    return () => clearInterval(id);
+  }, [refreshHistory]);
 
   const saveQuestions = useCallback((qs) => {
     connRef.current?.invoke('AdminUpdateQuestions', qs).catch(console.error);
@@ -367,6 +385,62 @@ function Dashboard() {
                 />
               ))}
             </div>
+          )}
+        </div>
+
+        {/* Candidate history */}
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+            <h2 style={{ fontSize: '1rem', color: '#f1f5f9' }}>
+              Candidate History <span className="badge">{history.length}</span>
+            </h2>
+            <button
+              onClick={() => setHistOpen(o => !o)}
+              style={{ background: 'none', border: '1px solid #334155', borderRadius: 6,
+                       color: '#64748b', fontSize: '0.75rem', padding: '2px 10px', cursor: 'pointer' }}
+            >
+              {histOpen ? 'Collapse ▲' : 'Expand ▼'}
+            </button>
+            <button
+              onClick={refreshHistory}
+              style={{ background: 'none', border: '1px solid #334155', borderRadius: 6,
+                       color: '#64748b', fontSize: '0.75rem', padding: '2px 10px', cursor: 'pointer' }}
+            >
+              ↺ Refresh
+            </button>
+          </div>
+          {histOpen && (
+            history.length === 0 ? (
+              <div className="camera-placeholder">No candidates yet — history persists across restarts</div>
+            ) : (
+              <div className="candidate-history-grid">
+                {history.map(item => {
+                  const riskCls = item.riskScore >= 80 ? 'risk-low' : item.riskScore >= 50 ? 'risk-med' : 'risk-high';
+                  const quizPct = item.quizTotal > 0 ? Math.round(item.quizScore / item.quizTotal * 100) : null;
+                  return (
+                    <div key={item.sessionId} className="cand-card">
+                      {item.snapshot
+                        ? <img src={`data:image/jpeg;base64,${item.snapshot}`} alt="snapshot" className="cand-snapshot" />
+                        : <div className="cand-snapshot-placeholder">No snapshot</div>
+                      }
+                      <div className="cand-info">
+                        <span className="cand-name">{item.candidateName || '—'}</span>
+                        <span className="cand-email">{item.candidateEmail || '—'}</span>
+                        <span className="cand-date">{new Date(item.startedAt).toLocaleString()}</span>
+                        <div className="cand-chips">
+                          <span className={`chip risk-chip ${riskCls}`}>Risk {item.riskScore}</span>
+                          {quizPct !== null && (
+                            <span className={`chip ${quizPct >= 80 ? 'chip-ok' : quizPct >= 50 ? 'chip-warn' : 'chip-alert'}`}>
+                              Quiz {quizPct}%
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )
           )}
         </div>
 

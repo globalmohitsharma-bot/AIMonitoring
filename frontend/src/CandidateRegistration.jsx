@@ -38,7 +38,7 @@ export default function CandidateRegistration({ onComplete }) {
             <input
               className="reg-input"
               type="email"
-              placeholder="e.g. mohit@example.com"
+              placeholder="e.g. global.mohitsharma@gmail.com"
               value={email}
               onChange={e => { setEmail(e.target.value); setError(''); }}
             />
