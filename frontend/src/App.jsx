@@ -47,7 +47,7 @@ function AlertBanner({ events }) {
 
 export default function App() {
   const [candidateInfo, setCandidateInfo] = useState(storedCandidate);
-  const [monitoring,    setMonitoring]    = useState(false);
+  const [monitoring,    setMonitoring]    = useState(true);  // auto-start
   const [examDone,      setExamDone]      = useState(false);
 
   const { connected, events, reportEvent, sendFrame, submitQuiz } =
