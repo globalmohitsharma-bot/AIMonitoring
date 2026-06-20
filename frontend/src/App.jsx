@@ -48,17 +48,21 @@ function AlertBanner({ events }) {
 }
 
 export default function App() {
-  const [candidateInfo, setCandidateInfo] = useState(storedCandidate);
-  const [monitoring,    setMonitoring]    = useState(true);
-  const [examDone,      setExamDone]      = useState(false);
-  const [audioLevel,    setAudioLevel]    = useState(0);
+  const [candidateInfo,    setCandidateInfo]    = useState(storedCandidate);
+  const [monitoring,       setMonitoring]       = useState(true);
+  const [examDone,         setExamDone]         = useState(false);
+  const [audioLevel,       setAudioLevel]       = useState(0);
+  const [terminated,       setTerminated]       = useState(false);
+  const [terminateReason,  setTerminateReason]  = useState('');
+
+  const VIOLATION_LIMIT = 5;
 
   const { connected, events, reportEvent, sendFrame, submitQuiz } =
     useSignalR(SESSION_ID, candidateInfo);
 
   const active = !!candidateInfo && monitoring;
   const { isFullscreen, exitCount, enterFullscreen } = useFullscreen(SESSION_ID, reportEvent, active);
-  useAntiCheat(SESSION_ID, reportEvent, active);
+  const { multiMonitor } = useAntiCheat(SESSION_ID, reportEvent, active);
   useTabMonitor(SESSION_ID, reportEvent);
 
   useEffect(() => {
@@ -82,9 +86,44 @@ export default function App() {
   const faceAlerts   = events.filter(e => e.type === 1).length;
   const multiAlerts  = events.filter(e => e.type === 7).length;
 
+  // Auto-terminate when violations exceed limit
+  useEffect(() => {
+    if (!monitoring || terminated) return;
+    if (tabSwitches >= VIOLATION_LIMIT) {
+      const reason = `Tab switched ${tabSwitches} times — limit of ${VIOLATION_LIMIT} exceeded`;
+      reportEvent(SESSION_ID, 4, `Exam auto-terminated: ${reason}`, 'error');
+      setTerminated(true);
+      setTerminateReason(reason);
+      setMonitoring(false);
+    } else if (faceAlerts >= VIOLATION_LIMIT) {
+      const reason = `Face not detected ${faceAlerts} times — limit of ${VIOLATION_LIMIT} exceeded`;
+      reportEvent(SESSION_ID, 4, `Exam auto-terminated: ${reason}`, 'error');
+      setTerminated(true);
+      setTerminateReason(reason);
+      setMonitoring(false);
+    }
+  }, [tabSwitches, faceAlerts, monitoring, terminated, reportEvent]);
+
   // ── Candidate registration gate ────────────────────────────────
   if (!candidateInfo) {
     return <CandidateRegistration onComplete={setCandidateInfo} />;
+  }
+
+  // ── Auto-terminated screen ─────────────────────────────────────
+  if (terminated) {
+    return (
+      <div className="app">
+        <div className="timeup-screen">
+          <div className="timeup-icon">⛔</div>
+          <h2 style={{ color: '#f87171' }}>Exam Terminated</h2>
+          <p>Your exam has been <b>automatically stopped</b>, <b>{candidateInfo.name}</b>.</p>
+          <p className="timeup-sub" style={{ color: '#fca5a5', marginTop: 6 }}>{terminateReason}</p>
+          <p className="timeup-sub" style={{ marginTop: 12 }}>
+            Your answers so far have been submitted to the proctor.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   // ── Time-up screen ─────────────────────────────────────────────
@@ -112,8 +151,12 @@ export default function App() {
         </div>
         <div className="header-right">
           {monitoring && <ExamTimer durationMinutes={30} onExpire={handleTimerExpire} active={monitoring} />}
-          <div className="stat-pill">Switches: <b>{tabSwitches}</b></div>
-          <div className="stat-pill">Face: <b>{faceAlerts}</b></div>
+          <div className={`stat-pill ${tabSwitches >= VIOLATION_LIMIT - 1 ? 'stat-danger' : tabSwitches >= 3 ? 'stat-warn' : ''}`}>
+            Switches: <b>{tabSwitches}</b>/{VIOLATION_LIMIT}
+          </div>
+          <div className={`stat-pill ${faceAlerts >= VIOLATION_LIMIT - 1 ? 'stat-danger' : faceAlerts >= 3 ? 'stat-warn' : ''}`}>
+            Face off: <b>{faceAlerts}</b>/{VIOLATION_LIMIT}
+          </div>
           {multiAlerts > 0 && <div className="stat-pill stat-danger">Multi-face: <b>{multiAlerts}</b></div>}
           {monitoring && !isFullscreen && (
             <button className="btn btn-start" onClick={enterFullscreen} style={{ background: '#7c2d12', borderColor: '#ea580c' }}>
@@ -131,6 +174,18 @@ export default function App() {
 
       <ResumeBanner match={storedMatch} />
       <AlertBanner events={events} />
+
+      {/* Dual-monitor blocking overlay */}
+      {multiMonitor && (
+        <div className="fs-warning-overlay">
+          <div className="fs-warning-card">
+            <div className="fs-warning-icon">🖥️</div>
+            <h2 style={{ color: '#fbbf24' }}>External Monitor Detected</h2>
+            <p>Multiple displays are not allowed during the exam.</p>
+            <p className="fs-warning-sub">Please disconnect your external monitor and refresh to continue.</p>
+          </div>
+        </div>
+      )}
 
       {/* Fullscreen exit warning overlay */}
       {monitoring && !isFullscreen && exitCount > 0 && (
@@ -193,7 +248,7 @@ export default function App() {
 
         <section className="log-section">
           {monitoring && (
-            <QuizPanel sessionId={SESSION_ID} onSubmit={handleQuizSubmit} reportEvent={reportEvent} />
+            <QuizPanel sessionId={SESSION_ID} onSubmit={handleQuizSubmit} reportEvent={reportEvent} terminated={terminated} />
           )}
           <EventLog events={events} />
         </section>

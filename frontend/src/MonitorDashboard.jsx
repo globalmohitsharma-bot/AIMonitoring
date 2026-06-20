@@ -13,6 +13,7 @@ const TYPE_LABELS = {
   6:  'Quiz Done',       7:  'Multi-Face',      8:  'Audio Alert',
   9:  'Inactivity',      10: 'Timer Expired',
   11: '⛶ Fullscreen Exit', 12: '⎘ Paste Attempt', 13: '🔧 DevTools Block',
+  15: '🖥️ Multi-Monitor',
 };
 
 const MONITOR_PASSWORD = 'Qazwsx';

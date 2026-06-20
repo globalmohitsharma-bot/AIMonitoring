@@ -38,7 +38,7 @@ function evalOpenEnded(userText, correctText) {
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
-export function QuizPanel({ sessionId, onSubmit, reportEvent }) {
+export function QuizPanel({ sessionId, onSubmit, reportEvent, terminated }) {
   const [questions, setQuestions] = useState([]);
   const [current,   setCurrent]   = useState(0);
   const [answers,   setAnswers]   = useState([]);
@@ -47,6 +47,24 @@ export function QuizPanel({ sessionId, onSubmit, reportEvent }) {
   const [result,    setResult]    = useState(null);
   const textareaRef  = useRef(null);
   const qStartTime   = useRef(Date.now());
+  const answersRef   = useRef([]);
+
+  // Keep ref in sync so force-submit doesn't get stale answers
+  useEffect(() => { answersRef.current = answers; }, [answers]);
+
+  // Auto-submit whatever's been answered when exam is force-terminated
+  useEffect(() => {
+    if (!terminated) return;
+    if (phase !== 'quiz' && phase !== 'loading') return;
+    const collected = answersRef.current;
+    const score = collected.filter(a => a.isCorrect === true).length;
+    const total = collected.filter(a => a.isCorrect !== null).length;
+    const res   = { sessionId, answers: collected, score, total, terminated: true };
+    setResult(res);
+    setPhase('result');
+    onSubmit?.(res);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [terminated]);
 
   // ── Load + shuffle questions ────────────────────────────────────────────────
   const loadQuestions = () => {

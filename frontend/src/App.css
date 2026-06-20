@@ -884,8 +884,9 @@ body {
 .timer-value { font-variant-numeric: tabular-nums; font-size: 1.05rem; }
 .timer-warn  { font-size: 0.72rem; font-weight: 400; opacity: 0.8; }
 
-/* ── Stat danger chip ────────────────────────────── */
-.stat-danger { background: #450a0a !important; color: #f87171 !important; }
+/* ── Stat danger / warn chips ────────────────────── */
+.stat-danger { background: #450a0a !important; color: #f87171 !important; border-color: #991b1b !important; }
+.stat-warn   { background: #422006 !important; color: #fbbf24 !important; border-color: #d97706 !important; }
 
 /* ── Time-up screen ──────────────────────────────── */
 .timeup-screen {

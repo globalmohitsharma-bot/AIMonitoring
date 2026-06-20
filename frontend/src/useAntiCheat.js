@@ -1,9 +1,29 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const BLOCKED_KEYS = new Set(['F12']);
 const DEVTOOLS_COMBOS = new Set(['i','I','j','J','k','K','c','C']);
 
 export function useAntiCheat(sessionId, reportEvent, active) {
+  const [multiMonitor, setMultiMonitor] = useState(false);
+
+  // Detect extended/multiple displays
+  useEffect(() => {
+    if (!active) return;
+    const check = () => {
+      const extended = window.screen.isExtended;           // modern API
+      const tooWide  = window.screen.width > 3000;         // very wide = dual screen
+      if (extended || tooWide) {
+        setMultiMonitor(true);
+        reportEvent(sessionId, 15, 'Multiple monitors detected — external display connected', 'error');
+      } else {
+        setMultiMonitor(false);
+      }
+    };
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, [active, sessionId, reportEvent]);
+
   useEffect(() => {
     if (!active) return;
 
@@ -52,4 +72,6 @@ export function useAntiCheat(sessionId, reportEvent, active) {
       clearTimeout(blurTimer);
     };
   }, [active, sessionId, reportEvent]);
+
+  return { multiMonitor };
 }

@@ -42,4 +42,5 @@ public enum EventType
     FullscreenExit  = 11,
     CopyPaste       = 12,
     DevToolsBlocked = 13,
+    MultipleScreens = 15,
 }
