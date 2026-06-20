@@ -613,9 +613,11 @@ body {
 .landing-page {
   min-height: 100vh;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   padding: 40px 16px;
+  gap: 20px;
 }
 
 .landing-card {
@@ -1208,17 +1210,15 @@ body {
   display: flex;
   align-items: center;
   gap: 16px;
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 14px;
-  padding: 16px 20px;
-  margin-bottom: 20px;
-  max-width: 600px;
-  width: 100%;
+  background: #0f172a;
+  border: 1px solid #3b82f6;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 4px;
 }
 .creator-photo {
-  width: 70px;
-  height: 70px;
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #3b82f6;
@@ -1227,20 +1227,32 @@ body {
 .creator-content {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  min-width: 0;
+}
+.creator-name-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.creator-name {
+  font-size: 1rem;
+  color: #f1f5f9;
+  font-weight: 700;
 }
 .creator-tagline {
-  font-size: 0.85rem;
-  color: #cbd5e1;
+  font-size: 0.82rem;
+  color: #94a3b8;
   line-height: 1.5;
   margin: 0;
 }
-.creator-tagline strong { color: #f1f5f9; }
 .creator-linkedin {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #60a5fa;
   text-decoration: none;
   font-weight: 600;
+  white-space: nowrap;
   transition: color 0.2s;
 }
 .creator-linkedin:hover { color: #93c5fd; text-decoration: underline; }

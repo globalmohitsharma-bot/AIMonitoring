@@ -101,28 +101,30 @@ export default function JobLanding() {
 
   return (
     <div className="landing-page">
-
-      {/* ── Creator intro banner ─────────────────────────────── */}
-      <div className="creator-banner">
-        <img src="/mohit.png" alt="Mohit Sharma" className="creator-photo" />
-        <div className="creator-content">
-          <p className="creator-tagline">
-            Hi! I'm <strong>Mohit Sharma</strong>. I'm building a community where we help each other
-            prepare for technical interviews in a better way — using AI-powered practice with real
-            feedback and monitoring.
-          </p>
-          <a
-            href="https://www.linkedin.com/in/globalmohitsharma/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="creator-linkedin"
-          >
-            🔗 Connect with me on LinkedIn — if you want to help grow this community
-          </a>
-        </div>
-      </div>
-
       <div className="landing-card">
+
+        {/* ── Creator intro — very first thing on the page ────── */}
+        <div className="creator-banner">
+          <img src="/mohit.png" alt="Mohit Sharma" className="creator-photo" />
+          <div className="creator-content">
+            <div className="creator-name-row">
+              <strong className="creator-name">Mohit Sharma</strong>
+              <a
+                href="https://www.linkedin.com/in/globalmohitsharma/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="creator-linkedin"
+              >
+                🔗 Connect on LinkedIn
+              </a>
+            </div>
+            <p className="creator-tagline">
+              I'm building a community where we help each other prepare for technical
+              interviews in a better way. Connect with me if you want to contribute or
+              grow this community together.
+            </p>
+          </div>
+        </div>
 
         {/* Header */}
         <div className="landing-header">
