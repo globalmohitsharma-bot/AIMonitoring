@@ -94,33 +94,67 @@ public class EventStore
 
     private static List<Question> _questions =
     [
-        // Yes/No intake questions
-        new() { Id = 1, Text = "Have you read and understood the exam instructions?",           Type = "yesno", CorrectAnswer = "yes" },
-        new() { Id = 2, Text = "Are you in a quiet, private location with no one nearby?",      Type = "yesno", CorrectAnswer = "yes" },
-        new() { Id = 3, Text = "Do you have any unauthorized materials (notes/books) with you?", Type = "yesno", CorrectAnswer = "no"  },
-        new() { Id = 4, Text = "Do you agree to abide by the academic integrity policy?",        Type = "yesno", CorrectAnswer = "yes" },
-
-        // Technical MCQ
+        new() {
+            Id = 1,
+            Text = "What is the difference between .NET and C#?",
+            Type = "openended",
+            CorrectAnswer = ".NET is a framework providing the CLR runtime environment and class libraries. C# is a programming language. Code written in C# runs on top of the .NET framework."
+        },
+        new() {
+            Id = 2,
+            Text = "What is IL code and what does the JIT compiler do with it?",
+            Type = "openended",
+            CorrectAnswer = "IL stands for Intermediate Language. It is partially compiled code. JIT stands for Just In Time compiler. JIT compiles IL code into machine language at runtime, optimizing for the target environment."
+        },
+        new() {
+            Id = 3,
+            Text = "What is CLR and what are its main responsibilities?",
+            Type = "openended",
+            CorrectAnswer = "CLR stands for Common Language Runtime. It invokes JIT to compile IL code into machine language. CLR manages memory using the Garbage Collector. It also handles exception management and type safety."
+        },
+        new() {
+            Id = 4,
+            Text = "What is the difference between Value types and Reference types in C#?",
+            Type = "openended",
+            CorrectAnswer = "Value types store actual data on the stack. Reference types store a pointer on the stack that points to actual data on the heap. Examples of value types are int bool double. Objects and strings are reference types stored on the heap."
+        },
         new() {
             Id = 5,
+            Text = "What is boxing and unboxing, and what is the consequence of using them?",
+            Type = "openended",
+            CorrectAnswer = "Boxing is converting a value type to a reference type on the heap. Unboxing is converting a reference type back to a value type on the stack. Boxing and unboxing decrease performance of the program."
+        },
+        new() {
+            Id = 6,
             Text = "What does the 'S' in SOLID principles stand for?",
             Type = "mcq",
             Options = ["Single Responsibility", "Synchronous Processing", "Structured Design", "Sequential Logic"],
             CorrectAnswer = "Single Responsibility"
         },
         new() {
-            Id = 6,
-            Text = "Which HTTP method is used to CREATE a new resource in a REST API?",
-            Type = "mcq",
-            Options = ["GET", "PUT", "POST", "DELETE"],
-            CorrectAnswer = "POST"
+            Id = 7,
+            Text = "What is polymorphism in object oriented programming?",
+            Type = "openended",
+            CorrectAnswer = "Polymorphism means the ability of an object to act differently under different conditions. Static polymorphism is implemented by method overloading. Dynamic polymorphism is implemented by method overriding using virtual and override keywords."
         },
         new() {
-            Id = 7,
+            Id = 8,
+            Text = "What is the difference between an Abstract class and an Interface?",
+            Type = "openended",
+            CorrectAnswer = "Abstract class is a half defined parent class that can have some implemented methods. Interface is a contract with only method signatures and no implementation. Interface supports multiple inheritance while abstract class does not. Interface is implemented while abstract class is inherited."
+        },
+        new() {
+            Id = 9,
             Text = "In C#, which keyword marks a method as asynchronous?",
             Type = "mcq",
             Options = ["await", "async", "Task", "thread"],
             CorrectAnswer = "async"
+        },
+        new() {
+            Id = 10,
+            Text = "What is the Repository pattern and what are its benefits?",
+            Type = "openended",
+            CorrectAnswer = "Repository pattern abstracts and centralizes data access logic. It provides a clean interface for CRUD operations on models. It decouples business logic from data access code. It makes unit testing easier through mock testing and improves maintainability."
         },
     ];
 
