@@ -48,10 +48,12 @@ export function QuizPanel({ sessionId, onSubmit }) {
   const textareaRef = useRef(null);
 
   // ── Load + shuffle questions ────────────────────────────────────────────────
-  useEffect(() => {
+  const loadQuestions = () => {
+    setPhase('loading');
     fetch(`${API_BASE}/api/quiz/questions`)
-      .then(r => r.json())
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(data => {
+        if (!Array.isArray(data) || data.length === 0) throw new Error('empty');
         for (let i = data.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [data[i], data[j]] = [data[j], data[i]];
@@ -60,7 +62,9 @@ export function QuizPanel({ sessionId, onSubmit }) {
         setPhase('quiz');
       })
       .catch(() => setPhase('error'));
-  }, []);
+  };
+
+  useEffect(() => { loadQuestions(); }, []);
 
   // ── Clear textarea when question advances ───────────────────────────────────
   useEffect(() => {
@@ -110,7 +114,10 @@ export function QuizPanel({ sessionId, onSubmit }) {
     <div className="quiz-panel"><p className="empty">Loading questions…</p></div>
   );
   if (phase === 'error') return (
-    <div className="quiz-panel"><p style={{ color: '#f87171' }}>Failed to load questions.</p></div>
+    <div className="quiz-panel" style={{ textAlign: 'center' }}>
+      <p style={{ color: '#f87171', marginBottom: 12 }}>Failed to load questions.</p>
+      <button className="btn btn-start" onClick={loadQuestions}>↺ Retry</button>
+    </div>
   );
 
   // ── Results screen ──────────────────────────────────────────────────────────

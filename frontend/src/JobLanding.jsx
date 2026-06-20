@@ -132,26 +132,38 @@ export default function JobLanding() {
 
         {/* Upload / Analyzing / Result */}
         {phase === 'landing' && (
-          <div
-            className={`upload-zone ${dragging ? 'upload-dragging' : ''}`}
-            onClick={() => fileRef.current?.click()}
-            onDragOver={e => { e.preventDefault(); setDragging(true); }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={e => { e.preventDefault(); setDragging(false); handleFile(e.dataTransfer.files[0]); }}
-          >
-            <input
-              ref={fileRef} type="file"
-              accept=".pdf,.docx,.doc,.txt"
-              style={{ display: 'none' }}
-              onChange={e => handleFile(e.target.files[0])}
-            />
-            <div className="upload-icon">📄</div>
-            <div className="upload-text">
-              <b>Click to upload</b> or drag & drop your resume
+          <>
+            <div
+              className={`upload-zone ${dragging ? 'upload-dragging' : ''}`}
+              onClick={() => fileRef.current?.click()}
+              onDragOver={e => { e.preventDefault(); setDragging(true); }}
+              onDragLeave={() => setDragging(false)}
+              onDrop={e => { e.preventDefault(); setDragging(false); handleFile(e.dataTransfer.files[0]); }}
+            >
+              <input
+                ref={fileRef} type="file"
+                accept=".pdf,.docx,.doc,.txt"
+                style={{ display: 'none' }}
+                onChange={e => handleFile(e.target.files[0])}
+              />
+              <div className="upload-icon">📄</div>
+              <div className="upload-text">
+                <b>Click to upload</b> or drag & drop your resume
+              </div>
+              <div className="upload-hint">PDF, DOCX, TXT — max 10 MB</div>
+              {error && <div className="upload-error">{error}</div>}
             </div>
-            <div className="upload-hint">PDF, DOCX, TXT — max 10 MB</div>
-            {error && <div className="upload-error">{error}</div>}
-          </div>
+
+            <div className="skip-row">
+              <span className="skip-divider">or</span>
+              <button
+                className="btn skip-btn"
+                onClick={() => window.location.href = '/exam'}
+              >
+                Skip — Go directly to interview →
+              </button>
+            </div>
+          </>
         )}
 
         {phase === 'analyzing' && (
