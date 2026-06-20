@@ -12,7 +12,7 @@ export function useSignalR(sessionId = null, candidateInfo = null) {
 
   const joinSession = useCallback((conn) => {
     if (!sessionId) return;
-    conn.invoke('JoinSession', sessionId, candidateInfo?.name ?? null, candidateInfo?.email ?? null)
+    conn.invoke('JoinSession', sessionId, candidateInfo?.name ?? null, candidateInfo?.email ?? null, candidateInfo?.resumeScore ?? null)
         .catch(console.error);
   }, [sessionId, candidateInfo?.name, candidateInfo?.email]);
 

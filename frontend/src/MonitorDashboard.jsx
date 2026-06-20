@@ -334,6 +334,10 @@ function Dashboard() {
             onClick={toggleSound} title="Toggle sound alerts">
             {soundOn ? '🔔 Sound On' : '🔕 Sound Off'}
           </button>
+          <a href="/api/reports/excel" download className="btn"
+            style={{ textDecoration:'none', fontSize:'0.82rem', background:'#14532d', color:'#86efac', border:'1px solid #16a34a' }}>
+            ⬇ Export Excel
+          </a>
           <a href="/exam" className="btn btn-start" style={{ textDecoration: 'none', fontSize: '0.85rem' }}>← Tester View</a>
         </div>
       </header>

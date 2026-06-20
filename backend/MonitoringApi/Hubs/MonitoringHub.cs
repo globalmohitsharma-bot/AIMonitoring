@@ -9,9 +9,9 @@ public class MonitoringHub : Hub
 
     public MonitoringHub(EventStore store) => _store = store;
 
-    public async Task JoinSession(string sessionId, string? candidateName = null, string? candidateEmail = null)
+    public async Task JoinSession(string sessionId, string? candidateName = null, string? candidateEmail = null, double? resumeScore = null)
     {
-        _store.UpsertSession(sessionId, candidateName, candidateEmail);
+        _store.UpsertSession(sessionId, candidateName, candidateEmail, resumeScore);
         var session = _store.GetSession(sessionId)!;
         await Clients.Group("admin-monitor").SendAsync("SessionUpdated", session);
     }
@@ -128,7 +128,7 @@ public class EventStore
     public static void SetQuestions(List<Question> q) { lock (typeof(EventStore)) _questions = q; }
 
     // ── Session management ────────────────────────────────────────
-    public void UpsertSession(string sessionId, string? name = null, string? email = null)
+    public void UpsertSession(string sessionId, string? name = null, string? email = null, double? resumeScore = null)
     {
         lock (_lock)
         {
@@ -137,8 +137,9 @@ public class EventStore
                 s = new SessionInfo { SessionId = sessionId };
                 _sessions[sessionId] = s;
             }
-            if (name  is not null) s.CandidateName  = name;
-            if (email is not null) s.CandidateEmail = email;
+            if (name         is not null) s.CandidateName  = name;
+            if (email        is not null) s.CandidateEmail = email;
+            if (resumeScore  is not null) s.ResumeScore    = resumeScore;
         }
     }
 

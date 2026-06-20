@@ -22,6 +22,7 @@ public class SessionInfo
     public int EventCount { get; set; }
     public int? QuizScore { get; set; }
     public int? QuizTotal { get; set; }
+    public double? ResumeScore { get; set; }
     public double RiskScore { get; set; } = 100;
 }
 
