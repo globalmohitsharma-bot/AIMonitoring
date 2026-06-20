@@ -55,7 +55,8 @@ export default function App() {
   const [terminated,       setTerminated]       = useState(false);
   const [terminateReason,  setTerminateReason]  = useState('');
 
-  const VIOLATION_LIMIT = 5;
+  const VIOLATION_LIMIT    = 5;
+  const FULLSCREEN_LIMIT   = 2;
 
   const { connected, events, reportEvent, sendFrame, submitQuiz } =
     useSignalR(SESSION_ID, candidateInfo);
@@ -89,20 +90,21 @@ export default function App() {
   // Auto-terminate when violations exceed limit
   useEffect(() => {
     if (!monitoring || terminated) return;
-    if (tabSwitches >= VIOLATION_LIMIT) {
-      const reason = `Tab switched ${tabSwitches} times — limit of ${VIOLATION_LIMIT} exceeded`;
-      reportEvent(SESSION_ID, 4, `Exam auto-terminated: ${reason}`, 'error');
-      setTerminated(true);
-      setTerminateReason(reason);
-      setMonitoring(false);
+    let reason = null;
+    if (exitCount >= FULLSCREEN_LIMIT) {
+      reason = `Fullscreen exited ${exitCount} times — limit of ${FULLSCREEN_LIMIT} exceeded`;
+    } else if (tabSwitches >= VIOLATION_LIMIT) {
+      reason = `Tab switched ${tabSwitches} times — limit of ${VIOLATION_LIMIT} exceeded`;
     } else if (faceAlerts >= VIOLATION_LIMIT) {
-      const reason = `Face not detected ${faceAlerts} times — limit of ${VIOLATION_LIMIT} exceeded`;
+      reason = `Face not detected ${faceAlerts} times — limit of ${VIOLATION_LIMIT} exceeded`;
+    }
+    if (reason) {
       reportEvent(SESSION_ID, 4, `Exam auto-terminated: ${reason}`, 'error');
       setTerminated(true);
       setTerminateReason(reason);
       setMonitoring(false);
     }
-  }, [tabSwitches, faceAlerts, monitoring, terminated, reportEvent]);
+  }, [exitCount, tabSwitches, faceAlerts, monitoring, terminated, reportEvent]);
 
   // ── Candidate registration gate ────────────────────────────────
   if (!candidateInfo) {
@@ -158,6 +160,11 @@ export default function App() {
             Face off: <b>{faceAlerts}</b>/{VIOLATION_LIMIT}
           </div>
           {multiAlerts > 0 && <div className="stat-pill stat-danger">Multi-face: <b>{multiAlerts}</b></div>}
+          {exitCount > 0 && (
+            <div className={`stat-pill ${exitCount >= FULLSCREEN_LIMIT ? 'stat-danger' : exitCount >= 1 ? 'stat-warn' : ''}`}>
+              ⛶ FS exits: <b>{exitCount}</b>/{FULLSCREEN_LIMIT}
+            </div>
+          )}
           {monitoring && !isFullscreen && (
             <button className="btn btn-start" onClick={enterFullscreen} style={{ background: '#7c2d12', borderColor: '#ea580c' }}>
               ⛶ Enter Fullscreen

@@ -17,7 +17,8 @@ export function useFullscreen(sessionId, reportEvent, active) {
 
   useEffect(() => {
     if (!active) return;
-    const t = setTimeout(enterFullscreen, 600);
+    // 80ms is within the browser's user-activation lifetime from the registration submit click
+    const t = setTimeout(enterFullscreen, 80);
 
     const onChange = () => {
       const full = !!(document.fullscreenElement || document.webkitFullscreenElement);
