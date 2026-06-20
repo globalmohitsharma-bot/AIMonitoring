@@ -100,6 +100,53 @@ body {
   border-radius: 10px;
   overflow: hidden;
   transition: border-color 0.4s;
+  min-height: 240px;
+  background: #0f172a;
+}
+
+.camera-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15,23,42,0.88);
+  border-radius: 8px;
+  z-index: 2;
+}
+.camera-overlay-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #94a3b8;
+  font-size: 0.88rem;
+}
+.camera-overlay-err {
+  color: #f87171;
+  text-align: center;
+  padding: 20px;
+  max-width: 280px;
+}
+.camera-overlay-err p { margin: 0; line-height: 1.5; }
+.cam-err-icon { font-size: 2.2rem; }
+
+.camera-spinner {
+  width: 32px; height: 32px;
+  border: 3px solid #334155;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.cam-status-bar {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 0;
+  border-radius: 6px;
+  background: #1e293b;
 }
 
 .status-badge {
@@ -741,25 +788,36 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  margin-top: 14px;
+  margin-top: 16px;
 }
-.skip-divider {
-  font-size: 0.78rem;
-  color: #475569;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-.skip-btn {
-  background: transparent;
+.skip-tip {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  background: #1e293b;
   border: 1px solid #334155;
-  color: #64748b;
-  font-size: 0.85rem;
-  padding: 8px 20px;
   border-radius: 8px;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
+  padding: 8px 16px;
+  text-align: center;
+  max-width: 420px;
+  line-height: 1.5;
 }
-.skip-btn:hover { color: #94a3b8; border-color: #475569; }
+.skip-tip b { color: #fbbf24; }
+.skip-btn-highlight {
+  background: #0f172a;
+  border: 1.5px dashed #475569;
+  color: #94a3b8;
+  font-size: 0.88rem;
+  padding: 10px 28px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.01em;
+}
+.skip-btn-highlight:hover {
+  border-color: #64748b;
+  color: #cbd5e1;
+  background: #1e293b;
+}
 
 .rejected-box {
   background: #1c1917;

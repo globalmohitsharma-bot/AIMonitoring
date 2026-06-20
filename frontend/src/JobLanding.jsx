@@ -155,12 +155,14 @@ export default function JobLanding() {
             </div>
 
             <div className="skip-row">
-              <span className="skip-divider">or</span>
+              <div className="skip-tip">
+                💡 Uploading your resume gives you <b>more relevant questions</b> matched to your skills
+              </div>
               <button
-                className="btn skip-btn"
+                className="btn skip-btn-highlight"
                 onClick={() => window.location.href = '/exam'}
               >
-                Skip — Go directly to interview →
+                Skip resume — Go directly to interview →
               </button>
             </div>
           </>
