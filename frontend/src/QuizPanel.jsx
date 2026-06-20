@@ -1,16 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const API_BASE = import.meta.env.DEV ? 'http://localhost:5165' : '';
 
-// ── Constants ─────────────────────────────────────────────────────────────────
-const YES_WORDS = ['yes','yeah','yep','correct','true','sure','affirmative','ok','okay'];
-const NO_WORDS  = ['no','nope','nah','negative','false','incorrect'];
-const OPTION_WORDS = {
-  0: ['one','first','1','a'],
-  1: ['two','second','2','b'],
-  2: ['three','third','3','c'],
-  3: ['four','fourth','4','d'],
-};
+// ── Keyword scoring ───────────────────────────────────────────────────────────
 const STOP_WORDS = new Set([
   'the','a','an','is','it','in','of','to','and','or','for','that','this','are',
   'with','we','has','have','can','not','be','as','by','at','its','on','which',
@@ -20,7 +12,6 @@ const STOP_WORDS = new Set([
   'using','used','use','make','get','set','put','two','each','both','only',
 ]);
 
-// ── Pure helpers ──────────────────────────────────────────────────────────────
 function extractKeywords(text) {
   return [...new Set(
     text.toLowerCase()
@@ -46,73 +37,21 @@ function evalOpenEnded(userText, correctText) {
   };
 }
 
-function parseYesNo(t) {
-  const l = t.toLowerCase();
-  if (YES_WORDS.some(w => l.includes(w))) return 'yes';
-  if (NO_WORDS.some(w => l.includes(w)))  return 'no';
-  return null;
-}
-
-function parseMcq(t, options) {
-  const l = t.toLowerCase();
-  for (const [idx, words] of Object.entries(OPTION_WORDS)) {
-    if (+idx < options.length && words.some(w => l.includes(w))) return options[+idx];
-  }
-  for (const opt of options) {
-    if (l.includes(opt.toLowerCase().split(' ')[0])) return opt;
-  }
-  return null;
-}
-
-function speak(text) {
-  return new Promise(resolve => {
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.rate = 0.9; u.pitch = 1; u.lang = 'en-US';
-    u.onend = resolve; u.onerror = resolve;
-    window.speechSynthesis.speak(u);
-  });
-}
-
-const SpeechRecAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-const voiceOK      = !!SpeechRecAPI;
-
 // ── Component ─────────────────────────────────────────────────────────────────
 export function QuizPanel({ sessionId, onSubmit }) {
   const [questions, setQuestions] = useState([]);
   const [current,   setCurrent]   = useState(0);
   const [answers,   setAnswers]   = useState([]);
-  const [phase,     setPhase]     = useState('loading');  // loading|quiz|result|error
-  const [qPhase,    setQPhase]    = useState('speaking'); // speaking|listening|feedback
-  const [voiceMode, setVoiceMode] = useState(voiceOK);
-  const [liveText,  setLiveText]  = useState('');
-  const [feedback,  setFeedback]  = useState(null);
+  const [phase,     setPhase]     = useState('loading'); // loading|quiz|result|error
+  const [feedback,  setFeedback]  = useState(null);      // null = answering, obj = showing result
   const [result,    setResult]    = useState(null);
+  const textareaRef = useRef(null);
 
-  // Refs to avoid stale closures in async/recognition callbacks
-  const answersRef   = useRef([]);
-  const currentRef   = useRef(0);
-  const questionsRef = useRef([]);
-  const recRef       = useRef(null);
-  const silenceRef   = useRef(null);
-  const autoTimerRef = useRef(null);
-  const finalRef     = useRef('');
-  const busyRef      = useRef(false);
-  const doSubmitRef  = useRef(null);
-  const doListenRef  = useRef(null);
-  const doAdvanceRef = useRef(null);
-
-  // Keep refs in sync
-  answersRef.current   = answers;
-  currentRef.current   = current;
-  questionsRef.current = questions;
-
-  // ── Load questions ──────────────────────────────────────────────────────────
+  // ── Load + shuffle questions ────────────────────────────────────────────────
   useEffect(() => {
     fetch(`${API_BASE}/api/quiz/questions`)
       .then(r => r.json())
       .then(data => {
-        // Fisher-Yates shuffle
         for (let i = data.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [data[i], data[j]] = [data[j], data[i]];
@@ -123,47 +62,15 @@ export function QuizPanel({ sessionId, onSubmit }) {
       .catch(() => setPhase('error'));
   }, []);
 
-  // ── Advance to next question ────────────────────────────────────────────────
-  const doAdvance = useCallback((newAnswers) => {
-    clearTimeout(silenceRef.current);
-    clearTimeout(autoTimerRef.current);
-    window.speechSynthesis.cancel();
-    try { recRef.current?.abort(); } catch {}
-    busyRef.current = false;
+  // ── Clear textarea when question advances ───────────────────────────────────
+  useEffect(() => {
+    if (textareaRef.current) textareaRef.current.value = '';
+    setFeedback(null);
+  }, [current, phase]);
 
-    const c  = currentRef.current;
-    const qs = questionsRef.current;
-
-    if (c + 1 >= qs.length) {
-      const score = newAnswers.filter(a => a.isCorrect === true).length;
-      const total = newAnswers.filter(a => a.isCorrect !== null).length;
-      const res   = { sessionId, answers: newAnswers, score, total };
-      setResult(res);
-      setPhase('result');
-      const pct = total > 0 ? Math.round((score / total) * 100) : 100;
-      speak(`Quiz complete. Your score is ${score} out of ${total}, that is ${pct} percent.`);
-      onSubmit?.(res);
-    } else {
-      setAnswers(newAnswers);
-      setCurrent(c + 1);
-      setFeedback(null);
-      setLiveText('');
-      setQPhase('speaking');
-    }
-  }, [sessionId, onSubmit]);
-
-  doAdvanceRef.current = doAdvance;
-
-  // ── Submit and evaluate an answer ──────────────────────────────────────────
-  const doSubmit = useCallback((transcript, q) => {
-    if (busyRef.current) return;
-    busyRef.current = true;
-
-    window.speechSynthesis.cancel();
-    try { recRef.current?.stop(); recRef.current?.abort(); } catch {}
-    clearTimeout(silenceRef.current);
-
-    const currentAnswers = answersRef.current;
+  // ── Submit answer ───────────────────────────────────────────────────────────
+  const submit = (transcript) => {
+    const q = questions[current];
     let isCorrect = null;
     let evalRes   = null;
 
@@ -177,171 +84,28 @@ export function QuizPanel({ sessionId, onSubmit }) {
     }
 
     const newAnswer  = { questionId: q.id, questionText: q.text, answer: transcript, isCorrect };
-    const newAnswers = [...currentAnswers, newAnswer];
-
+    const newAnswers = [...answers, newAnswer];
     setAnswers(newAnswers);
-    setFeedback({ transcript, evalRes, q, isCorrect });
-    setQPhase('feedback');
+    setFeedback({ transcript, evalRes, q, isCorrect, newAnswers });
+  };
 
-    // Compose spoken feedback
-    let msg;
-    if (q.type === 'openended' && evalRes) {
-      if (evalRes.grade === 'good') {
-        msg = `Good answer. You covered ${evalRes.matched.length} key concepts.`;
-      } else if (evalRes.grade === 'partial') {
-        msg = `Partial answer. You missed: ${evalRes.missing.slice(0, 3).join(', ')}.`;
-      } else {
-        msg = `Needs improvement. Try to mention: ${evalRes.missing.slice(0, 3).join(', ')}.`;
-      }
-    } else if (isCorrect === true) {
-      msg = 'Correct!';
-    } else if (isCorrect === false) {
-      msg = `Incorrect. The correct answer was ${q.correctAnswer}.`;
+  // ── Advance to next ─────────────────────────────────────────────────────────
+  const advance = () => {
+    const { newAnswers } = feedback;
+    if (current + 1 >= questions.length) {
+      const score = newAnswers.filter(a => a.isCorrect === true).length;
+      const total = newAnswers.filter(a => a.isCorrect !== null).length;
+      const res   = { sessionId, answers: newAnswers, score, total };
+      setResult(res);
+      setPhase('result');
+      onSubmit?.(res);
     } else {
-      msg = 'Answer noted.';
+      setCurrent(c => c + 1);
+      setFeedback(null);
     }
+  };
 
-    speak(msg).then(() => {
-      autoTimerRef.current = setTimeout(() => doAdvanceRef.current(newAnswers), 5000);
-    });
-  }, []);
-
-  doSubmitRef.current = doSubmit;
-
-  // ── Start voice recognition ─────────────────────────────────────────────────
-  const doListen = useCallback((q) => {
-    if (!voiceOK) { setQPhase('listening'); return; }
-    finalRef.current = '';
-    setLiveText('');
-
-    const rec = new SpeechRecAPI();
-    rec.lang            = 'en-US';
-    rec.maxAlternatives = 1;
-    rec.continuous      = q.type === 'openended';
-    rec.interimResults  = q.type === 'openended';
-
-    rec.onstart = () => {
-      setQPhase('listening');
-      if (q.type === 'openended') {
-        clearTimeout(silenceRef.current);
-        silenceRef.current = setTimeout(() => { try { rec.stop(); } catch {} }, 20000);
-      }
-    };
-
-    rec.onresult = (e) => {
-      if (q.type === 'openended') {
-        // Each new speech chunk resets the 2.5 s silence timer
-        clearTimeout(silenceRef.current);
-        silenceRef.current = setTimeout(() => { try { rec.stop(); } catch {} }, 2500);
-
-        let interim = '';
-        finalRef.current = '';
-        for (let i = 0; i < e.results.length; i++) {
-          if (e.results[i].isFinal) finalRef.current += e.results[i][0].transcript + ' ';
-          else                      interim           += e.results[i][0].transcript;
-        }
-        setLiveText(finalRef.current + interim);
-      } else {
-        const text = Array.from(e.results[0]).map(r => r.transcript).join(' ').trim();
-        finalRef.current = text;
-        setLiveText(text);
-
-        const ans = q.type === 'mcq'
-          ? parseMcq(text, q.options ?? [])
-          : parseYesNo(text);
-
-        if (ans !== null) {
-          doSubmitRef.current(ans, q);
-        } else {
-          const hint = q.type === 'mcq'
-            ? 'Please say the option number: one, two, three, or four.'
-            : 'Please say yes or no clearly.';
-          finalRef.current = '';
-          setLiveText('');
-          speak(`I didn't catch that. ${hint}`).then(() => doListenRef.current(q));
-        }
-      }
-    };
-
-    rec.onend = () => {
-      clearTimeout(silenceRef.current);
-      if (q.type === 'openended') {
-        const trimmed = finalRef.current.trim();
-        if (trimmed && !busyRef.current) {
-          doSubmitRef.current(trimmed, q);
-        } else if (!trimmed && !busyRef.current) {
-          speak('I did not hear anything. Please speak your answer.').then(() => doListenRef.current(q));
-        }
-      }
-    };
-
-    rec.onerror = (e) => {
-      clearTimeout(silenceRef.current);
-      if (e.error === 'aborted') return;
-      if (!busyRef.current) {
-        if (e.error === 'no-speech') {
-          speak('I did not hear anything. Please try again.').then(() => doListenRef.current(q));
-        } else {
-          console.warn('SpeechRecognition error:', e.error);
-          setQPhase('listening'); // fall back to buttons/textarea
-        }
-      }
-    };
-
-    recRef.current = rec;
-    try { rec.start(); } catch (err) {
-      console.warn('rec.start() failed:', err);
-      setQPhase('listening');
-    }
-  }, []);
-
-  doListenRef.current = doListen;
-
-  // ── Speak question whenever current question or phase changes ──────────────
-  useEffect(() => {
-    // Only run when entering speaking phase (guards against feedback/listening re-triggers)
-    if (phase !== 'quiz' || questions.length === 0 || qPhase !== 'speaking') return;
-
-    busyRef.current = false;
-    setLiveText('');
-    setFeedback(null);
-    clearTimeout(silenceRef.current);
-    clearTimeout(autoTimerRef.current);
-
-    const q = questions[current];
-
-    const run = async () => {
-      await speak(q.text);
-      if (q.type === 'mcq' && q.options?.length) {
-        await speak(q.options.map((o, i) => `Option ${i + 1}: ${o}`).join('. '));
-      } else if (q.type === 'openended') {
-        await speak('Please speak your answer, or type it below.');
-      } else {
-        await speak('Please answer yes or no.');
-      }
-      if (voiceMode) doListenRef.current(q);
-      else setQPhase('listening');
-    };
-
-    run();
-
-    return () => {
-      window.speechSynthesis.cancel();
-      clearTimeout(silenceRef.current);
-      try { recRef.current?.abort(); } catch {}
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [current, phase, questions, qPhase, voiceMode]);
-
-  // ── Cleanup on unmount ──────────────────────────────────────────────────────
-  useEffect(() => () => {
-    window.speechSynthesis.cancel();
-    clearTimeout(silenceRef.current);
-    clearTimeout(autoTimerRef.current);
-    try { recRef.current?.abort(); } catch {}
-  }, []);
-
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // ── Render ──────────────────────────────────────────────────────────────────
   if (phase === 'loading') return (
     <div className="quiz-panel"><p className="empty">Loading questions…</p></div>
   );
@@ -386,23 +150,7 @@ export function QuizPanel({ sessionId, onSubmit }) {
     <div className="quiz-panel">
       <div className="quiz-header">
         <h3 className="quiz-title">C# Interview Quiz</h3>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="quiz-counter">{current + 1} / {questions.length}</span>
-          {voiceOK && (
-            <button
-              className={`voice-toggle ${voiceMode ? 'voice-on' : 'voice-off'}`}
-              onClick={() => {
-                window.speechSynthesis.cancel();
-                try { recRef.current?.abort(); } catch {}
-                clearTimeout(silenceRef.current);
-                setVoiceMode(m => !m);
-                if (qPhase !== 'feedback') setQPhase('listening');
-              }}
-            >
-              {voiceMode ? '🎤 Voice' : '🖱 Buttons'}
-            </button>
-          )}
-        </div>
+        <span className="quiz-counter">{current + 1} / {questions.length}</span>
       </div>
 
       <div className="quiz-progress-bar">
@@ -411,18 +159,61 @@ export function QuizPanel({ sessionId, onSubmit }) {
 
       <p className="quiz-question-text">{q.text}</p>
 
-      {/* ── FEEDBACK PHASE ────────────────────────────────────── */}
-      {qPhase === 'feedback' && feedback && (
+      {/* ── ANSWERING ─────────────────────────────────────────── */}
+      {!feedback && (
+        <>
+          {isOpen && (
+            <div className="openended-input">
+              <textarea
+                ref={textareaRef}
+                className="openended-textarea"
+                placeholder="Type your answer here…"
+                rows={4}
+                id="oe-answer-input"
+              />
+              <button
+                className="btn btn-start"
+                style={{ width: '100%', marginTop: 8 }}
+                onClick={() => {
+                  const v = textareaRef.current?.value?.trim();
+                  if (v) submit(v);
+                }}
+              >
+                Submit Answer
+              </button>
+            </div>
+          )}
+
+          {isMcq && (
+            <div className="mcq-options">
+              {q.options.map((opt, i) => (
+                <button key={i} className="mcq-option-btn" onClick={() => submit(opt)}>
+                  <span className="mcq-option-num">{i + 1}</span>
+                  <span className="mcq-option-text">{opt}</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {!isOpen && !isMcq && (
+            <div className="quiz-btn-row">
+              <button className="quiz-btn quiz-btn-no"  onClick={() => submit('no')}>No</button>
+              <button className="quiz-btn quiz-btn-yes" onClick={() => submit('yes')}>Yes</button>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ── FEEDBACK ──────────────────────────────────────────── */}
+      {feedback && (
         <div className="quiz-feedback">
+          {/* What the user wrote */}
           <div className="qf-heard">
-            <span className="qf-label">You said:</span>
-            <span className="qf-transcript">
-              &ldquo;{feedback.transcript.length > 140
-                ? feedback.transcript.slice(0, 140) + '…'
-                : feedback.transcript}&rdquo;
-            </span>
+            <span className="qf-label">Your answer:</span>
+            <span className="qf-transcript">{feedback.transcript}</span>
           </div>
 
+          {/* Open-ended score + keywords */}
           {isOpen && feedback.evalRes && (
             <>
               <div className={`qf-score qf-${feedback.evalRes.grade}`}>
@@ -433,14 +224,16 @@ export function QuizPanel({ sessionId, onSubmit }) {
                 </span>
                 <span className="qf-pct">{feedback.evalRes.pct}% match</span>
               </div>
+
               {feedback.evalRes.matched.length > 0 && (
                 <div className="qf-keywords">
-                  <span className="qf-kw-label">Mentioned:</span>
+                  <span className="qf-kw-label">Covered:</span>
                   {feedback.evalRes.matched.map(k => (
                     <span key={k} className="kw-badge kw-matched">{k}</span>
                   ))}
                 </div>
               )}
+
               {feedback.evalRes.missing.length > 0 && (
                 <div className="qf-keywords">
                   <span className="qf-kw-label">Missed:</span>
@@ -449,15 +242,10 @@ export function QuizPanel({ sessionId, onSubmit }) {
                   ))}
                 </div>
               )}
-              {q.correctAnswer && (
-                <div className="qf-model-answer">
-                  <span className="qf-label">Model answer:</span>
-                  <span className="qf-answer-text">{q.correctAnswer}</span>
-                </div>
-              )}
             </>
           )}
 
+          {/* MCQ / yes-no verdict */}
           {!isOpen && (
             <div className={`qf-score ${feedback.isCorrect === true ? 'qf-good' : feedback.isCorrect === false ? 'qf-poor' : 'qf-partial'}`}>
               {feedback.isCorrect === true  && '✓ Correct!'}
@@ -466,108 +254,18 @@ export function QuizPanel({ sessionId, onSubmit }) {
             </div>
           )}
 
-          <button
-            className="btn btn-start qf-next-btn"
-            onClick={() => {
-              clearTimeout(autoTimerRef.current);
-              doAdvanceRef.current(answers);
-            }}
-          >
+          {/* Model answer */}
+          {q.correctAnswer && (
+            <div className="qf-model-answer">
+              <span className="qf-label">Model answer:</span>
+              <span className="qf-answer-text">{q.correctAnswer}</span>
+            </div>
+          )}
+
+          <button className="btn btn-start qf-next-btn" onClick={advance}>
             {current + 1 >= questions.length ? 'See Results →' : 'Next Question →'}
           </button>
-          <p className="qf-auto-hint">Auto-advances in 5 seconds…</p>
         </div>
-      )}
-
-      {/* ── SPEAKING / LISTENING PHASE ────────────────────────── */}
-      {qPhase !== 'feedback' && (
-        <>
-          {voiceMode && (
-            <div className="voice-indicator">
-              {qPhase === 'speaking' && (
-                <div className="voice-state voice-speaking">
-                  <span className="voice-icon">🔊</span>
-                  <span>Speaking question…</span>
-                </div>
-              )}
-              {qPhase === 'listening' && (
-                <div className="voice-state voice-listening">
-                  <span className="voice-icon">🎤</span>
-                  <span>
-                    {isOpen
-                      ? 'Listening… speak freely — auto-submits after you pause'
-                      : isMcq
-                      ? 'Say "one", "two", "three" or "four"'
-                      : 'Say Yes or No'}
-                  </span>
-                  <span className="voice-dots"><span /><span /><span /></span>
-                </div>
-              )}
-              {liveText && (
-                <div className="voice-heard"><em>{liveText}</em></div>
-              )}
-              {qPhase === 'listening' && isOpen && (
-                <button
-                  className="qf-done-btn"
-                  onClick={() => { try { recRef.current?.stop(); } catch {} }}
-                >
-                  ✓ Done Speaking
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* Open-ended: show textarea in listening phase */}
-          {isOpen && qPhase === 'listening' && (
-            <div className="openended-input">
-              <textarea
-                className="openended-textarea"
-                placeholder={voiceMode ? 'Or type your answer here…' : 'Type your answer here…'}
-                rows={4}
-                id="oe-answer-input"
-              />
-              <button
-                className="btn btn-start"
-                style={{ width: '100%', marginTop: 8 }}
-                onClick={() => {
-                  const v = document.getElementById('oe-answer-input')?.value?.trim();
-                  if (v) {
-                    try { recRef.current?.abort(); } catch {}
-                    doSubmitRef.current(v, q);
-                  }
-                }}
-              >
-                Submit Answer
-              </button>
-            </div>
-          )}
-
-          {/* MCQ buttons */}
-          {isMcq && qPhase === 'listening' && (
-            <div className="mcq-options">
-              {q.options.map((opt, i) => (
-                <button key={i} className="mcq-option-btn" onClick={() => doSubmitRef.current(opt, q)}>
-                  <span className="mcq-option-num">{i + 1}</span>
-                  <span className="mcq-option-text">{opt}</span>
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Yes/No buttons */}
-          {!isOpen && !isMcq && qPhase === 'listening' && (
-            <div className="quiz-btn-row">
-              <button className="quiz-btn quiz-btn-no"  onClick={() => doSubmitRef.current('no',  q)}>No</button>
-              <button className="quiz-btn quiz-btn-yes" onClick={() => doSubmitRef.current('yes', q)}>Yes</button>
-            </div>
-          )}
-        </>
-      )}
-
-      {!voiceOK && (
-        <p style={{ fontSize: '0.75rem', color: '#64748b', textAlign: 'center', marginTop: 8 }}>
-          Voice not supported in this browser — use the text input above
-        </p>
       )}
     </div>
   );
