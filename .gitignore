@@ -11,7 +11,20 @@ node_modules/
 dist/
 .env
 .env.local
+.env.*
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Secrets — NEVER commit these
+*.publishsettings
+*.pfx
+*.pem
+*.p12
+*.key
+*_rsa
+*_rsa.pub
+secrets.json
+appsettings.Production.json
+appsettings.Secrets.json

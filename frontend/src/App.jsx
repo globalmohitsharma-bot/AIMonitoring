@@ -144,7 +144,7 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <div className="header-left">
-          <h1>AI Proctoring Monitor</h1>
+          <h1>AI Proctoring Monitor <span className="beta-badge">BETA</span></h1>
           <span className={`conn-badge ${connected ? 'conn-ok' : 'conn-off'}`}>
             {connected ? 'Connected' : 'Disconnected'}
           </span>

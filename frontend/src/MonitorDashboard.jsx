@@ -16,8 +16,6 @@ const TYPE_LABELS = {
   15: '🖥️ Multi-Monitor',
 };
 
-const MONITOR_PASSWORD = 'Qazwsx';
-
 // ── Sound alert ───────────────────────────────────────────────────────────────
 function playAlertBeep() {
   try {
@@ -94,18 +92,32 @@ function exportReport(session, events, quizResult) {
 
 // ── Password gate ─────────────────────────────────────────────────────────────
 function PasswordGate({ onSuccess }) {
-  const [value, setValue] = useState('');
-  const [error, setError] = useState(false);
-  const [shake, setShake] = useState(false);
+  const [value,   setValue]   = useState('');
+  const [error,   setError]   = useState(false);
+  const [shake,   setShake]   = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    if (value === MONITOR_PASSWORD) {
-      sessionStorage.setItem('monitor_auth', '1');
-      onSuccess();
-    } else {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/monitor`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: value }),
+      });
+      if (res.ok) {
+        sessionStorage.setItem('monitor_auth', '1');
+        onSuccess();
+      } else {
+        setError(true); setShake(true); setValue('');
+        setTimeout(() => setShake(false), 500);
+      }
+    } catch {
       setError(true); setShake(true); setValue('');
       setTimeout(() => setShake(false), 500);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -118,9 +130,11 @@ function PasswordGate({ onSuccess }) {
         <form onSubmit={submit} className="pw-form">
           <input type="password" className={`pw-input ${error ? 'pw-input-error' : ''}`}
             value={value} onChange={e => { setValue(e.target.value); setError(false); }}
-            placeholder="Password" autoFocus />
+            placeholder="Password" autoFocus disabled={loading} />
           {error && <p className="pw-error">Incorrect password</p>}
-          <button type="submit" className="btn btn-start pw-btn">Enter</button>
+          <button type="submit" className="btn btn-start pw-btn" disabled={loading}>
+            {loading ? 'Checking…' : 'Enter'}
+          </button>
         </form>
       </div>
     </div>

@@ -130,8 +130,11 @@ export default function JobLanding() {
         <div className="landing-header">
           <div className="landing-logo">🎯</div>
           <div>
-            <h1 className="landing-title">AI Proctoring Assessment</h1>
-            <p className="landing-sub">Upload your resume to check eligibility</p>
+            <h1 className="landing-title">
+              AI Proctoring Assessment
+              <span className="beta-badge">BETA</span>
+            </h1>
+            <p className="landing-sub">Upload your resume to check eligibility · Testing phase — feedback welcome</p>
           </div>
         </div>
 
