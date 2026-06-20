@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSignalR }          from './useSignalR';
 import { useTabMonitor }       from './useTabMonitor';
+import { useFullscreen }       from './useFullscreen';
+import { useAntiCheat }        from './useAntiCheat';
 import { CameraMonitor }       from './CameraMonitor';
 import { EventLog }            from './EventLog';
 import { QuizPanel }           from './QuizPanel';
@@ -47,12 +49,16 @@ function AlertBanner({ events }) {
 
 export default function App() {
   const [candidateInfo, setCandidateInfo] = useState(storedCandidate);
-  const [monitoring,    setMonitoring]    = useState(true);  // auto-start
+  const [monitoring,    setMonitoring]    = useState(true);
   const [examDone,      setExamDone]      = useState(false);
+  const [audioLevel,    setAudioLevel]    = useState(0);
 
   const { connected, events, reportEvent, sendFrame, submitQuiz } =
     useSignalR(SESSION_ID, candidateInfo);
 
+  const active = !!candidateInfo && monitoring;
+  const { isFullscreen, exitCount, enterFullscreen } = useFullscreen(SESSION_ID, reportEvent, active);
+  useAntiCheat(SESSION_ID, reportEvent, active);
   useTabMonitor(SESSION_ID, reportEvent);
 
   useEffect(() => {
@@ -109,6 +115,11 @@ export default function App() {
           <div className="stat-pill">Switches: <b>{tabSwitches}</b></div>
           <div className="stat-pill">Face: <b>{faceAlerts}</b></div>
           {multiAlerts > 0 && <div className="stat-pill stat-danger">Multi-face: <b>{multiAlerts}</b></div>}
+          {monitoring && !isFullscreen && (
+            <button className="btn btn-start" onClick={enterFullscreen} style={{ background: '#7c2d12', borderColor: '#ea580c' }}>
+              ⛶ Enter Fullscreen
+            </button>
+          )}
           <button
             className={`btn ${monitoring ? 'btn-stop' : 'btn-start'}`}
             onClick={() => setMonitoring(m => !m)}
@@ -121,18 +132,60 @@ export default function App() {
       <ResumeBanner match={storedMatch} />
       <AlertBanner events={events} />
 
+      {/* Fullscreen exit warning overlay */}
+      {monitoring && !isFullscreen && exitCount > 0 && (
+        <div className="fs-warning-overlay">
+          <div className="fs-warning-card">
+            <div className="fs-warning-icon">⚠</div>
+            <h2>Fullscreen Required</h2>
+            <p>Exiting fullscreen has been recorded as <b>violation #{exitCount}</b>.</p>
+            <p className="fs-warning-sub">The proctor has been notified.</p>
+            <button className="btn btn-start" style={{ marginTop: 16 }} onClick={enterFullscreen}>
+              Return to Fullscreen →
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Headless monitors */}
-      <AudioMonitor      sessionId={SESSION_ID} reportEvent={reportEvent} active={monitoring} />
+      <AudioMonitor      sessionId={SESSION_ID} reportEvent={reportEvent} active={monitoring} onLevel={setAudioLevel} />
       <InactivityMonitor sessionId={SESSION_ID} reportEvent={reportEvent} active={monitoring} />
 
       <main className="app-main">
         <section className="camera-section">
-          <h2>Camera Feed</h2>
+          <div className="camera-section-header">
+            <h2>Camera Feed</h2>
+            <div className="proctoring-status-bar">
+              <span className={`proc-badge ${isFullscreen ? 'proc-ok' : 'proc-warn'}`}>
+                {isFullscreen ? '⛶ Fullscreen' : '⚠ Not Fullscreen'}
+              </span>
+              {exitCount > 0 && (
+                <span className="proc-badge proc-alert">↗ {exitCount} exit{exitCount > 1 ? 's' : ''}</span>
+              )}
+              <div className="audio-level-wrap" title="Microphone level">
+                <span className="audio-level-icon">🎤</span>
+                <div className="audio-level-bar">
+                  <div
+                    className="audio-level-fill"
+                    style={{
+                      width: `${Math.min(audioLevel * 500, 100)}%`,
+                      background: audioLevel > 0.18 ? '#ef4444' : '#22c55e',
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
           <p className="section-desc">
-            Hello <b>{candidateInfo.name}</b> — face detection runs every second. Stay in frame.
+            Hello <b>{candidateInfo.name}</b> — stay in frame. Fullscreen is required.
           </p>
           {monitoring ? (
-            <CameraMonitor sessionId={SESSION_ID} reportEvent={reportEvent} sendFrame={sendFrame} />
+            <CameraMonitor
+              sessionId={SESSION_ID}
+              reportEvent={reportEvent}
+              sendFrame={sendFrame}
+              candidateName={candidateInfo.name}
+            />
           ) : (
             <div className="camera-placeholder">Press Start Monitoring to enable camera</div>
           )}
@@ -140,7 +193,7 @@ export default function App() {
 
         <section className="log-section">
           {monitoring && (
-            <QuizPanel sessionId={SESSION_ID} onSubmit={handleQuizSubmit} />
+            <QuizPanel sessionId={SESSION_ID} onSubmit={handleQuizSubmit} reportEvent={reportEvent} />
           )}
           <EventLog events={events} />
         </section>

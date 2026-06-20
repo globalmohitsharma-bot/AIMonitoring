@@ -39,4 +39,7 @@ public enum EventType
     AudioAlert      = 8,
     InactivityAlert = 9,
     TimerExpired    = 10,
+    FullscreenExit  = 11,
+    CopyPaste       = 12,
+    DevToolsBlocked = 13,
 }

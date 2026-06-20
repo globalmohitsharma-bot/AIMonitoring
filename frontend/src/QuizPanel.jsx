@@ -38,14 +38,15 @@ function evalOpenEnded(userText, correctText) {
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
-export function QuizPanel({ sessionId, onSubmit }) {
+export function QuizPanel({ sessionId, onSubmit, reportEvent }) {
   const [questions, setQuestions] = useState([]);
   const [current,   setCurrent]   = useState(0);
   const [answers,   setAnswers]   = useState([]);
-  const [phase,     setPhase]     = useState('loading'); // loading|quiz|result|error
-  const [feedback,  setFeedback]  = useState(null);      // null = answering, obj = showing result
+  const [phase,     setPhase]     = useState('loading');
+  const [feedback,  setFeedback]  = useState(null);
   const [result,    setResult]    = useState(null);
-  const textareaRef = useRef(null);
+  const textareaRef  = useRef(null);
+  const qStartTime   = useRef(Date.now());
 
   // ── Load + shuffle questions ────────────────────────────────────────────────
   const loadQuestions = () => {
@@ -66,15 +67,17 @@ export function QuizPanel({ sessionId, onSubmit }) {
 
   useEffect(() => { loadQuestions(); }, []);
 
-  // ── Clear textarea when question advances ───────────────────────────────────
+  // Reset start time and clear textarea when question advances
   useEffect(() => {
     if (textareaRef.current) textareaRef.current.value = '';
     setFeedback(null);
+    qStartTime.current = Date.now();
   }, [current, phase]);
 
   // ── Submit answer ───────────────────────────────────────────────────────────
   const submit = (transcript) => {
-    const q = questions[current];
+    const q         = questions[current];
+    const timeTaken = Math.round((Date.now() - qStartTime.current) / 1000);
     let isCorrect = null;
     let evalRes   = null;
 
@@ -87,10 +90,10 @@ export function QuizPanel({ sessionId, onSubmit }) {
       isCorrect = q.correctAnswer == null ? null : transcript === q.correctAnswer;
     }
 
-    const newAnswer  = { questionId: q.id, questionText: q.text, answer: transcript, isCorrect };
+    const newAnswer  = { questionId: q.id, questionText: q.text, answer: transcript, isCorrect, timeTaken };
     const newAnswers = [...answers, newAnswer];
     setAnswers(newAnswers);
-    setFeedback({ transcript, evalRes, q, isCorrect, newAnswers });
+    setFeedback({ transcript, evalRes, q, isCorrect, newAnswers, timeTaken });
   };
 
   // ── Advance to next ─────────────────────────────────────────────────────────
@@ -177,6 +180,10 @@ export function QuizPanel({ sessionId, onSubmit }) {
                 placeholder="Type your answer here…"
                 rows={4}
                 id="oe-answer-input"
+                onPaste={e => {
+                  e.preventDefault();
+                  reportEvent?.(sessionId, 12, `Paste attempt blocked — Q${current + 1}`, 'warning');
+                }}
               />
               <button
                 className="btn btn-start"
@@ -216,7 +223,11 @@ export function QuizPanel({ sessionId, onSubmit }) {
         <div className="quiz-feedback">
           {/* What the user wrote */}
           <div className="qf-heard">
-            <span className="qf-label">Your answer:</span>
+            <span className="qf-label">Your answer:
+              <span style={{ marginLeft: 8, color: '#475569', fontWeight: 400 }}>
+                ⏱ {feedback.timeTaken}s
+              </span>
+            </span>
             <span className="qf-transcript">{feedback.transcript}</span>
           </div>
 

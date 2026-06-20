@@ -1300,6 +1300,80 @@ body {
 .cand-date  { font-size: 0.7rem;  color: #475569; }
 .cand-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
 
+/* ── Fullscreen warning overlay ──────────────────── */
+.fs-warning-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fs-warning-card {
+  background: #1c0a0a;
+  border: 2px solid #ef4444;
+  border-radius: 16px;
+  padding: 40px 48px;
+  text-align: center;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.fs-warning-icon { font-size: 3rem; color: #ef4444; }
+.fs-warning-card h2 { font-size: 1.4rem; color: #f87171; }
+.fs-warning-card p  { font-size: 0.9rem; color: #fca5a5; line-height: 1.5; margin: 0; }
+.fs-warning-sub     { color: #64748b !important; font-size: 0.8rem !important; }
+
+/* ── Proctoring status bar (camera section) ──────── */
+.camera-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.camera-section-header h2 { margin: 0; }
+.proctoring-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.proc-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+.proc-ok    { background: #14532d; color: #86efac; }
+.proc-warn  { background: #451a03; color: #fcd34d; }
+.proc-alert { background: #450a0a; color: #f87171; }
+
+/* ── Audio level meter ───────────────────────────── */
+.audio-level-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.audio-level-icon { font-size: 0.8rem; }
+.audio-level-bar  {
+  width: 64px;
+  height: 6px;
+  background: #1e293b;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.audio-level-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.1s, background 0.2s;
+}
+
 /* ── Footer ──────────────────────────────────────── */
 .app-footer {
   text-align: center;

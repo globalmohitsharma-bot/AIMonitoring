@@ -4,7 +4,7 @@ const VOLUME_THRESHOLD  = 0.18; // 0–1 normalised RMS — above this = talking
 const SUSTAINED_MS      = 3000; // must be loud for 3s to trigger
 const COOLDOWN_MS       = 30000; // don't re-alert within 30s
 
-export function AudioMonitor({ sessionId, reportEvent, active }) {
+export function AudioMonitor({ sessionId, reportEvent, active, onLevel }) {
   const audioCtxRef  = useRef(null);
   const streamRef    = useRef(null);
   const loudSinceRef = useRef(null);
@@ -35,6 +35,7 @@ export function AudioMonitor({ sessionId, reportEvent, active }) {
           const rms = Math.sqrt(dataArray.reduce((s, v) => s + ((v - 128) / 128) ** 2, 0) / dataArray.length);
 
           const now = Date.now();
+          onLevel?.(rms);
           if (rms > VOLUME_THRESHOLD) {
             if (!loudSinceRef.current) loudSinceRef.current = now;
             const duration = now - loudSinceRef.current;

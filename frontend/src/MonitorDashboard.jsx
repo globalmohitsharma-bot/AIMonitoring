@@ -8,10 +8,11 @@ const HUB_URL  = import.meta.env.DEV
 const API_BASE = import.meta.env.DEV ? 'http://localhost:5165' : '';
 
 const TYPE_LABELS = {
-  0: 'Tab Switch', 1: 'Face Lost', 2: 'Face Returned',
-  3: 'Session Start', 4: 'Session End', 5: 'Tab Returned',
-  6: 'Quiz Done', 7: 'Multi-Face', 8: 'Audio Alert',
-  9: 'Inactivity', 10: 'Timer Expired',
+  0:  'Tab Switch',      1:  'Face Lost',      2:  'Face Returned',
+  3:  'Session Start',   4:  'Session End',     5:  'Tab Returned',
+  6:  'Quiz Done',       7:  'Multi-Face',      8:  'Audio Alert',
+  9:  'Inactivity',      10: 'Timer Expired',
+  11: '⛶ Fullscreen Exit', 12: '⎘ Paste Attempt', 13: '🔧 DevTools Block',
 };
 
 const MONITOR_PASSWORD = 'Qazwsx';

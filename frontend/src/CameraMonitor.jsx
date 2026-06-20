@@ -35,7 +35,7 @@ function loadModel() {
   });
 }
 
-export function CameraMonitor({ sessionId, reportEvent, sendFrame }) {
+export function CameraMonitor({ sessionId, reportEvent, sendFrame, candidateName }) {
   const videoRef    = useRef(null);
   const canvasRef   = useRef(null);
   const detectRef   = useRef(null);
@@ -123,8 +123,17 @@ export function CameraMonitor({ sessionId, reportEvent, sendFrame }) {
       if (canvas) {
         const size = { width: video.videoWidth || 640, height: video.videoHeight || 480 };
         faceapi.matchDimensions(canvas, size);
-        canvasRef.current.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+        const ctx2d = canvasRef.current.getContext('2d');
+        ctx2d.clearRect(0, 0, canvas.width, canvas.height);
         faceapi.draw.drawDetections(canvas, faceapi.resizeResults(detections, size));
+        // Watermark: candidate name + timestamp
+        const name = candidateName || '';
+        const ts   = new Date().toLocaleTimeString();
+        ctx2d.font = '13px monospace';
+        ctx2d.fillStyle = 'rgba(0,0,0,0.55)';
+        ctx2d.fillRect(0, size.height - 22, size.width, 22);
+        ctx2d.fillStyle = '#fbbf24';
+        ctx2d.fillText(`${name}  •  ${ts}`, 8, size.height - 6);
       }
 
       if (detections.length > 0) {
@@ -196,7 +205,7 @@ export function CameraMonitor({ sessionId, reportEvent, sendFrame }) {
         <video
           ref={videoRef}
           autoPlay muted playsInline
-          style={{ width: '100%', minHeight: 240, display: 'block', borderRadius: 6, background: '#0f172a' }}
+          style={{ width: '100%', minHeight: 320, display: 'block', borderRadius: 6, background: '#0f172a' }}
         />
         <canvas
           ref={canvasRef}
