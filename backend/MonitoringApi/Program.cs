@@ -26,11 +26,29 @@ var app = builder.Build();
 app.UseCors("ReactApp");
 
 app.UseDefaultFiles();
+
+// Serve assets with long-term cache (filenames are hash-busted by Vite)
 app.UseStaticFiles(new StaticFileOptions
 {
     ServeUnknownFileTypes = true,
-    DefaultContentType = "application/octet-stream"
+    DefaultContentType = "application/octet-stream",
+    OnPrepareResponse = ctx =>
+    {
+        var path = ctx.File.Name;
+        if (path == "index.html")
+        {
+            // Never cache index.html — it references hashed asset filenames
+            ctx.Context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";
+            ctx.Context.Response.Headers["Pragma"] = "no-cache";
+        }
+        else if (path.EndsWith(".js") || path.EndsWith(".css"))
+        {
+            // Hash-named assets can be cached forever
+            ctx.Context.Response.Headers["Cache-Control"] = "public, max-age=31536000, immutable";
+        }
+    }
 });
+
 app.MapControllers();
 app.MapHub<MonitoringHub>("/hub/monitoring");
 app.MapFallbackToFile("index.html");
