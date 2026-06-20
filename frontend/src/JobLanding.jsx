@@ -186,7 +186,12 @@ export default function JobLanding() {
               </div>
               <button
                 className="btn skip-btn-highlight"
-                onClick={() => window.location.href = '/exam'}
+                onClick={() => {
+                  // Clear any stale candidate session so registration always shows
+                  sessionStorage.removeItem('candidateInfo');
+                  sessionStorage.removeItem('resumeMatch');
+                  window.location.href = '/exam';
+                }}
               >
                 Skip resume — Go directly to interview →
               </button>
