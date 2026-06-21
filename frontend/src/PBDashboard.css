@@ -411,6 +411,54 @@
 }
 .pb-edit-input:focus { border-color: #6366f1; }
 
+/* ── Password gate ──────────────────────────────────────────── */
+.pb-gate-overlay {
+  min-height: 100vh;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.pb-gate-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 18px;
+  padding: 40px 32px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+}
+.pb-gate-shake {
+  animation: pb-shake 0.4s ease;
+}
+@keyframes pb-shake {
+  0%,100% { transform: translateX(0); }
+  20%,60%  { transform: translateX(-8px); }
+  40%,80%  { transform: translateX(8px); }
+}
+.pb-gate-icon  { font-size: 2.2rem; margin-bottom: 12px; }
+.pb-gate-title { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin: 0 0 6px; }
+.pb-gate-sub   { font-size: 0.85rem; color: #64748b; margin: 0 0 24px; }
+.pb-gate-form  { display: flex; flex-direction: column; gap: 12px; }
+.pb-gate-input {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: #f1f5f9;
+  font-size: 1rem;
+  text-align: center;
+  letter-spacing: 0.2em;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.pb-gate-input:focus   { border-color: #6366f1; }
+.pb-gate-input-err     { border-color: #ef4444 !important; }
+.pb-gate-error { color: #f87171; font-size: 0.82rem; margin: 0; }
+.pb-gate-btn   { padding: 12px; font-size: 1rem; width: 100%; }
+
 /* ── Date input (dark theme) ────────────────────────────────── */
 .pb-date-input {
   color-scheme: dark;

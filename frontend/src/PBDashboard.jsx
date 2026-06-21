@@ -346,8 +346,50 @@ function RecordCard({ row, headers, onClick }) {
   );
 }
 
+// ── Password gate ─────────────────────────────────────────────────
+function PBPasswordGate({ onSuccess }) {
+  const [value, setValue] = useState('');
+  const [error, setError] = useState(false);
+  const [shake, setShake] = useState(false);
+
+  const submit = (e) => {
+    e.preventDefault();
+    if (value === 'PB') {
+      sessionStorage.setItem('pb_auth', '1');
+      onSuccess();
+    } else {
+      setError(true); setShake(true); setValue('');
+      setTimeout(() => setShake(false), 500);
+    }
+  };
+
+  return (
+    <div className="pb-gate-overlay">
+      <div className={`pb-gate-card ${shake ? 'pb-gate-shake' : ''}`}>
+        <div className="pb-gate-icon">🔒</div>
+        <h2 className="pb-gate-title">CRM Board</h2>
+        <p className="pb-gate-sub">Enter password to continue</p>
+        <form onSubmit={submit} className="pb-gate-form">
+          <input
+            className={`pb-gate-input ${error ? 'pb-gate-input-err' : ''}`}
+            type="password"
+            placeholder="Password"
+            value={value}
+            autoFocus
+            onChange={e => { setValue(e.target.value); setError(false); }}
+          />
+          {error && <p className="pb-gate-error">Incorrect password</p>}
+          <button type="submit" className="pb-btn pb-primary pb-gate-btn">Enter →</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 // ── Main ──────────────────────────────────────────────────────────
 export default function PBDashboard() {
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem('pb_auth') === '1');
+  if (!authed) return <PBPasswordGate onSuccess={() => setAuthed(true)} />;
   const [headers,   setHeaders]   = useState([]);
   const [rows,      setRows]      = useState([]);
   const [loading,   setLoading]   = useState(true);
