@@ -6,7 +6,9 @@ const API_BASE = import.meta.env.DEV ? 'http://localhost:5165' : '';
 const LS_KEY   = 'pb_script_url';
 
 // Fields that get a combo-dropdown (type-or-pick from existing values)
-const COMBO_FIELDS = ['society', 'progress', 'type of paint', 'type of paint', 'paint type'];
+const COMBO_FIELDS = ['society', 'progress', 'type of paint', 'paint type'];
+// Fields that get a date picker
+const DATE_FIELDS  = ['date'];
 
 // ── CSV parser ────────────────────────────────────────────────────
 function parseCSV(text) {
@@ -81,6 +83,54 @@ function ComboField({ fieldName, value, onChange, options }) {
 
 function isComboField(header) {
   return COMBO_FIELDS.some(k => header.toLowerCase().includes(k));
+}
+function isDateField(header) {
+  return DATE_FIELDS.some(k => header.toLowerCase().includes(k));
+}
+
+// Sheet stores dates as YYYY-MM-DD; input[type=date] uses the same format
+function toInputDate(val) {
+  if (!val) return '';
+  // Handle DD-MM-YYYY or D/M/YYYY → YYYY-MM-DD
+  const dmY = val.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (dmY) return `${dmY[3]}-${dmY[2].padStart(2,'0')}-${dmY[1].padStart(2,'0')}`;
+  // Already YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}/.test(val)) return val.slice(0,10);
+  return '';
+}
+function fromInputDate(val) { return val; } // keep YYYY-MM-DD as-is for sheet
+
+// ── Shared form field renderer ────────────────────────────────────
+function FormField({ header, value, onChange, rows }) {
+  const uniq = (col) => [...new Set(rows.map(r => r[col]).filter(Boolean))].sort();
+
+  if (isDateField(header)) {
+    return (
+      <input
+        type="date"
+        className="pb-edit-input pb-date-input"
+        value={toInputDate(value)}
+        onChange={e => onChange(fromInputDate(e.target.value))}
+      />
+    );
+  }
+  if (isComboField(header)) {
+    return (
+      <ComboField
+        fieldName={header}
+        value={value}
+        onChange={onChange}
+        options={uniq(header)}
+      />
+    );
+  }
+  return (
+    <input
+      className="pb-edit-input"
+      value={value}
+      onChange={e => onChange(e.target.value)}
+    />
+  );
 }
 
 // ── Setup sheet ───────────────────────────────────────────────────
@@ -169,8 +219,6 @@ function DetailSheet({ row, headers, rows, onClose, onSave, onDelete, saving, sc
     headers.forEach(h => { f[h] = row[h] ?? ''; });
     return f;
   });
-  const uniq = (col) => [...new Set(rows.map(r => r[col]).filter(Boolean))].sort();
-
   const phone = row['Phone'] || row['phone'] || '';
   const name  = row['Contact Name'] || row['Name'] || row['name'] || Object.values(row).find(v => v && v !== row.__row) || '';
 
@@ -213,17 +261,8 @@ function DetailSheet({ row, headers, rows, onClose, onSave, onDelete, saving, sc
                   {h}
                   {isComboField(h) && <span className="pb-combo-hint"> — select or type new</span>}
                 </label>
-                {isComboField(h) ? (
-                  <ComboField
-                    fieldName={h}
-                    value={form[h]}
-                    onChange={val => setForm(f => ({ ...f, [h]: val }))}
-                    options={uniq(h)}
-                  />
-                ) : (
-                  <input className="pb-edit-input" value={form[h]}
-                    onChange={e => setForm(f => ({ ...f, [h]: e.target.value }))} />
-                )}
+                <FormField header={h} value={form[h]} rows={rows}
+                  onChange={val => setForm(f => ({ ...f, [h]: val }))} />
               </div>
             ))}
           </div>
@@ -250,7 +289,6 @@ function AddSheet({ headers, rows, onClose, onSave, saving }) {
     headers.filter(h => h && h !== '#').forEach(h => { f[h] = ''; });
     return f;
   });
-  const uniq = (col) => [...new Set(rows.map(r => r[col]).filter(Boolean))].sort();
 
   return (
     <div className="pb-sheet-overlay" onClick={onClose}>
@@ -264,17 +302,8 @@ function AddSheet({ headers, rows, onClose, onSave, saving }) {
                 {h}
                 {isComboField(h) && <span className="pb-combo-hint"> — select or type new</span>}
               </label>
-              {isComboField(h) ? (
-                <ComboField
-                  fieldName={h}
-                  value={form[h]}
-                  onChange={val => setForm(f => ({ ...f, [h]: val }))}
-                  options={uniq(h)}
-                />
-              ) : (
-                <input className="pb-edit-input" value={form[h]}
-                  onChange={e => setForm(f => ({ ...f, [h]: e.target.value }))} />
-              )}
+              <FormField header={h} value={form[h]} rows={rows}
+                onChange={val => setForm(f => ({ ...f, [h]: val }))} />
             </div>
           ))}
         </div>

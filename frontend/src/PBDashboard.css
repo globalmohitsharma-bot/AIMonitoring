@@ -411,6 +411,17 @@
 }
 .pb-edit-input:focus { border-color: #6366f1; }
 
+/* ── Date input (dark theme) ────────────────────────────────── */
+.pb-date-input {
+  color-scheme: dark;
+  cursor: pointer;
+}
+.pb-date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.6);
+  cursor: pointer;
+  padding: 2px;
+}
+
 /* ── Combo field ────────────────────────────────────────────── */
 .pb-combo-wrap {
   position: relative;
