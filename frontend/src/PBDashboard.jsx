@@ -3,7 +3,8 @@ import './PBDashboard.css';
 
 const SHEET_ID  = '1e729W4MXvlGXGLpmIrQugkCuCIVWWm9QqJtxONxFGo8';
 const GID       = '1417050744';
-const CSV_URL   = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+const API_BASE  = import.meta.env.DEV ? 'http://localhost:5165' : '';
+const CSV_URL   = `${API_BASE}/api/pb/sheet`;
 const LS_KEY    = 'pb_script_url';
 const PAGE_SIZE = 30;
 
@@ -192,9 +193,8 @@ export default function PBDashboard() {
     setLoading(true); setError(null);
     try {
       const res = await fetch(CSV_URL);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const text = await res.text();
-      if (text.includes('<!DOCTYPE')) throw new Error('Sheet is not public. Share it as "Anyone with link can view".');
+      if (!res.ok) throw new Error(text || `HTTP ${res.status}`);
       const { headers: h, rows: r } = parseCSV(text);
       setHeaders(h);
       setRows(r);
