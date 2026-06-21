@@ -1,14 +1,11 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import './PBDashboard.css';
 
-const SHEET_ID  = '1e729W4MXvlGXGLpmIrQugkCuCIVWWm9QqJtxONxFGo8';
-const GID       = '1417050744';
-const API_BASE  = import.meta.env.DEV ? 'http://localhost:5165' : '';
-const CSV_URL   = `${API_BASE}/api/pb/sheet`;
-const LS_KEY    = 'pb_script_url';
-const PAGE_SIZE = 30;
+const CSV_URL  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSRHqp1TWLyAEgydJ19b6vCJcTGCCxGrLcB1Mccw95xndfc9mbC1y5y3ev5T1njzE0evlvGIHA6OGH1/pub?gid=1417050744&single=true&output=csv';
+const API_BASE = import.meta.env.DEV ? 'http://localhost:5165' : '';
+const LS_KEY   = 'pb_script_url';
 
-// ── CSV parser ───────────────────────────────────────────────────
+// ── CSV parser ────────────────────────────────────────────────────
 function parseCSV(text) {
   const lines = [];
   let cur = '', inQ = false;
@@ -24,9 +21,7 @@ function parseCSV(text) {
       if (c === '\r' && text[i + 1] === '\n') i++;
       cells.push(cur); cur = '';
       lines.push([...cells]); cells.length = 0;
-    } else {
-      cur += c;
-    }
+    } else { cur += c; }
   }
   if (cur || cells.length) { cells.push(cur); lines.push([...cells]); }
   if (!lines.length) return { headers: [], rows: [] };
@@ -34,69 +29,70 @@ function parseCSV(text) {
   const rows = lines.slice(1)
     .filter(r => r.some(c => c.trim()))
     .map((r, i) => {
-      const obj = { __row: i + 2 };       // sheet row index (1=header)
+      const obj = { __row: i + 2 };
       headers.forEach((h, j) => { obj[h] = (r[j] ?? '').trim(); });
       return obj;
     });
   return { headers, rows };
 }
 
-// ── Apps Script caller ───────────────────────────────────────────
-async function callScript(scriptUrl, payload) {
-  await fetch(scriptUrl, {
-    method: 'POST',
-    mode: 'no-cors',
+// ── Progress colour ───────────────────────────────────────────────
+function progressClass(val = '') {
+  const v = val.toLowerCase();
+  if (v.includes('compl')) return 'badge-green';
+  if (v.includes('cancel')) return 'badge-red';
+  if (v.includes('not st') || v.includes('not s')) return 'badge-gray';
+  if (v.includes('progress') || v.includes('ongoing')) return 'badge-blue';
+  return 'badge-orange';
+}
+
+// ── Apps Script write ─────────────────────────────────────────────
+async function callScript(url, payload) {
+  await fetch(url, {
+    method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
 }
 
-// ── Setup instructions modal ─────────────────────────────────────
-function SetupModal({ onSave }) {
+// ── Setup sheet ───────────────────────────────────────────────────
+function SetupSheet({ onSave }) {
   const [url, setUrl] = useState('');
-  const SCRIPT = `function doPost(e) {
-  var ss    = SpreadsheetApp.openById('${SHEET_ID}');
-  var sheet = ss.getSheets().filter(function(s){
-    return s.getSheetId() == ${GID};
-  })[0];
-  var data  = JSON.parse(e.postData.contents);
-  if (data.action === 'append') {
-    sheet.appendRow(data.values);
-  } else if (data.action === 'update') {
-    sheet.getRange(data.rowIndex, 1, 1, data.values.length)
-         .setValues([data.values]);
-  } else if (data.action === 'delete') {
-    sheet.deleteRow(data.rowIndex);
-  }
-  return ContentService
-    .createTextOutput(JSON.stringify({ok:true}))
+  const SCRIPT =
+`function doPost(e){
+  var sheet=SpreadsheetApp
+    .openById('1e729W4MXvlGXGLpmIrQugkCuCIVWWm9QqJtxONxFGo8')
+    .getSheets().filter(function(s){return s.getSheetId()==1417050744;})[0];
+  var d=JSON.parse(e.postData.contents);
+  if(d.action==='append') sheet.appendRow(d.values);
+  else if(d.action==='update')
+    sheet.getRange(d.rowIndex,1,1,d.values.length).setValues([d.values]);
+  else if(d.action==='delete') sheet.deleteRow(d.rowIndex);
+  return ContentService.createTextOutput(JSON.stringify({ok:true}))
     .setMimeType(ContentService.MimeType.JSON);
 }`;
 
   return (
-    <div className="pb-modal-backdrop">
-      <div className="pb-modal pb-setup">
-        <h2 className="pb-modal-title">⚙️ One-time Setup for Writing</h2>
-        <p className="pb-setup-sub">Reading data works automatically. To <b>add / edit / delete</b> rows, paste this script into your Google Sheet:</p>
+    <div className="pb-sheet-overlay" onClick={() => onSave(null)}>
+      <div className="pb-bottom-sheet" onClick={e => e.stopPropagation()}>
+        <div className="pb-sheet-handle" />
+        <h2 className="pb-sheet-title">⚙️ Enable Adding / Editing</h2>
+        <p className="pb-setup-sub">Paste this Apps Script into your sheet to enable writes:</p>
         <ol className="pb-steps">
-          <li>Open your Google Sheet → <b>Extensions → Apps Script</b></li>
-          <li>Delete the default code and paste the script below</li>
-          <li>Click <b>Deploy → New deployment → Web app</b></li>
-          <li>Set <i>Execute as: Me</i> and <i>Who has access: Anyone</i></li>
-          <li>Click <b>Deploy</b>, copy the Web App URL and paste it here</li>
+          <li>Google Sheet → <b>Extensions → Apps Script</b></li>
+          <li>Replace all code with the script below</li>
+          <li><b>Deploy → New deployment → Web app</b></li>
+          <li>Execute as: <b>Me</b> · Access: <b>Anyone</b></li>
+          <li>Copy the URL and paste it here</li>
         </ol>
         <pre className="pb-script">{SCRIPT}</pre>
-        <input
-          className="pb-url-input"
-          placeholder="Paste Web App URL here…"
-          value={url}
-          onChange={e => setUrl(e.target.value)}
-        />
-        <div className="pb-setup-actions">
-          <button className="pb-btn pb-btn-ghost" onClick={() => onSave(null)}>Skip (read-only)</button>
-          <button className="pb-btn pb-btn-primary" disabled={!url.trim()}
+        <input className="pb-url-input" placeholder="Paste Web App URL…"
+          value={url} onChange={e => setUrl(e.target.value)} />
+        <div className="pb-sheet-actions">
+          <button className="pb-btn pb-ghost" onClick={() => onSave(null)}>Skip (read-only)</button>
+          <button className="pb-btn pb-primary" disabled={!url.trim()}
             onClick={() => { localStorage.setItem(LS_KEY, url.trim()); onSave(url.trim()); }}>
-            Save URL
+            Save
           </button>
         </div>
       </div>
@@ -104,62 +100,134 @@ function SetupModal({ onSave }) {
   );
 }
 
-// ── Add / Edit modal ─────────────────────────────────────────────
-function RowModal({ headers, row, onSave, onClose, saving }) {
-  const isEdit = !!row;
-  const [form, setForm] = useState(() => {
-    const f = {};
-    headers.forEach(h => { f[h] = row ? (row[h] ?? '') : ''; });
-    return f;
-  });
-
+// ── Filter sheet ──────────────────────────────────────────────────
+function FilterSheet({ headers, rows, filters, onApply, onClose }) {
+  const [local, setLocal] = useState({ ...filters });
+  const uniq = (col) => [...new Set(rows.map(r => r[col]).filter(Boolean))].sort();
   return (
-    <div className="pb-modal-backdrop" onClick={onClose}>
-      <div className="pb-modal" onClick={e => e.stopPropagation()}>
-        <div className="pb-modal-header">
-          <h2 className="pb-modal-title">{isEdit ? '✏️ Edit Row' : '➕ Add Row'}</h2>
-          <button className="pb-modal-close" onClick={onClose}>✕</button>
-        </div>
-        <div className="pb-modal-body">
-          {headers.map(h => (
-            <div key={h} className="pb-field">
-              <label className="pb-field-label">{h}</label>
-              <input
-                className="pb-field-input"
-                value={form[h]}
-                onChange={e => setForm(f => ({ ...f, [h]: e.target.value }))}
-              />
+    <div className="pb-sheet-overlay" onClick={onClose}>
+      <div className="pb-bottom-sheet" onClick={e => e.stopPropagation()}>
+        <div className="pb-sheet-handle" />
+        <h2 className="pb-sheet-title">🔽 Filter</h2>
+        <div className="pb-filter-list">
+          {headers.filter(h => h && h !== '#').map(h => (
+            <div key={h} className="pb-filter-item">
+              <label className="pb-filter-label">{h}</label>
+              <select className="pb-filter-select"
+                value={local[h] ?? ''}
+                onChange={e => setLocal(f => ({ ...f, [h]: e.target.value }))}>
+                <option value="">All</option>
+                {uniq(h).map(v => <option key={v} value={v}>{v}</option>)}
+              </select>
             </div>
           ))}
         </div>
-        <div className="pb-modal-footer">
-          <button className="pb-btn pb-btn-ghost" onClick={onClose}>Cancel</button>
-          <button className="pb-btn pb-btn-primary" disabled={saving}
-            onClick={() => onSave(form)}>
-            {saving ? 'Saving…' : (isEdit ? 'Update' : 'Add Row')}
-          </button>
+        <div className="pb-sheet-actions">
+          <button className="pb-btn pb-ghost"
+            onClick={() => { setLocal({}); onApply({}); onClose(); }}>Clear all</button>
+          <button className="pb-btn pb-primary"
+            onClick={() => { onApply(local); onClose(); }}>Apply</button>
         </div>
       </div>
     </div>
   );
 }
 
-// ── Delete confirm ───────────────────────────────────────────────
-function DeleteModal({ onConfirm, onClose, saving }) {
+// ── Detail / Edit sheet ───────────────────────────────────────────
+function DetailSheet({ row, headers, onClose, onSave, onDelete, saving, scriptUrl }) {
+  const [editing, setEditing] = useState(false);
+  const [form, setForm]       = useState(() => {
+    const f = {};
+    headers.forEach(h => { f[h] = row[h] ?? ''; });
+    return f;
+  });
+
+  const phone = row['Phone'] || row['phone'] || '';
+  const name  = row['Contact Name'] || row['Name'] || row['name'] || Object.values(row).find(v => v && v !== row.__row) || '';
+
   return (
-    <div className="pb-modal-backdrop" onClick={onClose}>
-      <div className="pb-modal pb-modal-sm" onClick={e => e.stopPropagation()}>
-        <div className="pb-modal-header">
-          <h2 className="pb-modal-title">🗑️ Delete Row</h2>
-          <button className="pb-modal-close" onClick={onClose}>✕</button>
+    <div className="pb-sheet-overlay" onClick={onClose}>
+      <div className="pb-bottom-sheet pb-detail-sheet" onClick={e => e.stopPropagation()}>
+        <div className="pb-sheet-handle" />
+        <div className="pb-detail-header">
+          <div>
+            <div className="pb-detail-name">{name}</div>
+            {phone && <a className="pb-detail-phone" href={`tel:${phone}`}>📞 {phone}</a>}
+          </div>
+          <div className="pb-detail-header-btns">
+            {scriptUrl && !editing && (
+              <button className="pb-icon-action" onClick={() => setEditing(true)}>✏️</button>
+            )}
+            {scriptUrl && !editing && (
+              <button className="pb-icon-action pb-icon-del" onClick={onDelete}>🗑️</button>
+            )}
+            <button className="pb-icon-action" onClick={onClose}>✕</button>
+          </div>
         </div>
-        <p style={{ padding: '0 0 16px', color: '#94a3b8', fontSize: '0.9rem' }}>
-          This will permanently delete the row from the sheet.
-        </p>
-        <div className="pb-modal-footer">
-          <button className="pb-btn pb-btn-ghost" onClick={onClose}>Cancel</button>
-          <button className="pb-btn pb-btn-danger" disabled={saving} onClick={onConfirm}>
-            {saving ? 'Deleting…' : 'Delete'}
+
+        {!editing ? (
+          <div className="pb-detail-fields">
+            {headers.filter(h => h && h !== '#').map(h => row[h] ? (
+              <div key={h} className="pb-detail-row">
+                <span className="pb-detail-key">{h}</span>
+                <span className={`pb-detail-val ${h.toLowerCase().includes('progress') ? progressClass(row[h]) + ' badge' : ''}`}>
+                  {row[h]}
+                </span>
+              </div>
+            ) : null)}
+          </div>
+        ) : (
+          <div className="pb-edit-fields">
+            {headers.filter(h => h && h !== '#').map(h => (
+              <div key={h} className="pb-edit-field">
+                <label className="pb-edit-label">{h}</label>
+                <input className="pb-edit-input" value={form[h]}
+                  onChange={e => setForm(f => ({ ...f, [h]: e.target.value }))} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {editing && (
+          <div className="pb-sheet-actions">
+            <button className="pb-btn pb-ghost" onClick={() => setEditing(false)}>Cancel</button>
+            <button className="pb-btn pb-primary" disabled={saving}
+              onClick={() => onSave(form)}>
+              {saving ? 'Saving…' : 'Save Changes'}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Add sheet ─────────────────────────────────────────────────────
+function AddSheet({ headers, onClose, onSave, saving }) {
+  const [form, setForm] = useState(() => {
+    const f = {};
+    headers.filter(h => h && h !== '#').forEach(h => { f[h] = ''; });
+    return f;
+  });
+  return (
+    <div className="pb-sheet-overlay" onClick={onClose}>
+      <div className="pb-bottom-sheet pb-detail-sheet" onClick={e => e.stopPropagation()}>
+        <div className="pb-sheet-handle" />
+        <h2 className="pb-sheet-title">➕ Add New Record</h2>
+        <div className="pb-edit-fields">
+          {headers.filter(h => h && h !== '#').map(h => (
+            <div key={h} className="pb-edit-field">
+              <label className="pb-edit-label">{h}</label>
+              <input className="pb-edit-input" value={form[h]}
+                onChange={e => setForm(f => ({ ...f, [h]: e.target.value }))} />
+            </div>
+          ))}
+        </div>
+        <div className="pb-sheet-actions">
+          <button className="pb-btn pb-ghost" onClick={onClose}>Cancel</button>
+          <button className="pb-btn pb-primary" disabled={saving}
+            onClick={() => onSave(form)}>
+            {saving ? 'Adding…' : 'Add Record'}
           </button>
         </div>
       </div>
@@ -167,256 +235,199 @@ function DeleteModal({ onConfirm, onClose, saving }) {
   );
 }
 
-// ── Main dashboard ───────────────────────────────────────────────
-export default function PBDashboard() {
-  const [headers,    setHeaders]    = useState([]);
-  const [rows,       setRows]       = useState([]);
-  const [loading,    setLoading]    = useState(true);
-  const [error,      setError]      = useState(null);
-  const [search,     setSearch]     = useState('');
-  const [colFilters, setColFilters] = useState({});
-  const [sortCol,    setSortCol]    = useState(null);
-  const [sortDir,    setSortDir]    = useState('asc');
-  const [page,       setPage]       = useState(1);
-  const [scriptUrl,  setScriptUrl]  = useState(() => localStorage.getItem(LS_KEY) || null);
-  const [showSetup,  setShowSetup]  = useState(false);
-  const [modal,      setModal]      = useState(null); // null | {type:'add'} | {type:'edit',row} | {type:'delete',row}
-  const [saving,     setSaving]     = useState(false);
-  const [toast,      setToast]      = useState(null);
+// ── Card ──────────────────────────────────────────────────────────
+function RecordCard({ row, headers, onClick }) {
+  const name     = row['Contact Name'] || row['Name'] || row['name'] || '—';
+  const phone    = row['Phone'] || row['phone'] || '';
+  const address  = row['Address'] || row['address'] || '';
+  const progress = row['Progress'] || row['progress'] || '';
+  const paint    = row['Type of Paint'] || row['Type of paint'] || '';
+  const date     = row['Date Contacted'] || row['Date Started'] || '';
+  const remarks  = row['Remarks'] || row['remarks'] || '';
 
-  const showToast = useCallback((msg, kind = 'ok') => {
-    setToast({ msg, kind });
+  return (
+    <div className="pb-card" onClick={onClick}>
+      <div className="pb-card-top">
+        <div className="pb-card-name">{name}</div>
+        {progress && <span className={`pb-badge ${progressClass(progress)}`}>{progress}</span>}
+      </div>
+      {phone   && <div className="pb-card-row">📞 <span>{phone}</span></div>}
+      {address && <div className="pb-card-row pb-card-addr">📍 <span>{address}</span></div>}
+      {paint   && <div className="pb-card-row">🎨 <span>{paint}</span></div>}
+      {date    && <div className="pb-card-row">📅 <span>{date}</span></div>}
+      {remarks && <div className="pb-card-remarks">{remarks}</div>}
+    </div>
+  );
+}
+
+// ── Main ──────────────────────────────────────────────────────────
+export default function PBDashboard() {
+  const [headers,   setHeaders]   = useState([]);
+  const [rows,      setRows]      = useState([]);
+  const [loading,   setLoading]   = useState(true);
+  const [error,     setError]     = useState(null);
+  const [search,    setSearch]    = useState('');
+  const [filters,   setFilters]   = useState({});
+  const [sheet,     setSheet]     = useState(null); // 'setup'|'filter'|'add'|{row}
+  const [scriptUrl, setScriptUrl] = useState(() => localStorage.getItem(LS_KEY) || null);
+  const [saving,    setSaving]    = useState(false);
+  const [toast,     setToast]     = useState(null);
+
+  const showToast = useCallback((msg, ok = true) => {
+    setToast({ msg, ok });
     setTimeout(() => setToast(null), 3000);
   }, []);
 
   const fetchData = useCallback(async () => {
     setLoading(true); setError(null);
     try {
-      const res = await fetch(CSV_URL);
+      const res  = await fetch(`${API_BASE}/api/pb/sheet`);
       const text = await res.text();
-      if (!res.ok) throw new Error(text || `HTTP ${res.status}`);
+      if (!res.ok) throw new Error(text);
       const { headers: h, rows: r } = parseCSV(text);
       setHeaders(h);
       setRows(r);
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setLoading(false);
-    }
+    } catch (e) { setError(e.message); }
+    finally { setLoading(false); }
   }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  // filtered + sorted rows
   const filtered = useMemo(() => {
     let r = rows;
     const q = search.toLowerCase();
     if (q) r = r.filter(row => headers.some(h => (row[h] ?? '').toLowerCase().includes(q)));
-    headers.forEach(h => {
-      const v = colFilters[h];
-      if (v) r = r.filter(row => row[h] === v);
+    Object.entries(filters).forEach(([col, val]) => {
+      if (val) r = r.filter(row => row[col] === val);
     });
-    if (sortCol) {
-      r = [...r].sort((a, b) => {
-        const av = (a[sortCol] ?? '').toLowerCase();
-        const bv = (b[sortCol] ?? '').toLowerCase();
-        return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
-      });
-    }
     return r;
-  }, [rows, headers, search, colFilters, sortCol, sortDir]);
+  }, [rows, headers, search, filters]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const pageRows   = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
-  const toggleSort = (col) => {
-    if (sortCol === col) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
-    else { setSortCol(col); setSortDir('asc'); }
-    setPage(1);
-  };
-
-  const uniqueVals = useMemo(() => {
-    const map = {};
-    headers.forEach(h => {
-      map[h] = [...new Set(rows.map(r => r[h]).filter(Boolean))].sort();
-    });
-    return map;
-  }, [rows, headers]);
-
-  // ── write helpers ──────────────────────────────────────────────
-  const withScript = (fn) => {
-    if (!scriptUrl) { setShowSetup(true); return; }
-    fn();
-  };
+  const activeFilterCount = Object.values(filters).filter(Boolean).length;
 
   const handleAdd = async (form) => {
     setSaving(true);
     const values = headers.map(h => form[h] ?? '');
     await callScript(scriptUrl, { action: 'append', values });
-    setSaving(false);
-    setModal(null);
-    showToast('Row added — refreshing…');
-    setTimeout(fetchData, 1500);
+    setSaving(false); setSheet(null);
+    showToast('Record added — refreshing…');
+    setTimeout(fetchData, 1800);
   };
 
   const handleEdit = async (form) => {
     setSaving(true);
     const values = headers.map(h => form[h] ?? '');
-    await callScript(scriptUrl, { action: 'update', rowIndex: modal.row.__row, values });
-    setSaving(false);
-    setModal(null);
-    showToast('Row updated — refreshing…');
-    setTimeout(fetchData, 1500);
+    await callScript(scriptUrl, { action: 'update', rowIndex: sheet.row.__row, values });
+    setSaving(false); setSheet(null);
+    showToast('Record updated — refreshing…');
+    setTimeout(fetchData, 1800);
   };
 
   const handleDelete = async () => {
+    if (!window.confirm('Delete this record?')) return;
     setSaving(true);
-    await callScript(scriptUrl, { action: 'delete', rowIndex: modal.row.__row });
-    setSaving(false);
-    setModal(null);
-    showToast('Row deleted — refreshing…');
-    setTimeout(fetchData, 1500);
+    await callScript(scriptUrl, { action: 'delete', rowIndex: sheet.row.__row });
+    setSaving(false); setSheet(null);
+    showToast('Deleted — refreshing…');
+    setTimeout(fetchData, 1800);
   };
-
-  const activeFilters = Object.entries(colFilters).filter(([, v]) => v);
 
   return (
     <div className="pb-root">
 
-      {/* ── Topbar ──────────────────────────────────────── */}
-      <header className="pb-topbar">
-        <div className="pb-topbar-left">
-          <span className="pb-logo">📊</span>
-          <h1 className="pb-title">Personal Board</h1>
-          <span className="pb-count">{filtered.length} rows</span>
+      {/* ── Header ──────────────────────────────── */}
+      <header className="pb-header">
+        <div className="pb-header-top">
+          <div className="pb-header-brand">
+            <span className="pb-logo-icon">📊</span>
+            <span className="pb-brand-name">CRM Board</span>
+            {!loading && <span className="pb-count">{filtered.length}</span>}
+          </div>
+          <div className="pb-header-actions">
+            <button className="pb-icon-btn" onClick={fetchData} title="Refresh">↻</button>
+            <button className="pb-icon-btn" onClick={() => setSheet('setup')} title="Settings">⚙</button>
+          </div>
         </div>
-        <div className="pb-topbar-right">
-          <input
-            className="pb-search"
-            placeholder="Search all columns…"
-            value={search}
-            onChange={e => { setSearch(e.target.value); setPage(1); }}
-          />
-          <button className="pb-icon-btn" title="Refresh" onClick={fetchData}>↻</button>
-          <button className="pb-btn pb-btn-primary" onClick={() => withScript(() => setModal({ type: 'add' }))}>
-            + Add Row
+        <div className="pb-search-row">
+          <div className="pb-search-wrap">
+            <span className="pb-search-icon">🔍</span>
+            <input className="pb-search" placeholder="Search name, phone, address…"
+              value={search} onChange={e => setSearch(e.target.value)} />
+            {search && <button className="pb-search-clear" onClick={() => setSearch('')}>✕</button>}
+          </div>
+          <button
+            className={`pb-filter-btn ${activeFilterCount ? 'pb-filter-active' : ''}`}
+            onClick={() => setSheet('filter')}>
+            🔽 {activeFilterCount > 0 ? `Filter (${activeFilterCount})` : 'Filter'}
           </button>
-          <button className="pb-icon-btn pb-icon-gear" title="Setup write access"
-            onClick={() => setShowSetup(true)}>⚙</button>
         </div>
-      </header>
-
-      {/* ── Active filters chips ─────────────────────────── */}
-      {activeFilters.length > 0 && (
-        <div className="pb-filter-bar">
-          {activeFilters.map(([col, val]) => (
-            <span key={col} className="pb-filter-chip">
-              {col}: <b>{val}</b>
-              <button onClick={() => { setColFilters(f => { const n = {...f}; delete n[col]; return n; }); setPage(1); }}>✕</button>
-            </span>
-          ))}
-          <button className="pb-clear-all" onClick={() => { setColFilters({}); setPage(1); }}>Clear all</button>
-        </div>
-      )}
-
-      {/* ── Status line ────────────────────────────────────── */}
-      {!scriptUrl && !loading && !error && (
-        <div className="pb-info-bar">
-          📖 Read-only mode — <button className="pb-link" onClick={() => setShowSetup(true)}>set up write access</button> to add/edit/delete rows.
-        </div>
-      )}
-
-      {/* ── Table ──────────────────────────────────────────── */}
-      <div className="pb-table-wrap">
-        {loading && <div className="pb-spinner">Loading sheet data…</div>}
-        {error   && (
-          <div className="pb-error-box">
-            <div className="pb-error-title">⚠ Cannot load sheet</div>
-            <div className="pb-error-msg">{error}</div>
-            <ol className="pb-error-steps">
-              <li>In your Google Sheet → <b>File → Share → Publish to the web</b></li>
-              <li>First dropdown: select the <b>PB</b> tab</li>
-              <li>Second dropdown: select <b>Comma-separated values (.csv)</b></li>
-              <li>Click <b>Publish</b> → confirm → then click ↻ refresh above</li>
-            </ol>
+        {activeFilterCount > 0 && (
+          <div className="pb-active-filters">
+            {Object.entries(filters).filter(([,v]) => v).map(([k, v]) => (
+              <span key={k} className="pb-chip">
+                {k}: {v}
+                <button onClick={() => setFilters(f => { const n = {...f}; delete n[k]; return n; })}>✕</button>
+              </span>
+            ))}
+            <button className="pb-chip-clear" onClick={() => setFilters({})}>Clear all</button>
           </div>
         )}
-        {!loading && !error && (
-          <table className="pb-table">
-            <thead>
-              <tr>
-                {headers.map(h => (
-                  <th key={h}>
-                    <div className="pb-th-inner">
-                      <span className="pb-th-label" onClick={() => toggleSort(h)}>
-                        {h}
-                        {sortCol === h ? (sortDir === 'asc' ? ' ▲' : ' ▼') : ''}
-                      </span>
-                      <select
-                        className="pb-col-filter"
-                        value={colFilters[h] ?? ''}
-                        onChange={e => { setColFilters(f => ({...f, [h]: e.target.value})); setPage(1); }}
-                      >
-                        <option value="">All</option>
-                        {uniqueVals[h]?.map(v => <option key={v} value={v}>{v}</option>)}
-                      </select>
-                    </div>
-                  </th>
-                ))}
-                <th className="pb-th-actions">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pageRows.length === 0 && (
-                <tr><td colSpan={headers.length + 1} className="pb-empty">No rows match your search.</td></tr>
-              )}
-              {pageRows.map((row, i) => (
-                <tr key={row.__row} className="pb-tr">
-                  {headers.map(h => (
-                    <td key={h} className="pb-td" title={row[h]}>{row[h]}</td>
-                  ))}
-                  <td className="pb-td pb-td-actions">
-                    <button className="pb-row-btn pb-edit"
-                      onClick={() => withScript(() => setModal({ type: 'edit', row }))}>✏</button>
-                    <button className="pb-row-btn pb-delete"
-                      onClick={() => withScript(() => setModal({ type: 'delete', row }))}>🗑</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      </header>
+
+      {/* ── Content ──────────────────────────────── */}
+      <main className="pb-main">
+        {loading && (
+          <div className="pb-loading">
+            <div className="pb-spinner-ring" />
+            <span>Loading…</span>
+          </div>
         )}
-      </div>
+        {error && (
+          <div className="pb-err-card">
+            <div className="pb-err-title">⚠️ Cannot load data</div>
+            <div className="pb-err-msg">{error}</div>
+          </div>
+        )}
+        {!loading && !error && filtered.length === 0 && (
+          <div className="pb-empty">
+            <div style={{fontSize:'2.5rem'}}>🔍</div>
+            <div>No records match your search</div>
+          </div>
+        )}
+        {!loading && !error && filtered.map(row => (
+          <RecordCard key={row.__row} row={row} headers={headers}
+            onClick={() => setSheet({ type: 'detail', row })} />
+        ))}
+      </main>
 
-      {/* ── Pagination ─────────────────────────────────────── */}
-      {totalPages > 1 && (
-        <div className="pb-pagination">
-          <button className="pb-pg-btn" disabled={page === 1} onClick={() => setPage(1)}>«</button>
-          <button className="pb-pg-btn" disabled={page === 1} onClick={() => setPage(p => p - 1)}>‹</button>
-          <span className="pb-pg-info">Page {page} of {totalPages}</span>
-          <button className="pb-pg-btn" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>›</button>
-          <button className="pb-pg-btn" disabled={page === totalPages} onClick={() => setPage(totalPages)}>»</button>
-        </div>
-      )}
+      {/* ── FAB ──────────────────────────────────── */}
+      <button className="pb-fab"
+        onClick={() => scriptUrl ? setSheet('add') : setSheet('setup')}
+        title="Add record">
+        +
+      </button>
 
-      {/* ── Toast ──────────────────────────────────────────── */}
-      {toast && <div className={`pb-toast pb-toast-${toast.kind}`}>{toast.msg}</div>}
+      {/* ── Toast ────────────────────────────────── */}
+      {toast && <div className={`pb-toast ${toast.ok ? 'toast-ok' : 'toast-err'}`}>{toast.msg}</div>}
 
-      {/* ── Modals ─────────────────────────────────────────── */}
-      {showSetup && (
-        <SetupModal onSave={(url) => { setScriptUrl(url); setShowSetup(false); }} />
+      {/* ── Bottom sheets ────────────────────────── */}
+      {sheet === 'setup' && (
+        <SetupSheet onSave={(url) => { setScriptUrl(url); setSheet(null); }} />
       )}
-      {modal?.type === 'add' && (
-        <RowModal headers={headers} row={null} saving={saving}
-          onClose={() => setModal(null)} onSave={handleAdd} />
+      {sheet === 'filter' && (
+        <FilterSheet headers={headers} rows={rows} filters={filters}
+          onApply={setFilters} onClose={() => setSheet(null)} />
       )}
-      {modal?.type === 'edit' && (
-        <RowModal headers={headers} row={modal.row} saving={saving}
-          onClose={() => setModal(null)} onSave={handleEdit} />
+      {sheet === 'add' && (
+        <AddSheet headers={headers} saving={saving}
+          onClose={() => setSheet(null)} onSave={handleAdd} />
       )}
-      {modal?.type === 'delete' && (
-        <DeleteModal saving={saving}
-          onClose={() => setModal(null)} onConfirm={handleDelete} />
+      {sheet?.type === 'detail' && (
+        <DetailSheet row={sheet.row} headers={headers} saving={saving}
+          scriptUrl={scriptUrl}
+          onClose={() => setSheet(null)}
+          onSave={handleEdit}
+          onDelete={handleDelete} />
       )}
     </div>
   );
