@@ -6,15 +6,14 @@ namespace MonitoringApi.Controllers;
 [Route("api/pb")]
 public class PBController(IHttpClientFactory httpFactory) : ControllerBase
 {
-    private const string SheetId = "1e729W4MXvlGXGLpmIrQugkCuCIVWWm9QqJtxONxFGo8";
-    private const string Gid     = "1417050744";
+    // Published-to-web CSV URL (File → Share → Publish to the web → PB tab → CSV)
+    private const string PublishedCsvUrl =
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRHqp1TWLyAEgydJ19b6vCJcTGCCxGrLcB1Mccw95xndfc9mbC1y5y3ev5T1njzE0evlvGIHA6OGH1/pub?gid=1417050744&single=true&output=csv";
 
     [HttpGet("sheet")]
     public async Task<IActionResult> GetSheet()
     {
-        // /pub URL requires "Published to the web" (File → Share → Publish to the web → CSV)
-        // This is more reliable than /export for server-side fetching
-        var url    = $"https://docs.google.com/spreadsheets/d/{SheetId}/pub?gid={Gid}&single=true&output=csv";
+        var url = PublishedCsvUrl;
         var client = httpFactory.CreateClient();
         try
         {
