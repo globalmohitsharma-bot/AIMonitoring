@@ -142,13 +142,33 @@
   overflow: auto;
   padding: 0 0 8px;
 }
-.pb-spinner, .pb-error, .pb-empty {
+.pb-spinner, .pb-empty {
   text-align: center;
   padding: 60px 20px;
   color: #64748b;
   font-size: 0.9rem;
 }
-.pb-error { color: #f87171; }
+.pb-error-box {
+  margin: 40px auto;
+  max-width: 520px;
+  background: #1a0f0f;
+  border: 1px solid #7f1d1d;
+  border-left: 4px solid #ef4444;
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+.pb-error-title { font-size: 1rem; font-weight: 700; color: #f87171; margin-bottom: 6px; }
+.pb-error-msg   { font-size: 0.83rem; color: #fca5a5; margin-bottom: 14px; line-height: 1.5; }
+.pb-error-steps {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  line-height: 1.5;
+  margin: 0;
+}
 
 .pb-table {
   width: 100%;

@@ -12,16 +12,25 @@ public class PBController(IHttpClientFactory httpFactory) : ControllerBase
     [HttpGet("sheet")]
     public async Task<IActionResult> GetSheet()
     {
-        var url    = $"https://docs.google.com/spreadsheets/d/{SheetId}/export?format=csv&gid={Gid}";
+        // /pub URL requires "Published to the web" (File → Share → Publish to the web → CSV)
+        // This is more reliable than /export for server-side fetching
+        var url    = $"https://docs.google.com/spreadsheets/d/{SheetId}/pub?gid={Gid}&single=true&output=csv";
         var client = httpFactory.CreateClient();
         try
         {
-            var res  = await client.GetAsync(url);
+            var req = new HttpRequestMessage(HttpMethod.Get, url);
+            req.Headers.Add("User-Agent", "Mozilla/5.0 (compatible; SheetsProxy/1.0)");
+            req.Headers.Add("Accept", "text/csv,text/plain,*/*");
+
+            var res  = await client.SendAsync(req);
             var body = await res.Content.ReadAsStringAsync();
 
-            // Google redirects to login page if sheet is private
-            if (body.TrimStart().StartsWith("<!DOCTYPE", StringComparison.OrdinalIgnoreCase))
-                return StatusCode(403, "Sheet is not publicly accessible. Share it as 'Anyone with link can view'.");
+            if (body.TrimStart().StartsWith("<!DOCTYPE", StringComparison.OrdinalIgnoreCase) ||
+                body.TrimStart().StartsWith("<html", StringComparison.OrdinalIgnoreCase))
+            {
+                return StatusCode(403,
+                    "Publish the sheet first: File → Share → Publish to the web → select 'PB' tab → CSV → Publish.");
+            }
 
             if (!res.IsSuccessStatusCode)
                 return StatusCode((int)res.StatusCode, "Google returned an error.");

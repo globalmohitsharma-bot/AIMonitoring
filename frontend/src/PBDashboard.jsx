@@ -329,7 +329,18 @@ export default function PBDashboard() {
       {/* ── Table ──────────────────────────────────────────── */}
       <div className="pb-table-wrap">
         {loading && <div className="pb-spinner">Loading sheet data…</div>}
-        {error   && <div className="pb-error">⚠ {error}</div>}
+        {error   && (
+          <div className="pb-error-box">
+            <div className="pb-error-title">⚠ Cannot load sheet</div>
+            <div className="pb-error-msg">{error}</div>
+            <ol className="pb-error-steps">
+              <li>In your Google Sheet → <b>File → Share → Publish to the web</b></li>
+              <li>First dropdown: select the <b>PB</b> tab</li>
+              <li>Second dropdown: select <b>Comma-separated values (.csv)</b></li>
+              <li>Click <b>Publish</b> → confirm → then click ↻ refresh above</li>
+            </ol>
+          </div>
+        )}
         {!loading && !error && (
           <table className="pb-table">
             <thead>
