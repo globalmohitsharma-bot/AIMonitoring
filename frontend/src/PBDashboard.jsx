@@ -5,6 +5,9 @@ const CSV_URL  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSRHqp1TWLyAEg
 const API_BASE = import.meta.env.DEV ? 'http://localhost:5165' : '';
 const LS_KEY   = 'pb_script_url';
 
+// Fields that get a combo-dropdown (type-or-pick from existing values)
+const COMBO_FIELDS = ['society', 'progress', 'type of paint', 'type of paint', 'paint type'];
+
 // ── CSV parser ────────────────────────────────────────────────────
 function parseCSV(text) {
   const lines = [];
@@ -53,6 +56,31 @@ async function callScript(url, payload) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
+}
+
+// ── Combo field (select existing OR type new) ─────────────────────
+function ComboField({ fieldName, value, onChange, options }) {
+  const id = `combo-${fieldName.replace(/\s+/g, '-')}`;
+  return (
+    <div className="pb-combo-wrap">
+      <input
+        className="pb-edit-input"
+        list={id}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={`Select or type…`}
+        autoComplete="off"
+      />
+      <datalist id={id}>
+        {options.map(v => <option key={v} value={v} />)}
+      </datalist>
+      <span className="pb-combo-arrow">▾</span>
+    </div>
+  );
+}
+
+function isComboField(header) {
+  return COMBO_FIELDS.some(k => header.toLowerCase().includes(k));
 }
 
 // ── Setup sheet ───────────────────────────────────────────────────
@@ -134,13 +162,14 @@ function FilterSheet({ headers, rows, filters, onApply, onClose }) {
 }
 
 // ── Detail / Edit sheet ───────────────────────────────────────────
-function DetailSheet({ row, headers, onClose, onSave, onDelete, saving, scriptUrl }) {
+function DetailSheet({ row, headers, rows, onClose, onSave, onDelete, saving, scriptUrl }) {
   const [editing, setEditing] = useState(false);
   const [form, setForm]       = useState(() => {
     const f = {};
     headers.forEach(h => { f[h] = row[h] ?? ''; });
     return f;
   });
+  const uniq = (col) => [...new Set(rows.map(r => r[col]).filter(Boolean))].sort();
 
   const phone = row['Phone'] || row['phone'] || '';
   const name  = row['Contact Name'] || row['Name'] || row['name'] || Object.values(row).find(v => v && v !== row.__row) || '';
@@ -180,9 +209,21 @@ function DetailSheet({ row, headers, onClose, onSave, onDelete, saving, scriptUr
           <div className="pb-edit-fields">
             {headers.filter(h => h && h !== '#').map(h => (
               <div key={h} className="pb-edit-field">
-                <label className="pb-edit-label">{h}</label>
-                <input className="pb-edit-input" value={form[h]}
-                  onChange={e => setForm(f => ({ ...f, [h]: e.target.value }))} />
+                <label className="pb-edit-label">
+                  {h}
+                  {isComboField(h) && <span className="pb-combo-hint"> — select or type new</span>}
+                </label>
+                {isComboField(h) ? (
+                  <ComboField
+                    fieldName={h}
+                    value={form[h]}
+                    onChange={val => setForm(f => ({ ...f, [h]: val }))}
+                    options={uniq(h)}
+                  />
+                ) : (
+                  <input className="pb-edit-input" value={form[h]}
+                    onChange={e => setForm(f => ({ ...f, [h]: e.target.value }))} />
+                )}
               </div>
             ))}
           </div>
@@ -203,12 +244,14 @@ function DetailSheet({ row, headers, onClose, onSave, onDelete, saving, scriptUr
 }
 
 // ── Add sheet ─────────────────────────────────────────────────────
-function AddSheet({ headers, onClose, onSave, saving }) {
+function AddSheet({ headers, rows, onClose, onSave, saving }) {
   const [form, setForm] = useState(() => {
     const f = {};
     headers.filter(h => h && h !== '#').forEach(h => { f[h] = ''; });
     return f;
   });
+  const uniq = (col) => [...new Set(rows.map(r => r[col]).filter(Boolean))].sort();
+
   return (
     <div className="pb-sheet-overlay" onClick={onClose}>
       <div className="pb-bottom-sheet pb-detail-sheet" onClick={e => e.stopPropagation()}>
@@ -217,9 +260,21 @@ function AddSheet({ headers, onClose, onSave, saving }) {
         <div className="pb-edit-fields">
           {headers.filter(h => h && h !== '#').map(h => (
             <div key={h} className="pb-edit-field">
-              <label className="pb-edit-label">{h}</label>
-              <input className="pb-edit-input" value={form[h]}
-                onChange={e => setForm(f => ({ ...f, [h]: e.target.value }))} />
+              <label className="pb-edit-label">
+                {h}
+                {isComboField(h) && <span className="pb-combo-hint"> — select or type new</span>}
+              </label>
+              {isComboField(h) ? (
+                <ComboField
+                  fieldName={h}
+                  value={form[h]}
+                  onChange={val => setForm(f => ({ ...f, [h]: val }))}
+                  options={uniq(h)}
+                />
+              ) : (
+                <input className="pb-edit-input" value={form[h]}
+                  onChange={e => setForm(f => ({ ...f, [h]: e.target.value }))} />
+              )}
             </div>
           ))}
         </div>
@@ -419,11 +474,11 @@ export default function PBDashboard() {
           onApply={setFilters} onClose={() => setSheet(null)} />
       )}
       {sheet === 'add' && (
-        <AddSheet headers={headers} saving={saving}
+        <AddSheet headers={headers} rows={rows} saving={saving}
           onClose={() => setSheet(null)} onSave={handleAdd} />
       )}
       {sheet?.type === 'detail' && (
-        <DetailSheet row={sheet.row} headers={headers} saving={saving}
+        <DetailSheet row={sheet.row} headers={headers} rows={rows} saving={saving}
           scriptUrl={scriptUrl}
           onClose={() => setSheet(null)}
           onSave={handleEdit}

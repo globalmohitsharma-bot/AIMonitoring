@@ -411,6 +411,32 @@
 }
 .pb-edit-input:focus { border-color: #6366f1; }
 
+/* ── Combo field ────────────────────────────────────────────── */
+.pb-combo-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.pb-combo-wrap .pb-edit-input {
+  padding-right: 32px;
+}
+.pb-combo-arrow {
+  position: absolute;
+  right: 10px;
+  color: #475569;
+  font-size: 0.75rem;
+  pointer-events: none;
+  user-select: none;
+}
+.pb-combo-hint {
+  font-weight: 400;
+  font-size: 0.66rem;
+  color: #6366f1;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-left: 4px;
+}
+
 /* ── Filter list ────────────────────────────────────────────── */
 .pb-filter-list {
   display: flex;
