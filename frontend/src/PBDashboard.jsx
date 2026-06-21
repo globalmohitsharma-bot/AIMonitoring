@@ -290,6 +290,8 @@ function AddSheet({ headers, rows, onClose, onSave, saving }) {
   );
 }
 
+
+
 // ── Card ──────────────────────────────────────────────────────────
 function RecordCard({ row, headers, onClick }) {
   const name     = row['Contact Name'] || row['Name'] || row['name'] || '—';
@@ -360,7 +362,13 @@ export default function PBDashboard() {
 
   const activeFilterCount = Object.values(filters).filter(Boolean).length;
 
+  const requireScript = (fn) => {
+    if (!scriptUrl) { setSheet('setup'); return; }
+    fn();
+  };
+
   const handleAdd = async (form) => {
+    if (!scriptUrl) { setSheet('setup'); return; }
     setSaving(true);
     const values = headers.map(h => form[h] ?? '');
     await callScript(scriptUrl, { action: 'append', values });
@@ -370,6 +378,7 @@ export default function PBDashboard() {
   };
 
   const handleEdit = async (form) => {
+    if (!scriptUrl) { setSheet('setup'); return; }
     setSaving(true);
     const values = headers.map(h => form[h] ?? '');
     await callScript(scriptUrl, { action: 'update', rowIndex: sheet.row.__row, values });
@@ -379,6 +388,7 @@ export default function PBDashboard() {
   };
 
   const handleDelete = async () => {
+    if (!scriptUrl) { setSheet('setup'); return; }
     if (!window.confirm('Delete this record?')) return;
     setSaving(true);
     await callScript(scriptUrl, { action: 'delete', rowIndex: sheet.row.__row });
@@ -456,9 +466,7 @@ export default function PBDashboard() {
       </main>
 
       {/* ── FAB ──────────────────────────────────── */}
-      <button className="pb-fab"
-        onClick={() => scriptUrl ? setSheet('add') : setSheet('setup')}
-        title="Add record">
+      <button className="pb-fab" onClick={() => setSheet('add')} title="Add record">
         +
       </button>
 
