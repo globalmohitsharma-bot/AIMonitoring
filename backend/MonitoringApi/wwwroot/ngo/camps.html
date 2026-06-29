@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Upcoming Camps | Shri Avadh Bihari Charitable Trust</title>
+  <meta name="description" content="Find and register for upcoming health, eye, food, and welfare camps organized by Shri Avadh Bihari Charitable Trust in Haridwar, Uttarakhand."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/ngo/css/style.css"/>
+  <link rel="stylesheet" href="/ngo/css/pages.css"/>
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-brand" href="/ngo/index.html">
+    <img src="/ngo/logo.png" alt="Shri Avadh Bihari Charitable Trust Logo" class="nav-logo-img"/>
+    <div><div class="nav-name">Shri Avadh Bihari</div><div class="nav-sub">Charitable Trust</div></div>
+  </a>
+  <div class="nav-links">
+    <a href="/ngo/about.html">About</a>
+    <a href="/ngo/programs.html">Programs</a>
+    <a href="/ngo/camps.html" style="color:var(--gold)">Camps</a>
+    <a href="/ngo/contact.html">Contact</a>
+    <a href="/ngo/donate.html" class="nav-cta">Donate</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/ngo/about.html" onclick="closeMobile()">About</a>
+  <a href="/ngo/programs.html" onclick="closeMobile()">Programs</a>
+  <a href="/ngo/camps.html" onclick="closeMobile()">Camps</a>
+  <a href="/ngo/contact.html" onclick="closeMobile()">Contact</a>
+  <a href="/ngo/donate.html" onclick="closeMobile()" style="color:var(--gold)">Donate</a>
+</div>
+
+<div class="page-hero" style="background:linear-gradient(135deg,#0D1B2A,#1B3A5C)">
+  <div class="container">
+    <div class="breadcrumb"><a href="/ngo/index.html">Home</a><span>/</span>Camps &amp; Events</div>
+    <h1 class="page-hero-h">Upcoming Camps &amp; Events</h1>
+    <p class="page-hero-sub">Register for a health camp, eye testing camp, food distribution, or any other community event near you. All services are completely free.</p>
+  </div>
+</div>
+
+<!-- Filter -->
+<section class="camps-page-section">
+  <div class="container">
+    <div class="camps-filter-bar">
+      <select class="cf-select" id="typeFilter" onchange="filterCamps()">
+        <option value="">All Camp Types</option>
+        <option value="Eye Camp">Eye Camp</option>
+        <option value="Medical Camp">Medical Camp</option>
+        <option value="Food Camp">Food Distribution</option>
+        <option value="Education">Education Drive</option>
+        <option value="General">General</option>
+      </select>
+      <input type="text" class="cf-select" id="searchFilter" placeholder="Search by name or location…" oninput="filterCamps()" style="flex:1;min-width:200px"/>
+    </div>
+
+    <!-- Loading state -->
+    <div id="loadingState" style="text-align:center;padding:64px">
+      <div style="font-size:3rem;margin-bottom:12px">⏳</div>
+      <p style="color:var(--muted)">Loading upcoming camps…</p>
+    </div>
+
+    <!-- Empty state -->
+    <div id="emptyState" style="display:none;text-align:center;padding:64px;background:#fff;border:1px solid var(--border);border-radius:var(--radius)">
+      <div style="font-size:3rem;margin-bottom:12px">📅</div>
+      <h3 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:8px">No Camps Found</h3>
+      <p style="color:var(--muted);margin-bottom:20px">No upcoming camps match your filters. Please check back soon or contact us.</p>
+      <a href="/ngo/contact.html" class="btn btn-gold">Contact Us</a>
+    </div>
+
+    <!-- Camps grid -->
+    <div id="campsGrid" class="camp-cards-grid" style="display:none"></div>
+  </div>
+</section>
+
+<!-- Registration CTA -->
+<div style="background:var(--gold-pale);border-top:1px solid rgba(200,134,10,.15);border-bottom:1px solid rgba(200,134,10,.15);padding:48px 0;text-align:center">
+  <div class="container">
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.7rem;color:var(--navy);margin-bottom:10px">Want to Volunteer at a Camp?</h2>
+    <p style="color:var(--muted);margin-bottom:24px;max-width:500px;margin-left:auto;margin-right:auto">We always need doctors, nurses, teachers, organizers, and helping hands. Join us as a volunteer.</p>
+    <a href="/ngo/contact.html" class="btn btn-gold">Volunteer with Us</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand"><div class="foot-logo">🙏 Shri Avadh Bihari Charitable Trust</div><p style="margin-top:10px">Serving with Seva, Supporting with Heart.</p><p style="margin-top:12px;font-size:.78rem;color:rgba(255,255,255,.3)">Shop No. 2, Ucchi Sadak, Arya Nagar,<br/>Jwalapur, Haridwar – 249407</p></div>
+      <div class="footer-col"><h4>Navigate</h4><a href="/ngo/index.html">Home</a><a href="/ngo/about.html">About</a><a href="/ngo/programs.html">Programs</a><a href="/ngo/camps.html">Camps</a><a href="/ngo/donate.html">Donate</a></div>
+      <div class="footer-col"><h4>Programs</h4><a href="/ngo/programs.html#education">Education</a><a href="/ngo/programs.html#health">Healthcare</a><a href="/ngo/programs.html#food">Food Distribution</a><a href="/ngo/programs.html#elderly">Elderly Care</a><a href="/ngo/programs.html#rural">Rural Dev.</a></div>
+    </div>
+    <div class="footer-bottom"><div class="footer-copy">© 2026 Shri Avadh Bihari Charitable Trust. All rights reserved.</div></div>
+  </div>
+</footer>
+
+<script>
+let allCamps = [];
+
+async function loadCamps() {
+  try {
+    const res = await fetch('/api/ngo/events');
+    const data = await res.json();
+    allCamps = data.filter(e => e.isActive !== false);
+    document.getElementById('loadingState').style.display = 'none';
+    renderCamps(allCamps);
+  } catch(e) {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'block';
+  }
+}
+
+function filterCamps() {
+  const type = document.getElementById('typeFilter').value.toLowerCase();
+  const q = document.getElementById('searchFilter').value.toLowerCase();
+  const filtered = allCamps.filter(c => {
+    const matchType = !type || (c.campType||'').toLowerCase().includes(type);
+    const matchQ = !q || (c.name||'').toLowerCase().includes(q) || (c.location||'').toLowerCase().includes(q);
+    return matchType && matchQ;
+  });
+  renderCamps(filtered);
+}
+
+function renderCamps(camps) {
+  const grid = document.getElementById('campsGrid');
+  const empty = document.getElementById('emptyState');
+  if (!camps.length) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  grid.style.display = 'grid';
+  const typeColors = {'Eye Camp':'#1B4B8A','Medical Camp':'#15803d','Food Camp':'#b45309','Education':'#7c3aed','General':'var(--gold)'};
+  const typeIcons  = {'Eye Camp':'👁️','Medical Camp':'🏥','Food Camp':'🍱','Education':'📚','General':'🤝'};
+  grid.innerHTML = camps.map(c => {
+    const color = typeColors[c.campType] || 'var(--gold)';
+    const icon = typeIcons[c.campType] || '🏕️';
+    const date = c.campDate ? new Date(c.campDate).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}) : 'Date TBD';
+    return `
+    <div class="camp-card">
+      <div class="camp-card-top" style="background:${color}">
+        <div style="font-size:2.2rem;margin-bottom:8px">${icon}</div>
+        <div class="camp-type-badge">${c.campType||'Camp'}</div>
+      </div>
+      <div class="camp-card-body">
+        <h3 class="camp-name">${c.name}</h3>
+        ${c.description?`<p class="camp-desc">${c.description}</p>`:''}
+        <div class="camp-meta">
+          <span>📅 ${date}</span>
+          ${c.location?`<span>📍 ${c.location}</span>`:''}
+          ${c.maxParticipants?`<span>👥 Max ${c.maxParticipants}</span>`:''}
+        </div>
+        <a href="/ngo/register.html?eventId=${c.id}" class="btn btn-gold" style="width:100%;justify-content:center;margin-top:16px">Register Now →</a>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleMenu(){ const m=document.getElementById('mobileMenu'); m.style.display=m.style.display==='flex'?'none':'flex'; }
+function closeMobile(){ document.getElementById('mobileMenu').style.display='none'; }
+window.addEventListener('scroll',()=>{ document.querySelector('.navbar').style.boxShadow=window.scrollY>20?'0 4px 24px rgba(0,0,0,.3)':'none'; });
+
+loadCamps();
+</script>
+</body>
+</html>

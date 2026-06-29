@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Donate | Shri Avadh Bihari Charitable Trust</title>
+  <meta name="description" content="Your donation helps Shri Avadh Bihari Charitable Trust serve hundreds of lives across Haridwar — fund eye camps, school kits, food drives, and more."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/ngo/css/style.css"/>
+  <link rel="stylesheet" href="/ngo/css/pages.css"/>
+  <style>
+    /* ── Donate page premium styles ─────────────────────────── */
+    .donate-hero{
+      background:linear-gradient(135deg,#0D1B2A 0%,#1a2e46 50%,#0D1B2A 100%);
+      padding:80px 0 64px;position:relative;overflow:hidden;
+    }
+    .donate-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 30% 50%,rgba(200,134,10,.12),transparent);}
+    .donate-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 80% 30%,rgba(200,134,10,.06),transparent);}
+    .donate-layout{display:grid;grid-template-columns:1.1fr 0.9fr;gap:56px;align-items:start;padding:72px 0}
+    .donate-form-card{background:#fff;border-radius:var(--radius-lg);padding:40px;box-shadow:0 24px 64px rgba(0,0,0,.12);border:1px solid var(--border)}
+    .donate-sidebar{display:flex;flex-direction:column;gap:24px}
+    .amount-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+    .amt-btn{
+      border:2px solid var(--border);background:#fff;border-radius:12px;padding:16px 8px;
+      text-align:center;cursor:pointer;transition:all .2s;
+    }
+    .amt-btn:hover{border-color:var(--gold);background:var(--gold-pale)}
+    .amt-btn.active{border-color:var(--gold);background:var(--gold-pale);box-shadow:0 0 0 3px rgba(200,134,10,.15)}
+    .amt-rs{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--navy)}
+    .amt-desc{font-size:.68rem;color:var(--muted);margin-top:4px;line-height:1.4}
+    .custom-amt{width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:10px;font-size:1rem;font-family:inherit;color:var(--navy);margin-bottom:20px;transition:border-color .2s}
+    .custom-amt:focus{outline:none;border-color:var(--gold)}
+    .donate-form-group{margin-bottom:16px}
+    .donate-label{display:block;font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+    .donate-input{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:inherit;box-sizing:border-box;transition:border-color .2s}
+    .donate-input:focus{outline:none;border-color:var(--gold)}
+    .donate-submit{
+      width:100%;padding:18px 24px;background:var(--gold);color:#fff;
+      border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:inherit;
+      cursor:pointer;transition:all .2s;letter-spacing:.02em;margin-top:8px;
+    }
+    .donate-submit:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(200,134,10,.35)}
+    .trust-badges{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+    .trust-badge{display:flex;align-items:center;gap:10px;font-size:.82rem;color:var(--muted)}
+    .trust-badge-icon{width:28px;height:28px;border-radius:50%;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+    .impact-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm)}
+    .impact-card h4{font-family:'Playfair Display',serif;font-weight:700;color:var(--navy);margin-bottom:14px;font-size:1rem}
+    .impact-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+    .impact-item:last-child{border-bottom:none}
+    .impact-amt{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--gold);min-width:60px}
+    .impact-what{font-size:.82rem;color:#374151;line-height:1.4}
+    .bank-card{background:linear-gradient(135deg,var(--navy),#1B3A5C);border-radius:var(--radius);padding:28px;color:#fff}
+    .bank-card h4{font-family:'Playfair Display',serif;font-weight:700;margin-bottom:16px;color:var(--gold);font-size:1rem}
+    .bank-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.83rem}
+    .bank-row:last-child{border-bottom:none}
+    .bank-key{color:rgba(255,255,255,.5);font-size:.75rem;text-transform:uppercase;letter-spacing:.06em}
+    .bank-val{color:#fff;font-weight:600}
+    .success-box{display:none;background:linear-gradient(135deg,#15803d,#16a34a);color:#fff;border-radius:var(--radius-lg);padding:40px;text-align:center}
+    .success-box.show{display:block}
+    @media(max-width:900px){.donate-layout{grid-template-columns:1fr}}
+    @media(max-width:480px){.amount-grid{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-brand" href="/ngo/index.html">
+    <img src="/ngo/logo.png" alt="Shri Avadh Bihari Charitable Trust Logo" class="nav-logo-img"/>
+    <div><div class="nav-name">Shri Avadh Bihari</div><div class="nav-sub">Charitable Trust</div></div>
+  </a>
+  <div class="nav-links">
+    <a href="/ngo/about.html">About</a>
+    <a href="/ngo/programs.html">Programs</a>
+    <a href="/ngo/camps.html">Camps</a>
+    <a href="/ngo/contact.html">Contact</a>
+    <a href="/ngo/donate.html" class="nav-cta" style="background:var(--gold)">Donate</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/ngo/about.html" onclick="closeMobile()">About</a>
+  <a href="/ngo/programs.html" onclick="closeMobile()">Programs</a>
+  <a href="/ngo/camps.html" onclick="closeMobile()">Camps</a>
+  <a href="/ngo/contact.html" onclick="closeMobile()">Contact</a>
+  <a href="/ngo/donate.html" onclick="closeMobile()" style="color:var(--gold)">Donate</a>
+</div>
+
+<!-- Hero -->
+<div class="donate-hero">
+  <div class="container" style="position:relative;z-index:1">
+    <div class="breadcrumb"><a href="/ngo/index.html">Home</a><span>/</span>Donate</div>
+    <h1 class="page-hero-h" style="max-width:620px">Your Generosity Changes Lives</h1>
+    <p class="page-hero-sub" style="max-width:540px">Every rupee you donate goes directly to funding eye camps, school kits, food drives, and care for the elderly. No hidden costs. Full transparency.</p>
+    <div style="display:flex;gap:20px;margin-top:32px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.7);font-size:.88rem"><span style="color:var(--gold);font-size:1.1rem">✓</span>Transparent use of funds</div>
+      <div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.7);font-size:.88rem"><span style="color:var(--gold);font-size:1.1rem">✓</span>No platform fee</div>
+      <div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.7);font-size:.88rem"><span style="color:var(--gold);font-size:1.1rem">✓</span>Every rupee reaches those in need</div>
+    </div>
+  </div>
+</div>
+
+<!-- Donate Layout -->
+<div class="container">
+  <div class="donate-layout">
+    <!-- Left: Form -->
+    <div>
+      <!-- Form -->
+      <div class="donate-form-card" id="donateCard">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--navy);margin-bottom:6px">Make a Donation</h2>
+        <p style="font-size:.85rem;color:var(--muted);margin-bottom:28px">Choose an amount or enter your own. Every contribution makes a real difference.</p>
+
+        <div style="font-size:.8rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Select Amount</div>
+        <div class="amount-grid">
+          <div class="amt-btn" onclick="selectAmt(this,500)">
+            <div class="amt-rs">₹500</div>
+            <div class="amt-desc">1 child's school kit</div>
+          </div>
+          <div class="amt-btn" onclick="selectAmt(this,1000)">
+            <div class="amt-rs">₹1,000</div>
+            <div class="amt-desc">Eye test + glasses for 1</div>
+          </div>
+          <div class="amt-btn active" onclick="selectAmt(this,2500)">
+            <div class="amt-rs">₹2,500</div>
+            <div class="amt-desc">Food ration for a family</div>
+          </div>
+          <div class="amt-btn" onclick="selectAmt(this,5000)">
+            <div class="amt-rs">₹5,000</div>
+            <div class="amt-desc">Fund a full camp day</div>
+          </div>
+          <div class="amt-btn" onclick="selectAmt(this,10000)">
+            <div class="amt-rs">₹10,000</div>
+            <div class="amt-desc">Month of elderly care</div>
+          </div>
+          <div class="amt-btn" onclick="selectAmt(this,25000)">
+            <div class="amt-rs">₹25,000</div>
+            <div class="amt-desc">Sponsor a health camp</div>
+          </div>
+        </div>
+
+        <div style="font-size:.8rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Or Enter Amount</div>
+        <div style="position:relative;margin-bottom:24px">
+          <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1.1rem;color:var(--muted)">₹</span>
+          <input type="number" class="custom-amt" id="customAmt" placeholder="0" min="1" style="padding-left:32px" oninput="clearSelection()"/>
+        </div>
+
+        <div style="border-top:1px solid var(--border);padding-top:24px;margin-bottom:20px">
+          <div style="font-size:.85rem;font-weight:700;color:var(--navy);margin-bottom:14px">Your Details</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="donate-form-group">
+              <label class="donate-label">First Name</label>
+              <input type="text" class="donate-input" id="firstName" placeholder="Your name"/>
+            </div>
+            <div class="donate-form-group">
+              <label class="donate-label">Phone</label>
+              <input type="tel" class="donate-input" id="phone" placeholder="+91 XXXXX XXXXX"/>
+            </div>
+          </div>
+          <div class="donate-form-group">
+            <label class="donate-label">Email (for receipt)</label>
+            <input type="email" class="donate-input" id="email" placeholder="you@example.com"/>
+          </div>
+          <div class="donate-form-group">
+            <label class="donate-label">Donate Towards (Optional)</label>
+            <select class="donate-input" id="purpose">
+              <option value="">Where needed most</option>
+              <option>Education Support</option>
+              <option>Health &amp; Eye Camps</option>
+              <option>Food Distribution</option>
+              <option>Elderly &amp; Widow Support</option>
+              <option>Rural Development</option>
+            </select>
+          </div>
+          <div class="donate-form-group">
+            <label class="donate-label">Message (Optional)</label>
+            <textarea class="donate-input" id="message" rows="2" placeholder="A note of encouragement…" style="resize:vertical"></textarea>
+          </div>
+        </div>
+
+        <button class="donate-submit" onclick="submitDonate()">❤️ Donate Now — ₹<span id="btnAmt">2,500</span></button>
+
+        <div class="trust-badges">
+          <div class="trust-badge"><div class="trust-badge-icon">🔒</div>Your information is private and secure</div>
+          <div class="trust-badge"><div class="trust-badge-icon">📜</div>Registered charitable trust</div>
+          <div class="trust-badge"><div class="trust-badge-icon">💯</div>100% of donation reaches beneficiaries</div>
+        </div>
+      </div>
+
+      <!-- Success Box -->
+      <div class="success-box" id="successBox">
+        <div style="font-size:3.5rem;margin-bottom:12px">🙏</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:10px">Thank You!</h2>
+        <p style="opacity:.85;margin-bottom:8px">Your generous contribution has been received.</p>
+        <p style="opacity:.7;font-size:.9rem;margin-bottom:24px">Dr. Poonam Gupta and the entire team at Shri Avadh Bihari Charitable Trust are deeply grateful for your support.</p>
+        <div style="background:rgba(255,255,255,.15);border-radius:10px;padding:20px;text-align:left;margin-bottom:24px">
+          <div style="font-size:.78rem;opacity:.7;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Bank Transfer Details</div>
+          <div style="font-size:.88rem;line-height:2">
+            Account Name: Shri Avadh Bihari Charitable Trust<br/>
+            Contact: poonam.gupta@shriavadhbiharicharitabletrust.org
+          </div>
+        </div>
+        <button onclick="resetForm()" style="background:rgba(255,255,255,.2);color:#fff;border:2px solid rgba(255,255,255,.4);padding:12px 28px;border-radius:10px;font-size:.9rem;font-family:inherit;cursor:pointer">Make Another Donation</button>
+      </div>
+
+      <!-- Bank transfer box -->
+      <div class="bank-card" style="margin-top:24px">
+        <h4>🏦 Bank Transfer / NEFT</h4>
+        <div class="bank-row"><span class="bank-key">Account Name</span><span class="bank-val">Shri Avadh Bihari Charitable Trust</span></div>
+        <div class="bank-row"><span class="bank-key">Contact for Details</span><span class="bank-val">poonam.gupta@shriavadhbiharicharitabletrust.org</span></div>
+        <div style="margin-top:14px;font-size:.78rem;color:rgba(255,255,255,.45)">Contact us by email to receive full bank details for NEFT/RTGS transfer.</div>
+      </div>
+    </div>
+
+    <!-- Right: Impact + Trust -->
+    <div class="donate-sidebar">
+      <!-- Impact of your money -->
+      <div class="impact-card">
+        <h4>❤️ What Your Donation Funds</h4>
+        <div class="impact-item">
+          <div class="impact-amt">₹500</div>
+          <div class="impact-what">Provides a complete school kit (bag, books, uniform) for one child</div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-amt">₹1,000</div>
+          <div class="impact-what">Free eye test and prescription glasses for one rural patient</div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-amt">₹2,500</div>
+          <div class="impact-what">A month's food ration kit for a family in need</div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-amt">₹5,000</div>
+          <div class="impact-what">Funds medical equipment and medicines for one camp day</div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-amt">₹10,000</div>
+          <div class="impact-what">One month of dedicated care and support for an elderly person</div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-amt">₹25,000</div>
+          <div class="impact-what">Organizes and runs a complete health or eye camp for 100+ patients</div>
+        </div>
+      </div>
+
+      <!-- Quote -->
+      <div style="background:var(--gold-pale);border:1px solid rgba(200,134,10,.2);border-radius:var(--radius);padding:28px">
+        <div style="font-size:1.8rem;color:var(--gold);margin-bottom:10px">"</div>
+        <p style="font-style:italic;color:var(--navy);font-size:.9rem;line-height:1.7;margin-bottom:14px">There is a lot that happens around the world we cannot control… but when we know where the hungry, the homeless and the sick exist, then we can help.</p>
+        <div style="font-size:.78rem;color:var(--gold);font-weight:700">— Jan Schakowsky</div>
+      </div>
+
+      <!-- Dr. Poonam -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+          <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#e6980a);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">👩‍⚕️</div>
+          <div>
+            <div style="font-family:'Playfair Display',serif;font-weight:700;color:var(--navy);font-size:.92rem">Dr. Poonam Gupta</div>
+            <div style="font-size:.75rem;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.06em">Chairwoman</div>
+          </div>
+        </div>
+        <p style="font-size:.83rem;color:var(--muted);line-height:1.65;font-style:italic">"Our trust has completed hundreds of initiatives in education, healthcare, and child protection. Every single donation — small or large — makes these programs possible. Thank you for being part of our mission."</p>
+      </div>
+
+      <!-- Contact -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;font-size:.83rem;color:var(--muted)">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:10px">📬 Questions About Donating?</div>
+        <p>We're happy to answer any questions about how your donation is used.</p>
+        <a href="mailto:poonam.gupta@shriavadhbiharicharitabletrust.org" style="color:var(--gold);font-weight:600;word-break:break-all">poonam.gupta@shriavadhbiharicharitabletrust.org</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Other ways -->
+<div style="background:var(--navy);padding:64px 0">
+  <div class="container">
+    <div class="section-head" style="margin-bottom:36px">
+      <div class="gold-line"></div>
+      <h2 class="section-h" style="color:#fff">Other Ways to Help</h2>
+      <p style="color:rgba(255,255,255,.6)">Money is not the only way to make a difference. Every contribution matters.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px">
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:28px;text-align:center">
+        <div style="font-size:2rem;margin-bottom:8px">🤝</div>
+        <h4 style="color:#fff;font-family:'Playfair Display',serif;margin-bottom:8px">Volunteer</h4>
+        <p style="font-size:.83rem;color:rgba(255,255,255,.55);line-height:1.6">Give your time and skills at camps, drives, and events.</p>
+        <a href="/ngo/contact.html" style="color:var(--gold);font-size:.82rem;font-weight:700;display:inline-block;margin-top:12px">Join as Volunteer →</a>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:28px;text-align:center">
+        <div style="font-size:2rem;margin-bottom:8px">📦</div>
+        <h4 style="color:#fff;font-family:'Playfair Display',serif;margin-bottom:8px">Donate in Kind</h4>
+        <p style="font-size:.83rem;color:rgba(255,255,255,.55);line-height:1.6">Clothes, school supplies, medicines, food — we accept all.</p>
+        <a href="/ngo/contact.html" style="color:var(--gold);font-size:.82rem;font-weight:700;display:inline-block;margin-top:12px">Contact Us →</a>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:28px;text-align:center">
+        <div style="font-size:2rem;margin-bottom:8px">📣</div>
+        <h4 style="color:#fff;font-family:'Playfair Display',serif;margin-bottom:8px">Spread the Word</h4>
+        <p style="font-size:.83rem;color:rgba(255,255,255,.55);line-height:1.6">Share our work with friends and family. Awareness saves lives.</p>
+        <a href="#" style="color:var(--gold);font-size:.82rem;font-weight:700;display:inline-block;margin-top:12px">Share Our Mission →</a>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:28px;text-align:center">
+        <div style="font-size:2rem;margin-bottom:8px">🏢</div>
+        <h4 style="color:#fff;font-family:'Playfair Display',serif;margin-bottom:8px">Corporate CSR</h4>
+        <p style="font-size:.83rem;color:rgba(255,255,255,.55);line-height:1.6">Partner with us for your CSR activities. We provide full documentation.</p>
+        <a href="/ngo/contact.html" style="color:var(--gold);font-size:.82rem;font-weight:700;display:inline-block;margin-top:12px">Contact for CSR →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand"><div class="foot-logo">🙏 Shri Avadh Bihari Charitable Trust</div><p style="margin-top:10px">Serving with Seva, Supporting with Heart.</p><p style="margin-top:12px;font-size:.78rem;color:rgba(255,255,255,.3)">Shop No. 2, Ucchi Sadak, Arya Nagar,<br/>Jwalapur, Haridwar – 249407</p></div>
+      <div class="footer-col"><h4>Navigate</h4><a href="/ngo/index.html">Home</a><a href="/ngo/about.html">About</a><a href="/ngo/programs.html">Programs</a><a href="/ngo/camps.html">Camps</a><a href="/ngo/donate.html">Donate</a></div>
+      <div class="footer-col"><h4>Programs</h4><a href="/ngo/programs.html#education">Education</a><a href="/ngo/programs.html#health">Healthcare</a><a href="/ngo/programs.html#food">Food Distribution</a><a href="/ngo/programs.html#elderly">Elderly Care</a><a href="/ngo/programs.html#rural">Rural Dev.</a></div>
+    </div>
+    <div class="footer-bottom"><div class="footer-copy">© 2026 Shri Avadh Bihari Charitable Trust. All rights reserved.</div></div>
+  </div>
+</footer>
+
+<script>
+let selectedAmt = 2500;
+function selectAmt(el, amt) {
+  document.querySelectorAll('.amt-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  selectedAmt = amt;
+  document.getElementById('customAmt').value = '';
+  document.getElementById('btnAmt').textContent = amt.toLocaleString('en-IN');
+}
+function clearSelection() {
+  document.querySelectorAll('.amt-btn').forEach(b=>b.classList.remove('active'));
+  const v = parseInt(document.getElementById('customAmt').value)||0;
+  selectedAmt = v;
+  document.getElementById('btnAmt').textContent = v ? v.toLocaleString('en-IN') : '0';
+}
+function submitDonate() {
+  const amt = parseInt(document.getElementById('customAmt').value) || selectedAmt;
+  if (!amt || amt < 1) { alert('Please select or enter an amount.'); return; }
+  const name = document.getElementById('firstName').value.trim();
+  if (!name) { alert('Please enter your name.'); return; }
+  document.getElementById('donateCard').style.display = 'none';
+  document.getElementById('successBox').classList.add('show');
+  window.scrollTo({top: document.getElementById('successBox').offsetTop - 80, behavior:'smooth'});
+}
+function resetForm() {
+  document.getElementById('donateCard').style.display = 'block';
+  document.getElementById('successBox').classList.remove('show');
+  document.getElementById('customAmt').value = '';
+  document.getElementById('firstName').value = '';
+  document.getElementById('phone').value = '';
+  document.getElementById('email').value = '';
+  document.getElementById('message').value = '';
+  selectAmt(document.querySelectorAll('.amt-btn')[2], 2500);
+}
+function toggleMenu(){ const m=document.getElementById('mobileMenu'); m.style.display=m.style.display==='flex'?'none':'flex'; }
+function closeMobile(){ document.getElementById('mobileMenu').style.display='none'; }
+window.addEventListener('scroll',()=>{ document.querySelector('.navbar').style.boxShadow=window.scrollY>20?'0 4px 24px rgba(0,0,0,.3)':'none'; });
+</script>
+</body>
+</html>

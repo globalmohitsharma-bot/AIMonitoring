@@ -10,15 +10,17 @@ a{color:inherit;text-decoration:none}
   --gold:#C8860A;
   --gold-light:#E8A020;
   --gold-pale:#FFF8ED;
-  --navy:#0D1B2A;
-  --navy2:#1A2E44;
+  /* Krishna/Peacock blue theme */
+  --navy:#0A1F6B;
+  --navy2:#122690;
+  --peacock:#007C7C;
   --blue:#1B4B8A;
   --green:#15803d;
-  --bg:#FAFAF9;
-  --bg2:#F5F3EF;
-  --border:#E8E2D8;
-  --text:#1a1a2e;
-  --muted:#6b7280;
+  --bg:#F4F8FF;
+  --bg2:#EBF0FA;
+  --border:#D4DCF0;
+  --text:#0d1533;
+  --muted:#5a6480;
   --radius:16px;
   --radius-lg:24px;
   --shadow-sm:0 2px 8px rgba(0,0,0,.06);
@@ -31,11 +33,12 @@ a{color:inherit;text-decoration:none}
   position:fixed;top:0;left:0;right:0;z-index:100;
   height:72px;padding:0 40px;
   display:flex;align-items:center;justify-content:space-between;
-  background:rgba(13,27,42,.92);backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(200,134,10,.18);
+  background:rgba(10,31,107,.94);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(200,134,10,.2);
   transition:all .3s;
 }
 .nav-brand{display:flex;align-items:center;gap:12px}
+.nav-logo-img{width:40px;height:40px;border-radius:50%;object-fit:contain;background:#fff;padding:3px;flex-shrink:0;box-shadow:0 0 0 2px rgba(200,134,10,.4)}
 .nav-emblem{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
 .nav-name{font-family:'Playfair Display','Georgia',serif;font-weight:700;font-size:1rem;color:#fff;line-height:1.1}
 .nav-sub{font-size:.62rem;color:rgba(200,134,10,.85);letter-spacing:.06em;text-transform:uppercase;margin-top:1px}
@@ -81,18 +84,20 @@ body{padding-top:72px}
 /* ── Hero ───────────────────────────────────────────────────── */
 .hero{
   position:relative;min-height:calc(100vh - 72px);
-  background:linear-gradient(160deg,var(--navy) 0%,#152238 40%,#1a1035 100%);
+  background:linear-gradient(160deg,#06144D 0%,#0A1F6B 40%,#0E2780 60%,#071440 100%);
   display:flex;align-items:center;overflow:hidden;
 }
 .hero::before{
   content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 80% 60% at 70% 50%,rgba(200,134,10,.12) 0%,transparent 70%);
+  background:radial-gradient(ellipse 70% 60% at 75% 40%,rgba(0,124,124,.18) 0%,transparent 60%),
+             radial-gradient(ellipse 50% 50% at 20% 70%,rgba(200,134,10,.1) 0%,transparent 60%);
   pointer-events:none;
 }
+/* Peacock feather decorative rings */
 .hero::after{
   content:'';position:absolute;
   width:600px;height:600px;border-radius:50%;
-  border:1px solid rgba(200,134,10,.08);
+  border:1px solid rgba(0,124,124,.12);
   top:50%;left:65%;transform:translate(-50%,-50%);
   pointer-events:none;
 }
@@ -407,6 +412,27 @@ footer{
 .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
 .admin-spinner{border-color:#374151;border-top-color:#C8860A}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Camp cards grid (camps.html) ───────────────────────────── */
+.camp-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+.camp-type-badge{display:inline-block;background:rgba(255,255,255,.2);color:#fff;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:4px 12px;border-radius:40px;margin-bottom:10px}
+.camp-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:8px}
+.camp-desc{font-size:.83rem;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.camp-meta{display:flex;flex-direction:column;gap:6px;font-size:.82rem;color:var(--muted)}
+
+/* ── Peacock feather decorative motif ──────────────────────── */
+.peacock-decor{
+  position:absolute;pointer-events:none;opacity:.06;
+  width:300px;height:400px;
+  background:conic-gradient(
+    from 200deg at 50% 100%,
+    #C8860A 0deg, #007C7C 40deg, #1B4B8A 80deg,
+    #7C3AED 120deg, #007C7C 160deg, #C8860A 200deg,
+    transparent 200deg
+  );
+  border-radius:50% 50% 0 0;
+}
+.hero-peacock{right:-60px;bottom:0;opacity:.07;transform:rotate(-15deg)}
 
 /* ── Responsive ─────────────────────────────────────────────── */
 @media(max-width:900px){
