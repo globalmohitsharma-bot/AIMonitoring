@@ -52,6 +52,16 @@ app.UseStaticFiles(new StaticFileOptions
 
 app.MapControllers();
 app.MapHub<MonitoringHub>("/hub/monitoring");
+
+// Serve SEO-optimised static page for /resume (before SPA fallback)
+app.MapGet("/resume", async ctx =>
+{
+    ctx.Response.ContentType = "text/html; charset=utf-8";
+    ctx.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";
+    await ctx.Response.SendFileAsync(
+        Path.Combine(app.Environment.WebRootPath, "resume.html"));
+});
+
 app.MapFallbackToFile("index.html");
 
 app.Run();
