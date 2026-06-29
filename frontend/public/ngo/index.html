@@ -29,39 +29,41 @@ body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(
 .o1{width:420px;height:420px;background:radial-gradient(#007C7C28,transparent 70%);top:-15%;right:0}
 .o2{width:300px;height:300px;background:radial-gradient(#C8860A18,transparent 70%);bottom:-10%;left:-5%}
 
-.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;position:relative;z-index:2;padding:44px 0 8px}
-.hero-left{max-width:none}
+/* Full-bleed hero — removes empty side gutters */
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;min-height:540px;position:relative;z-index:2}
 .hero-badge{display:none}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,2.6vw,2.5rem);font-weight:800;color:#fff;line-height:1.2;margin-bottom:18px;animation:fadeUp .7s ease .08s both}
+.hero-left-col{padding:56px clamp(24px,8vw,140px) 52px clamp(24px,8vw,140px);display:flex;flex-direction:column;justify-content:center}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,2.2vw,2.3rem);font-weight:800;color:#fff;line-height:1.2;margin-bottom:18px;animation:fadeUp .7s ease .08s both}
 .hero h1 em{font-style:italic;color:var(--gold)}
-.hero-sub{color:rgba(255,255,255,.6);font-size:.95rem;line-height:1.78;margin-bottom:24px;font-weight:300;animation:fadeUp .7s ease .16s both}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;animation:fadeUp .7s ease .22s both}
-
-/* ── Right: Impact Panel ── */
-.hero-panel{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:30px;backdrop-filter:blur(14px);animation:fadeIn 1s ease .35s both}
-.hp-eyebrow{font-size:.62rem;text-transform:uppercase;letter-spacing:.13em;color:var(--gold);font-weight:700;margin-bottom:5px}
-.hp-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:#fff;font-weight:700;margin-bottom:22px;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:16px}
-.hp-stat{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-.hp-stat:last-child{border-bottom:none}
-.hp-icon-box{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-.hp-info{flex:1;min-width:0}
-.hp-label{font-size:.72rem;color:rgba(255,255,255,.45);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hp-bar-wrap{height:4px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden}
-.hp-bar-fill{height:100%;border-radius:4px;width:0%;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
-.hp-num{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--gold);flex-shrink:0;margin-left:8px}
-.hp-foot{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);font-size:.73rem;color:rgba(255,255,255,.32);font-style:italic;line-height:1.55}
+.hero-sub{color:rgba(255,255,255,.6);font-size:.92rem;line-height:1.78;margin-bottom:24px;font-weight:300;animation:fadeUp .7s ease .16s both}
 
 /* Hero stats row */
-.hero-stats{display:flex;gap:0;margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.07);animation:fadeUp .7s ease .3s both}
-.hs{flex:1;padding:0 16px;border-right:1px solid rgba(255,255,255,.07);text-align:center}
+.hero-stats{display:flex;gap:0;margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.07);animation:fadeUp .7s ease .3s both}
+.hs{flex:1;padding:0 12px;border-right:1px solid rgba(255,255,255,.07);text-align:center}
 .hs:first-child{padding-left:0;text-align:left}
 .hs:last-child{border-right:none}
-.hs-n{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold)}
-.hs-l{font-size:.62rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+.hs-n{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--gold)}
+.hs-l{font-size:.6rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
 
-/* Hero wave bottom */
-.hero-wave{display:block;width:100%;height:48px;margin-bottom:-2px}
+/* Right: 5 Things We Do */
+.hero-what-col{background:rgba(0,0,0,.2);border-left:1px solid rgba(255,255,255,.07);padding:52px clamp(24px,8vw,140px) 52px 48px;display:flex;flex-direction:column;justify-content:center;animation:fadeIn 1s ease .3s both}
+.hwp-ey{font-size:.62rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);font-weight:700;margin-bottom:6px}
+.hwp-head{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.hwp-item{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.05);text-decoration:none;transition:padding-left .2s}
+.hwp-item:last-of-type{border-bottom:none}
+.hwp-item:hover{padding-left:4px}
+.hwp-item:hover .hwp-name{color:var(--gold)}
+.hwp-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
+.hwp-body{flex:1;min-width:0}
+.hwp-name{font-size:.88rem;font-weight:600;color:#fff;margin-bottom:2px;transition:color .2s}
+.hwp-desc{font-size:.73rem;color:rgba(255,255,255,.38);line-height:1.4}
+.hwp-stat{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--gold);flex-shrink:0;margin-left:6px}
+.hwp-cta{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#fff;padding:12px 22px;border-radius:10px;font-size:.83rem;font-weight:700;text-decoration:none;margin-top:22px;transition:all .22s;align-self:flex-start}
+.hwp-cta:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,134,10,.3)}
+
+/* No gold wave stripe */
+.hero-wave{display:none}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -263,9 +265,10 @@ body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(
 /* ────────────────────────────────────────────
    RESPONSIVE
 ──────────────────────────────────────────── */
-@media(max-width:1024px){
+@media(max-width:900px){
   .hero-inner{grid-template-columns:1fr}
-  .hero-panel{display:none}
+  .hero-what-col{border-left:none;border-top:1px solid rgba(255,255,255,.07);padding:40px 24px}
+  .hero-left-col{padding:48px 24px 36px}
 }
 @media(max-width:900px){
   .qa-grid{grid-template-columns:1fr}
@@ -340,74 +343,76 @@ body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(
   <div class="hero-grid"></div>
   <div class="o1 orb"></div>
   <div class="o2 orb"></div>
-  <div class="container">
-    <div class="hero-inner">
-      <div class="hero-left">
-        <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);margin-bottom:14px;animation:fadeUp .7s ease both">Haridwar, Uttarakhand &mdash; Since 2024</p>
-        <h1>Free <span class="type-word" id="typeWord">Eye Camps</span> &amp; Community Services Across Uttarakhand</h1>
-        <p class="hero-sub">Every month our team reaches underserved villages to deliver <strong style="color:#fff;font-weight:600">100% free</strong> healthcare, education, food, and elderly care &mdash; no fees, no barriers, just service.</p>
-        <div class="prog-chips">
-          <a href="/ngo/programs.html#health" class="p-chip p-chip-h">&#x1F3E5; Health Camps</a>
-          <a href="/ngo/programs.html#education" class="p-chip p-chip-e">&#x1F4DA; Education</a>
-          <a href="/ngo/programs.html#food" class="p-chip p-chip-f">&#x1F371; Food Drives</a>
-          <a href="/ngo/programs.html#elderly" class="p-chip p-chip-o">&#x1F9D3; Elderly Care</a>
-          <a href="/ngo/programs.html#rural" class="p-chip p-chip-r">&#x1F33F; Rural Dev</a>
-        </div>
-        <div class="hero-actions">
-          <a href="/ngo/camps.html" class="btn btn-gold">Find a Free Camp &rarr;</a>
-          <a href="/ngo/donate.html" class="btn-ghost-gold">Support This Mission</a>
-        </div>
+  <div class="hero-inner">
+
+    <!-- LEFT: heading + chips + stats -->
+    <div class="hero-left-col">
+      <p style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);margin-bottom:14px;animation:fadeUp .7s ease both">Haridwar, Uttarakhand &mdash; Since 2024</p>
+      <h1>Free <span class="type-word" id="typeWord">Eye Camps</span> &amp; Community Services Across Uttarakhand</h1>
+      <p class="hero-sub">Every month our team reaches underserved villages to deliver <strong style="color:#fff;font-weight:600">100% free</strong> healthcare, education, food, and elderly care &mdash; no fees, no barriers, just service.</p>
+      <div class="prog-chips">
+        <a href="/ngo/programs.html#health" class="p-chip p-chip-h">&#x1F3E5; Health Camps</a>
+        <a href="/ngo/programs.html#education" class="p-chip p-chip-e">&#x1F4DA; Education</a>
+        <a href="/ngo/programs.html#food" class="p-chip p-chip-f">&#x1F371; Food Drives</a>
+        <a href="/ngo/programs.html#elderly" class="p-chip p-chip-o">&#x1F9D3; Elderly Care</a>
+        <a href="/ngo/programs.html#rural" class="p-chip p-chip-r">&#x1F33F; Rural Dev</a>
       </div>
-      <div class="hero-panel" id="heroPanel">
-        <div class="hp-eyebrow">Our Impact</div>
-        <div class="hp-title">What We&rsquo;ve Achieved So Far</div>
-        <div class="hp-stat">
-          <div class="hp-icon-box">&#x1F3E5;</div>
-          <div class="hp-info">
-            <div class="hp-label">Healthcare Patients Treated</div>
-            <div class="hp-bar-wrap"><div class="hp-bar-fill" data-w="80" style="background:linear-gradient(90deg,#C8860A,#E09A18)"></div></div>
-          </div>
-          <div class="hp-num">200+</div>
-        </div>
-        <div class="hp-stat">
-          <div class="hp-icon-box">&#x1F4DA;</div>
-          <div class="hp-info">
-            <div class="hp-label">Children Supported with Education</div>
-            <div class="hp-bar-wrap"><div class="hp-bar-fill" data-w="55" style="background:linear-gradient(90deg,#60a5fa,#2563eb)"></div></div>
-          </div>
-          <div class="hp-num">100+</div>
-        </div>
-        <div class="hp-stat">
-          <div class="hp-icon-box">&#x1F371;</div>
-          <div class="hp-info">
-            <div class="hp-label">Families Receiving Food Kits</div>
-            <div class="hp-bar-wrap"><div class="hp-bar-fill" data-w="90" style="background:linear-gradient(90deg,#fb923c,#ea580c)"></div></div>
-          </div>
-          <div class="hp-num">300+</div>
-        </div>
-        <div class="hp-stat">
-          <div class="hp-icon-box">&#x1F33F;</div>
-          <div class="hp-info">
-            <div class="hp-label">Villages Reached</div>
-            <div class="hp-bar-wrap"><div class="hp-bar-fill" data-w="45" style="background:linear-gradient(90deg,#34d399,#059669)"></div></div>
-          </div>
-          <div class="hp-num">15+</div>
-        </div>
-        <div class="hp-stat">
-          <div class="hp-icon-box">&#x1F3D5;&#xFE0F;</div>
-          <div class="hp-info">
-            <div class="hp-label">Free Camps Organised</div>
-            <div class="hp-bar-wrap"><div class="hp-bar-fill" data-w="65" style="background:linear-gradient(90deg,#a78bfa,#7c3aed)"></div></div>
-          </div>
-          <div class="hp-num">20+</div>
-        </div>
-        <div class="hp-foot">&ldquo;Every camp is a promise kept to our community.&rdquo;<br/>&mdash; Dr. Poonam Gupta, Chairwoman</div>
+      <div class="hero-stats">
+        <div class="hs"><div class="hs-n">500+</div><div class="hs-l">Lives Touched</div></div>
+        <div class="hs"><div class="hs-n">20+</div><div class="hs-l">Camps Held</div></div>
+        <div class="hs"><div class="hs-n">5</div><div class="hs-l">Programs</div></div>
+        <div class="hs"><div class="hs-n">300+</div><div class="hs-l">Families Fed</div></div>
       </div>
     </div>
+
+    <!-- RIGHT: 5 Things We Do -->
+    <div class="hero-what-col">
+      <div class="hwp-ey">What We Do</div>
+      <div class="hwp-head">5 Core Programs &mdash; All 100% Free</div>
+      <a href="/ngo/programs.html#health" class="hwp-item">
+        <div class="hwp-icon" style="background:rgba(34,197,94,.15)">&#x1F3E5;</div>
+        <div class="hwp-body">
+          <div class="hwp-name">Free Health Camps</div>
+          <div class="hwp-desc">Medical checkups, eye tests &amp; medicines for all</div>
+        </div>
+        <div class="hwp-stat">200+</div>
+      </a>
+      <a href="/ngo/programs.html#education" class="hwp-item">
+        <div class="hwp-icon" style="background:rgba(96,165,250,.15)">&#x1F4DA;</div>
+        <div class="hwp-body">
+          <div class="hwp-name">Education Support</div>
+          <div class="hwp-desc">Books, bags, uniforms &amp; stationery for children</div>
+        </div>
+        <div class="hwp-stat">100+</div>
+      </a>
+      <a href="/ngo/programs.html#food" class="hwp-item">
+        <div class="hwp-icon" style="background:rgba(251,146,60,.15)">&#x1F371;</div>
+        <div class="hwp-body">
+          <div class="hwp-name">Food &amp; Essential Kits</div>
+          <div class="hwp-desc">Monthly ration &amp; meals for struggling families</div>
+        </div>
+        <div class="hwp-stat">300+</div>
+      </a>
+      <a href="/ngo/programs.html#elderly" class="hwp-item">
+        <div class="hwp-icon" style="background:rgba(196,130,214,.15)">&#x1F9D3;</div>
+        <div class="hwp-body">
+          <div class="hwp-name">Elderly &amp; Widow Care</div>
+          <div class="hwp-desc">Home visits, medicines &amp; essential support</div>
+        </div>
+        <div class="hwp-stat">80+</div>
+      </a>
+      <a href="/ngo/programs.html#rural" class="hwp-item">
+        <div class="hwp-icon" style="background:rgba(52,211,153,.15)">&#x1F33F;</div>
+        <div class="hwp-body">
+          <div class="hwp-name">Rural Empowerment</div>
+          <div class="hwp-desc">Skills training, women&rsquo;s SHGs &amp; village outreach</div>
+        </div>
+        <div class="hwp-stat">15+</div>
+      </a>
+      <a href="/ngo/camps.html" class="hwp-cta">Register for a Free Camp &rarr;</a>
+    </div>
+
   </div>
-  <svg class="hero-wave" viewBox="0 0 1440 48" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0,48 L0,24 Q180,0 360,20 Q540,40 720,18 Q900,-4 1080,16 Q1260,36 1440,20 L1440,48 Z" fill="#C8860A"/>
-  </svg>
 </section>
 
 <!-- ═══════════════════════════════════════
@@ -904,21 +909,6 @@ function toggleFaq(btn){
   document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
   if(!wasOpen) item.classList.add('open');
 }
-
-/* ── Hero impact panel bars ── */
-(function(){
-  const panel = document.getElementById('heroPanel');
-  if(!panel) return;
-  const pObs = new IntersectionObserver(entries => {
-    if(entries[0].isIntersecting){
-      panel.querySelectorAll('.hp-bar-fill').forEach(b => {
-        setTimeout(() => { b.style.width = b.dataset.w + '%'; }, 200);
-      });
-      pObs.disconnect();
-    }
-  }, {threshold:.4});
-  pObs.observe(panel);
-})();
 
 /* ── Rotating hero word ── */
 (function(){
