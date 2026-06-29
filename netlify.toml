@@ -1,0 +1,60 @@
+[build]
+  publish = "frontend/public"
+  command  = ""           # static HTML — no build step needed
+
+# ── Root → NGO homepage (URL stays clean) ──────────────────────────────────
+[[redirects]]
+  from   = "/"
+  to     = "/ngo/index.html"
+  status = 200
+
+# ── Clean page URLs ─────────────────────────────────────────────────────────
+[[redirects]]
+  from   = "/about"
+  to     = "/ngo/about.html"
+  status = 200
+
+[[redirects]]
+  from   = "/programs"
+  to     = "/ngo/programs.html"
+  status = 200
+
+[[redirects]]
+  from   = "/camps"
+  to     = "/ngo/camps.html"
+  status = 200
+
+[[redirects]]
+  from   = "/contact"
+  to     = "/ngo/contact.html"
+  status = 200
+
+[[redirects]]
+  from   = "/donate"
+  to     = "/ngo/donate.html"
+  status = 200
+
+[[redirects]]
+  from   = "/register"
+  to     = "/ngo/register.html"
+  status = 200
+
+[[redirects]]
+  from   = "/admin"
+  to     = "/ngo/admin.html"
+  status = 200
+
+# ── Proxy /api/ngo/* → Azure backend (keeps all API calls working, no CORS) ─
+[[redirects]]
+  from   = "/api/ngo/*"
+  to     = "https://aimonitoring-f3gxg9bqehcvg5by.centralindia-01.azurewebsites.net/api/ngo/:splat"
+  status = 200
+  force  = true
+
+# ── Security headers ────────────────────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options        = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
