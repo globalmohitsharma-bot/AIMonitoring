@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Admin | Shri Avadh Bihari Charitable Trust</title>
+  <meta name="robots" content="noindex,nofollow"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/ngo/css/style.css"/>
+</head>
+<body>
+
+<!-- ── Password Gate ──────────────────────────────────────────── -->
+<div class="gate" id="gate">
+  <div class="gate-card" id="gateCard">
+    <div class="gate-icon">🔐</div>
+    <div class="gate-title">Admin Dashboard</div>
+    <div class="gate-sub">Shri Avadh Bihari Charitable Trust</div>
+    <input type="password" id="gateInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkGate()"/>
+    <button onclick="checkGate()">Unlock</button>
+    <div class="gate-error" id="gateError">Incorrect password</div>
+  </div>
+</div>
+
+<!-- ── Admin App ──────────────────────────────────────────────── -->
+<div class="admin-root" id="adminRoot" style="display:none">
+
+  <div class="admin-header">
+    <div>
+      <div class="admin-title">🙏 SABT Admin</div>
+      <div class="admin-subtitle">Shri Avadh Bihari Charitable Trust</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <a href="/ngo/index.html" class="admin-logout" style="text-decoration:none">← View Site</a>
+      <button class="admin-logout" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="admin-tabs">
+    <button class="tab-btn active" onclick="showTab('events',this)">📅 Events</button>
+    <button class="tab-btn" onclick="showTab('registrations',this)">📋 Registrations</button>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- ── Events Tab ─────────────────────────────────────────── -->
+    <div id="tab-events">
+      <div class="admin-toolbar">
+        <span style="color:#f1f5f9;font-weight:700;font-size:.95rem">Manage Events</span>
+        <div style="flex:1"></div>
+        <button class="admin-btn admin-btn-primary" onclick="openEventModal()">+ New Event</button>
+      </div>
+      <div class="events-grid" id="eventsGrid">
+        <div class="loader"><div class="spinner admin-spinner"></div><p>Loading…</p></div>
+      </div>
+    </div>
+
+    <!-- ── Registrations Tab ──────────────────────────────────── -->
+    <div id="tab-registrations" style="display:none">
+      <div class="admin-toolbar" style="flex-wrap:wrap">
+        <input class="admin-search" id="searchName" placeholder="Search by name…" oninput="filterRegs()"/>
+        <select class="admin-select" id="filterEvent" onchange="filterRegs()">
+          <option value="">All Events</option>
+        </select>
+        <select class="admin-select" id="filterCampType" onchange="filterRegs()">
+          <option value="">All Types</option>
+          <option>EYE</option><option>MED</option><option>FD</option><option>GEN</option><option>EDU</option>
+        </select>
+        <input class="admin-date" id="filterFrom" type="date" onchange="filterRegs()" title="Registered from"/>
+        <input class="admin-date" id="filterTo"   type="date" onchange="filterRegs()" title="Registered to"/>
+        <button class="admin-btn admin-btn-green" onclick="exportExcel()">⬇ Export Excel</button>
+      </div>
+      <div style="color:#64748b;font-size:.82rem;margin-bottom:12px" id="regCount"></div>
+      <div class="reg-table-wrap">
+        <table class="reg-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Reg Number</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Event</th>
+              <th>Camp Type</th>
+              <th>Camp Date</th>
+              <th>Registered At</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody id="regTableBody">
+            <tr class="empty-row"><td colspan="9">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Event Modal ─────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="eventModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">New Event</div>
+      <button class="modal-close" onclick="closeModal('eventModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editEventId"/>
+      <div class="form-row"><label>Event Name <span class="req">*</span></label><input type="text" id="evName" placeholder="e.g. Free Eye Testing Camp" required/></div>
+      <div class="form-2col" style="gap:16px">
+        <div class="form-row">
+          <label>Camp Type <span class="req">*</span></label>
+          <select id="evType">
+            <option value="EYE">👁️ Eye Camp</option>
+            <option value="MED">🏥 Medical Camp</option>
+            <option value="FD">🍱 Food Distribution</option>
+            <option value="EDU">📚 Education</option>
+            <option value="GEN">🌟 General Camp</option>
+          </select>
+        </div>
+        <div class="form-row"><label>Camp Date</label><input type="date" id="evDate"/></div>
+      </div>
+      <div class="form-row"><label>Location</label><input type="text" id="evLocation" placeholder="Village, City, District"/></div>
+      <div class="form-row"><label>Description</label><textarea id="evDesc" placeholder="Brief description of the camp…" style="min-height:70px"></textarea></div>
+      <div class="form-row">
+        <label style="display:flex;align-items:center;gap:10px">
+          <input type="checkbox" id="evActive" checked style="width:auto;accent-color:#6366f1"/>
+          Active (visible on website)
+        </label>
+      </div>
+
+      <!-- Field configurator -->
+      <div style="margin-top:8px">
+        <label style="color:#94a3b8;font-size:.85rem;font-weight:700;display:block;margin-bottom:10px">📋 Registration Form Fields</label>
+        <p style="font-size:.78rem;color:#64748b;margin-bottom:10px">Name and Phone are always included. Toggle additional fields below.</p>
+        <div class="fields-config" id="fieldsConfig"></div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">
+        <button class="admin-btn admin-btn-gray" onclick="closeModal('eventModal')">Cancel</button>
+        <button class="admin-btn admin-btn-primary" onclick="saveEvent()">Save Event</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Registration Detail Modal ──────────────────────────────── -->
+<div class="modal-backdrop" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Registration Details</div>
+      <button class="modal-close" onclick="closeModal('detailModal')">×</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+  </div>
+</div>
+
+<script>
+const ADMIN_PASSWORD = 'NGO123';
+const AVAILABLE_FIELDS = [
+  { key:'age',       label:'Age',                   group:'basic'  },
+  { key:'gender',    label:'Gender',                group:'basic'  },
+  { key:'address',   label:'Address',               group:'basic'  },
+  { key:'city',      label:'City / Village',        group:'basic'  },
+  { key:'pincode',   label:'Pincode',               group:'basic'  },
+  { key:'aadhar',    label:'Aadhar Number',         group:'id'     },
+  { key:'glasses',   label:'Do you wear glasses?',  group:'eye'    },
+  { key:'vision',    label:'Existing Vision Issues',group:'eye'    },
+  { key:'medical',   label:'Medical History',       group:'medical'},
+  { key:'emergency', label:'Emergency Contact',     group:'basic'  },
+  { key:'notes',     label:'Special Requirements',  group:'basic'  },
+];
+
+let allEvents=[], allRegs=[];
+
+// ── Auth ──────────────────────────────────────────────────────
+function checkGate(){
+  const pw=document.getElementById('gateInput').value;
+  if(pw===ADMIN_PASSWORD){
+    sessionStorage.setItem('ngo_admin','1');
+    document.getElementById('gate').style.display='none';
+    document.getElementById('adminRoot').style.display='block';
+    init();
+  }else{
+    const card=document.getElementById('gateCard');
+    document.getElementById('gateError').style.display='block';
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+  }
+}
+function logout(){ sessionStorage.removeItem('ngo_admin'); location.reload(); }
+if(sessionStorage.getItem('ngo_admin')==='1'){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('adminRoot').style.display='block';
+  document.addEventListener('DOMContentLoaded',init);
+}
+document.getElementById('gateInput').addEventListener('keydown',e=>{ if(e.key==='Enter') checkGate(); });
+
+// ── Tabs ──────────────────────────────────────────────────────
+function showTab(name,btn){
+  document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).style.display='block';
+  btn.classList.add('active');
+  if(name==='registrations') loadRegs();
+}
+
+// ── Init ──────────────────────────────────────────────────────
+async function init(){
+  await loadEvents();
+}
+
+// ── Events ───────────────────────────────────────────────────
+async function loadEvents(){
+  const grid=document.getElementById('eventsGrid');
+  try{
+    const res=await fetch('/api/ngo/events?password='+ADMIN_PASSWORD);
+    allEvents=await res.json();
+    renderEvents();
+    // Populate filter dropdown
+    const sel=document.getElementById('filterEvent');
+    sel.innerHTML='<option value="">All Events</option>'+
+      allEvents.map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
+  }catch{
+    grid.innerHTML='<div style="color:#f87171;padding:24px">Failed to load events.</div>';
+  }
+}
+
+function renderEvents(){
+  const grid=document.getElementById('eventsGrid');
+  if(!allEvents.length){
+    grid.innerHTML='<div style="color:#64748b;padding:24px;grid-column:1/-1">No events yet. Create your first event!</div>';
+    return;
+  }
+  grid.innerHTML=allEvents.map(e=>`
+    <div class="event-card">
+      <div class="event-card-top">
+        <div class="event-card-name">${e.name}</div>
+        <div class="event-card-badge ${e.isActive?'badge-active':'badge-inactive'}">${e.isActive?'Active':'Inactive'}</div>
+      </div>
+      <div class="event-card-meta">
+        <span>📅 ${formatDate(e.date)}</span>
+        <span>📍 ${e.location||'Location TBA'}</span>
+        <span>🏷️ ${e.campType||'GEN'}</span>
+      </div>
+      <div class="event-card-actions">
+        <button class="admin-btn admin-btn-gray" onclick="openEventModal('${e.id}')">✏️ Edit</button>
+        <button class="admin-btn admin-btn-red"  onclick="deleteEvent('${e.id}','${e.name.replace(/'/g,'')}')">🗑️ Delete</button>
+        <a class="admin-btn admin-btn-green" style="text-decoration:none" href="/ngo/register.html?event=${e.id}" target="_blank">👁️ View</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+function buildFieldsConfig(existingFields){
+  const wrap=document.getElementById('fieldsConfig');
+  wrap.innerHTML=AVAILABLE_FIELDS.map(f=>{
+    const ex=existingFields?.find(ef=>ef.key===f.key);
+    const enabled=ex?ex.enabled:false;
+    const mandatory=ex?ex.mandatory:false;
+    return `<div class="field-config-row" id="fcr-${f.key}">
+      <div class="field-config-label">${f.label}</div>
+      <div class="toggle-wrap">
+        <label>Show</label>
+        <input type="checkbox" class="toggle" id="fen-${f.key}" ${enabled?'checked':''} onchange="toggleFieldMandatory('${f.key}')"/>
+      </div>
+      <div class="toggle-wrap" id="fmw-${f.key}" style="${enabled?'':'opacity:.3;pointer-events:none'}">
+        <label>Required</label>
+        <input type="checkbox" class="toggle" id="fmn-${f.key}" ${mandatory?'checked':''}/>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleFieldMandatory(key){
+  const enabled=document.getElementById('fen-'+key).checked;
+  const mw=document.getElementById('fmw-'+key);
+  mw.style.opacity=enabled?'1':'0.3';
+  mw.style.pointerEvents=enabled?'auto':'none';
+  if(!enabled) document.getElementById('fmn-'+key).checked=false;
+}
+
+function getFieldsConfig(){
+  return AVAILABLE_FIELDS.map(f=>({
+    key:f.key,
+    enabled:document.getElementById('fen-'+f.key)?.checked||false,
+    mandatory:document.getElementById('fmn-'+f.key)?.checked||false,
+  }));
+}
+
+function openEventModal(id){
+  const ev=id?allEvents.find(e=>e.id===id):null;
+  document.getElementById('modalTitle').textContent=ev?'Edit Event':'New Event';
+  document.getElementById('editEventId').value=id||'';
+  document.getElementById('evName').value=ev?.name||'';
+  document.getElementById('evType').value=ev?.campType||'EYE';
+  document.getElementById('evDate').value=ev?.date||'';
+  document.getElementById('evLocation').value=ev?.location||'';
+  document.getElementById('evDesc').value=ev?.description||'';
+  document.getElementById('evActive').checked=ev?ev.isActive:true;
+  buildFieldsConfig(ev?.fields||[]);
+  document.getElementById('eventModal').classList.add('open');
+}
+
+async function saveEvent(){
+  const name=document.getElementById('evName').value.trim();
+  if(!name){alert('Event name is required');return;}
+  const id=document.getElementById('editEventId').value;
+  const payload={
+    name,
+    campType:document.getElementById('evType').value,
+    date:document.getElementById('evDate').value,
+    location:document.getElementById('evLocation').value.trim(),
+    description:document.getElementById('evDesc').value.trim(),
+    isActive:document.getElementById('evActive').checked,
+    fields:getFieldsConfig(),
+  };
+  try{
+    const url=id?`/api/ngo/events/${id}`:'/api/ngo/events';
+    const method=id?'PUT':'POST';
+    const res=await fetch(url+'?password='+ADMIN_PASSWORD,{method,headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(!res.ok) throw new Error(await res.text());
+    closeModal('eventModal');
+    await loadEvents();
+  }catch(e){alert('Error: '+e.message);}
+}
+
+async function deleteEvent(id,name){
+  if(!confirm(`Delete event "${name}"? All registrations for this event will remain.`)) return;
+  try{
+    await fetch(`/api/ngo/events/${id}?password=`+ADMIN_PASSWORD,{method:'DELETE'});
+    await loadEvents();
+  }catch(e){alert('Error: '+e.message);}
+}
+
+// ── Registrations ─────────────────────────────────────────────
+async function loadRegs(){
+  document.getElementById('regTableBody').innerHTML='<tr class="empty-row"><td colspan="9"><div class="spinner admin-spinner" style="margin:auto"></div></td></tr>';
+  try{
+    const res=await fetch('/api/ngo/registrations?password='+ADMIN_PASSWORD);
+    allRegs=await res.json();
+    filterRegs();
+  }catch{
+    document.getElementById('regTableBody').innerHTML='<tr class="empty-row"><td colspan="9" style="color:#f87171">Failed to load registrations.</td></tr>';
+  }
+}
+
+function filterRegs(){
+  const name=document.getElementById('searchName').value.toLowerCase();
+  const eventId=document.getElementById('filterEvent').value;
+  const campType=document.getElementById('filterCampType').value;
+  const from=document.getElementById('filterFrom').value;
+  const to=document.getElementById('filterTo').value;
+
+  let rows=allRegs.filter(r=>{
+    if(name && !r.data?.name?.toLowerCase().includes(name)) return false;
+    if(eventId && r.eventId!==eventId) return false;
+    if(campType && r.campType!==campType) return false;
+    if(from && r.registeredAt<from) return false;
+    if(to && r.registeredAt.substring(0,10)>to) return false;
+    return true;
+  });
+
+  document.getElementById('regCount').textContent=`Showing ${rows.length} of ${allRegs.length} registrations`;
+  const tbody=document.getElementById('regTableBody');
+  if(!rows.length){
+    tbody.innerHTML='<tr class="empty-row"><td colspan="9">No registrations found.</td></tr>';
+    return;
+  }
+  tbody.innerHTML=rows.map((r,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td class="reg-num-cell">${r.registrationNumber}</td>
+      <td>${r.data?.name||'—'}</td>
+      <td>${r.data?.phone||'—'}</td>
+      <td>${r.eventName||'—'}</td>
+      <td><span style="background:#1e3a5f;color:#93c5fd;padding:2px 8px;border-radius:20px;font-size:.75rem">${r.campType||'—'}</span></td>
+      <td>${formatDate(r.eventDate)}</td>
+      <td>${r.registeredAt?new Date(r.registeredAt).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'—'}</td>
+      <td><button class="admin-btn admin-btn-gray" style="padding:4px 10px;font-size:.75rem" onclick='showDetail(${JSON.stringify(r).replace(/'/g,"&#39;")})'>View</button></td>
+    </tr>
+  `).join('');
+}
+
+function showDetail(r){
+  const rows=Object.entries(r.data||{}).map(([k,v])=>`<tr><td style="color:#64748b;font-size:.82rem;padding:6px 0;min-width:140px">${k.charAt(0).toUpperCase()+k.slice(1)}</td><td style="color:#e2e8f0;font-size:.85rem;padding:6px 0">${v||'—'}</td></tr>`).join('');
+  document.getElementById('detailBody').innerHTML=`
+    <div style="background:#0f172a;border-radius:8px;padding:16px;margin-bottom:16px">
+      <div class="reg-num-cell" style="font-size:1.1rem;margin-bottom:8px">${r.registrationNumber}</div>
+      <div style="font-size:.82rem;color:#64748b">${r.eventName||''} · ${formatDate(r.eventDate)}</div>
+    </div>
+    <table style="width:100%;border-collapse:collapse">${rows}</table>
+    <div style="margin-top:16px;display:flex;justify-content:flex-end">
+      <button class="admin-btn admin-btn-gray" onclick="closeModal('detailModal')">Close</button>
+    </div>`;
+  document.getElementById('detailModal').classList.add('open');
+}
+
+function exportExcel(){
+  const name=document.getElementById('searchName').value;
+  const eventId=document.getElementById('filterEvent').value;
+  const campType=document.getElementById('filterCampType').value;
+  const from=document.getElementById('filterFrom').value;
+  const to=document.getElementById('filterTo').value;
+  const params=new URLSearchParams({password:ADMIN_PASSWORD});
+  if(name)     params.set('name',name);
+  if(eventId)  params.set('eventId',eventId);
+  if(campType) params.set('campType',campType);
+  if(from)     params.set('from',from);
+  if(to)       params.set('to',to);
+  window.location.href='/api/ngo/registrations/export?'+params.toString();
+}
+
+// ── Helpers ───────────────────────────────────────────────────
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function formatDate(d){
+  if(!d) return 'TBA';
+  try{ return new Date(d+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}); }
+  catch{ return d; }
+}
+// Close modal on backdrop click
+document.querySelectorAll('.modal-backdrop').forEach(b=>{
+  b.addEventListener('click',e=>{ if(e.target===b) b.classList.remove('open'); });
+});
+</script>
+</body>
+</html>

@@ -26,6 +26,27 @@ var app = builder.Build();
 
 app.UseCors("ReactApp");
 
+// Route shriavadhbiharicharitabletrust.org → NGO subdirectory
+app.Use(async (context, next) =>
+{
+    var host = context.Request.Host.Host;
+    if (host.Contains("shriavadhbiharicharitabletrust", StringComparison.OrdinalIgnoreCase))
+    {
+        var path = context.Request.Path.Value?.TrimEnd('/') ?? "";
+        if (string.IsNullOrEmpty(path) || path == "/")
+            context.Request.Path = "/ngo/index.html";
+        else if (path == "/register")
+            context.Request.Path = "/ngo/register.html";
+        else if (path == "/admin")
+            context.Request.Path = "/ngo/admin.html";
+        else if (!path.Contains('.'))
+            context.Request.Path = "/ngo" + path + "/index.html";
+        else
+            context.Request.Path = "/ngo" + path;
+    }
+    await next();
+});
+
 app.UseDefaultFiles();
 
 // Serve assets with long-term cache (filenames are hash-busted by Vite)

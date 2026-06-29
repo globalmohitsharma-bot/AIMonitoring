@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Camp Registration | Shri Avadh Bihari Charitable Trust</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/ngo/css/style.css"/>
+</head>
+<body>
+<div class="register-page">
+  <div class="register-wrap">
+    <a class="register-back" href="/ngo/index.html#camps">← Back to Camps</a>
+
+    <div id="loadingState" class="loader" style="background:#fff;border-radius:12px;padding:48px">
+      <div class="spinner"></div>
+      <p>Loading event details…</p>
+    </div>
+
+    <div id="notFound" style="display:none;background:#fff;border-radius:12px;padding:40px;text-align:center">
+      <div style="font-size:3rem;margin-bottom:12px">⚠️</div>
+      <h2 style="font-family:'Poppins',sans-serif;margin-bottom:8px">Event Not Found</h2>
+      <p style="color:#6b7280;margin-bottom:20px">This camp may be no longer active or the link is invalid.</p>
+      <a href="/ngo/index.html#camps" class="btn btn-primary">View All Camps</a>
+    </div>
+
+    <div id="formWrap" style="display:none">
+      <div class="event-header" id="eventHeader">
+        <div style="font-size:.75rem;opacity:.7;font-weight:700;text-transform:uppercase;letter-spacing:.08em" id="eventTypeLabel"></div>
+        <h1 id="eventName"></h1>
+        <div class="event-meta">
+          <span id="eventDate"></span>
+          <span id="eventLocation"></span>
+        </div>
+        <div style="font-size:.83rem;opacity:.8;margin-top:8px" id="eventDesc"></div>
+      </div>
+
+      <div class="register-form-card">
+        <h3 style="font-family:'Poppins',sans-serif;font-weight:700;margin-bottom:6px">Registration Form</h3>
+        <p style="font-size:.83rem;color:#6b7280;margin-bottom:20px">Fields marked <span style="color:#dc2626">*</span> are required. Registration is free.</p>
+
+        <form id="regForm" onsubmit="submitRegistration(event)">
+          <!-- Fixed fields (always shown) -->
+          <div class="form-2col">
+            <div class="form-row">
+              <label>Full Name <span class="req">*</span></label>
+              <input type="text" name="name" required placeholder="Enter your full name"/>
+            </div>
+            <div class="form-row">
+              <label>Phone Number <span class="req">*</span></label>
+              <input type="tel" name="phone" required placeholder="10-digit mobile number" pattern="[0-9]{10}"/>
+            </div>
+          </div>
+
+          <!-- Dynamic fields injected here -->
+          <div id="dynamicFields"></div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">Register for Camp →</button>
+        </form>
+
+        <div class="error-box" id="errorBox"></div>
+
+        <!-- Confirmation -->
+        <div class="confirm-box" id="confirmBox">
+          <div class="confirm-icon">✅</div>
+          <h2>Registration Successful!</h2>
+          <p>Your unique registration number is:</p>
+          <div class="reg-number" id="regNumber">—</div>
+          <p>📸 Please screenshot or note this number. You will need it at the camp.</p>
+          <div style="margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <button onclick="printConfirmation()" class="btn btn-outline btn-sm">🖨️ Print</button>
+            <a href="/ngo/index.html" class="btn btn-primary btn-sm">Back to Home</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const AVAILABLE_FIELDS = [
+  { key:'age',       label:'Age',                   type:'number',   placeholder:'Your age in years' },
+  { key:'gender',    label:'Gender',                type:'select',   options:['Male','Female','Other'] },
+  { key:'address',   label:'Address',               type:'textarea', placeholder:'House no, Street, Village' },
+  { key:'city',      label:'City / Village',        type:'text',     placeholder:'City or Village name' },
+  { key:'pincode',   label:'Pincode',               type:'text',     placeholder:'6-digit pincode' },
+  { key:'aadhar',    label:'Aadhar Number',         type:'text',     placeholder:'12-digit Aadhar (optional)' },
+  { key:'glasses',   label:'Do you wear glasses?',  type:'select',   options:['Yes','No'] },
+  { key:'vision',    label:'Existing Vision Issues',type:'text',     placeholder:'e.g. Short-sightedness, cataract' },
+  { key:'medical',   label:'Medical History',       type:'textarea', placeholder:'Any existing conditions or medications' },
+  { key:'emergency', label:'Emergency Contact',     type:'text',     placeholder:'Name and phone of emergency contact' },
+  { key:'notes',     label:'Special Requirements',  type:'textarea', placeholder:'Any special needs or notes' },
+];
+
+let eventData = null;
+
+function getEventId(){
+  return new URLSearchParams(window.location.search).get('event');
+}
+
+function formatDate(d){
+  if(!d) return 'Date TBA';
+  const dt = new Date(d+'T00:00:00');
+  return '📅 '+dt.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
+
+function buildDynamicFields(fields){
+  const wrap = document.getElementById('dynamicFields');
+  const rows = [];
+  const paired = [];
+
+  fields.filter(f=>f.enabled).forEach(f=>{
+    const def = AVAILABLE_FIELDS.find(a=>a.key===f.key);
+    if(!def) return;
+    const req = f.mandatory ? '<span class="req">*</span>' : '';
+    const reqAttr = f.mandatory ? 'required' : '';
+
+    let input = '';
+    if(def.type==='select'){
+      input = `<select name="${def.key}" ${reqAttr}><option value="">Select…</option>${def.options.map(o=>`<option>${o}</option>`).join('')}</select>`;
+    } else if(def.type==='textarea'){
+      input = `<textarea name="${def.key}" ${reqAttr} placeholder="${def.placeholder||''}"></textarea>`;
+    } else {
+      input = `<input type="${def.type}" name="${def.key}" ${reqAttr} placeholder="${def.placeholder||''}"/>`;
+    }
+
+    rows.push(`<div class="form-row" data-key="${def.key}"><label>${def.label} ${req}</label>${input}</div>`);
+  });
+
+  // Pair small fields into 2-col grid
+  const smallKeys = ['age','gender','city','pincode','aadhar','glasses'];
+  const small = rows.filter(r=>smallKeys.some(k=>r.includes(`data-key="${k}"`))).map(r=>r.replace('class="form-row"','class="form-row" style=""'));
+  const large = rows.filter(r=>!smallKeys.some(k=>r.includes(`data-key="${k}"`)));
+
+  let html = '';
+  for(let i=0;i<small.length;i+=2){
+    if(small[i+1]) html+=`<div class="form-2col">${small[i]}${small[i+1]}</div>`;
+    else html+=small[i];
+  }
+  html += large.join('');
+  wrap.innerHTML = html;
+}
+
+async function loadEvent(){
+  const id = getEventId();
+  if(!id){ showNotFound(); return; }
+  try{
+    const res = await fetch(`/api/ngo/events/${id}`);
+    if(!res.ok){ showNotFound(); return; }
+    eventData = await res.json();
+
+    document.title = `Register — ${eventData.name} | SABT`;
+    document.getElementById('eventTypeLabel').textContent = eventData.campType || 'Camp';
+    document.getElementById('eventName').textContent = eventData.name;
+    document.getElementById('eventDate').textContent = formatDate(eventData.date);
+    document.getElementById('eventLocation').textContent = eventData.location ? '📍 '+eventData.location : '';
+    document.getElementById('eventDesc').textContent = eventData.description || '';
+
+    buildDynamicFields(eventData.fields || []);
+
+    document.getElementById('loadingState').style.display='none';
+    document.getElementById('formWrap').style.display='block';
+  }catch{
+    showNotFound();
+  }
+}
+
+function showNotFound(){
+  document.getElementById('loadingState').style.display='none';
+  document.getElementById('notFound').style.display='block';
+}
+
+async function submitRegistration(e){
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  const errBox = document.getElementById('errorBox');
+  errBox.style.display='none';
+  btn.disabled=true; btn.textContent='Registering…';
+
+  const form = e.target;
+  const data = {};
+  new FormData(form).forEach((v,k)=>{ data[k]=v; });
+
+  try{
+    const res = await fetch('/api/ngo/register',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ eventId: eventData.id, data })
+    });
+    const json = await res.json();
+    if(!res.ok) throw new Error(json.error || 'Registration failed');
+
+    document.getElementById('regNumber').textContent = json.registrationNumber;
+    document.getElementById('regForm').style.display='none';
+    errBox.style.display='none';
+    const cb = document.getElementById('confirmBox');
+    cb.style.display='block'; cb.style.animation='none';
+  }catch(err){
+    errBox.textContent='⚠️ '+err.message;
+    errBox.style.display='block';
+    btn.disabled=false; btn.textContent='Register for Camp →';
+  }
+}
+
+function printConfirmation(){
+  const name = document.querySelector('[name="name"]')?.value || '';
+  const num = document.getElementById('regNumber').textContent;
+  const event = eventData?.name || '';
+  const date = eventData?.date || '';
+  const w = window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><title>Registration Confirmation</title><style>
+    body{font-family:Arial,sans-serif;padding:40px;max-width:500px;margin:0 auto}
+    h1{color:#E07B1A;font-size:1.3rem}
+    .num{font-family:monospace;font-size:1.8rem;font-weight:bold;color:#E07B1A;border:2px dashed #E07B1A;padding:12px 20px;display:inline-block;margin:12px 0;letter-spacing:.1em}
+    .meta{color:#555;font-size:.9rem;margin-top:16px}
+    p{margin:4px 0}
+  </style></head><body>
+    <h1>🙏 Shri Avadh Bihari Charitable Trust</h1>
+    <h2>Registration Confirmation</h2>
+    <p class="meta"><strong>Name:</strong> ${name}</p>
+    <p class="meta"><strong>Event:</strong> ${event}</p>
+    <p class="meta"><strong>Date:</strong> ${formatDate(date)}</p>
+    <p class="meta" style="margin-top:16px">Your Registration Number:</p>
+    <div class="num">${num}</div>
+    <p class="meta" style="margin-top:16px">Please bring this number to the camp for verification.</p>
+    <p class="meta" style="color:#E07B1A;margin-top:20px">Serving with Seva, Supporting with Heart 🙏</p>
+  </body></html>`);
+  w.document.close();
+  w.print();
+}
+
+loadEvent();
+</script>
+</body>
+</html>
