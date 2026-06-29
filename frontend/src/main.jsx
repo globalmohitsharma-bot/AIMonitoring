@@ -5,6 +5,7 @@ import App from './App.jsx';
 import MonitorDashboard from './MonitorDashboard.jsx';
 import JobLanding from './JobLanding.jsx';
 import PBDashboard from './PBDashboard.jsx';
+import ResumePage  from './ResumePage.jsx';
 
 const path = window.location.pathname;
 
@@ -15,6 +16,8 @@ if (path === '/monitor') {
   Page = App;
 } else if (path === '/pb') {
   Page = PBDashboard;
+} else if (path === '/resume') {
+  Page = ResumePage;
 } else {
   Page = JobLanding;
 }
