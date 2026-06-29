@@ -4,20 +4,19 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Contact Us | Shri Avadh Bihari Charitable Trust</title>
-  <meta name="description" content="Get in touch with Shri Avadh Bihari Charitable Trust — for donations, volunteering, partnerships, or camp information. Based in Haridwar, Uttarakhand."/>
+  <meta name="description" content="Get in touch with Shri Avadh Bihari Charitable Trust - for donations, volunteering, or camp information. Based in Haridwar, Uttarakhand."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/ngo/css/style.css"/>
   <link rel="stylesheet" href="/ngo/css/pages.css"/>
-  <style>
-    .contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:56px;align-items:start;padding:80px 0}
-    .contact-info-block{display:flex;flex-direction:column;gap:24px}
-    .ci-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm);display:flex;gap:16px;align-items:flex-start;transition:all .2s}
-    .ci-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
-    .ci-icon{width:44px;height:44px;border-radius:12px;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
-    .ci-label{font-size:.75rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
-    .ci-value{font-size:.9rem;color:var(--navy);font-weight:600;line-height:1.5}
-    .ci-sub{font-size:.78rem;color:var(--muted);margin-top:2px}
+  <style>body::before{content:'';position:fixed;right:-60px;top:50%;transform:translateY(-50%);width:300px;height:620px;background:url('/ngo/peacock-feather.svg') center/contain no-repeat;opacity:.06;pointer-events:none;z-index:0}
+    .contact-grid-pg{display:grid;grid-template-columns:1fr 1.2fr;gap:56px;align-items:start;padding:80px 0}
+    .ci-card{background:linear-gradient(135deg,var(--navy),#122690);border:1px solid rgba(200,134,10,.15);border-radius:var(--radius);padding:24px;display:flex;gap:16px;align-items:flex-start;transition:all .2s;margin-bottom:14px}
+    .ci-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(10,31,107,.2)}
+    .ci-icon{width:44px;height:44px;border-radius:12px;background:rgba(200,134,10,.15);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+    .ci-label{font-size:.72rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+    .ci-value{font-size:.9rem;color:#fff;font-weight:600;line-height:1.5}
+    .ci-sub{font-size:.78rem;color:rgba(255,255,255,.45);margin-top:2px}
     .contact-form-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px;box-shadow:0 16px 48px rgba(0,0,0,.08)}
     .cf-group{margin-bottom:18px}
     .cf-label{display:block;font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
@@ -26,16 +25,12 @@
     .cf-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     .cf-submit{width:100%;padding:16px 24px;background:var(--gold);color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:700;font-family:inherit;cursor:pointer;transition:all .2s;margin-top:6px}
     .cf-submit:hover{background:var(--gold-light);transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,134,10,.3)}
-    .volunteer-strip{background:linear-gradient(135deg,var(--navy),#1B3A5C);padding:64px 0}
-    @media(max-width:900px){.contact-grid{grid-template-columns:1fr;padding:48px 0}.cf-row{grid-template-columns:1fr}}
+    @media(max-width:900px){.contact-grid-pg{grid-template-columns:1fr;padding:48px 0}.cf-row{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
 <nav class="navbar">
-  <a class="nav-brand" href="/ngo/index.html">
-    <img src="/ngo/logo.png" alt="Shri Avadh Bihari Charitable Trust Logo" class="nav-logo-img"/>
-    <div><div class="nav-name">Shri Avadh Bihari</div><div class="nav-sub">Charitable Trust</div></div>
-  </a>
+  <a class="nav-brand" href="/ngo/index.html"><img src="/ngo/logo.svg" alt="Logo" class="nav-logo-img"/><div><div class="nav-name">Shri Avadh Bihari</div><div class="nav-sub">Charitable Trust</div></div></a>
   <div class="nav-links">
     <a href="/ngo/about.html">About</a>
     <a href="/ngo/programs.html">Programs</a>
@@ -53,93 +48,60 @@
   <a href="/ngo/donate.html" onclick="closeMobile()" style="color:var(--gold)">Donate</a>
 </div>
 
-<div class="page-hero" style="background:linear-gradient(135deg,#1a1200,#2d2000,#1a1200)">
+<div class="page-hero" style="background:linear-gradient(135deg,#06144D,#0A1F6B)">
   <div class="container">
     <div class="breadcrumb"><a href="/ngo/index.html">Home</a><span>/</span>Contact Us</div>
     <h1 class="page-hero-h">Get in Touch</h1>
-    <p class="page-hero-sub">Whether you want to donate, volunteer, partner with us, or simply learn more — we'd love to hear from you. Reach out and our team will respond promptly.</p>
+    <p class="page-hero-sub">Whether you want to donate, volunteer, partner, or simply learn more &mdash; we&rsquo;d love to hear from you. Our team responds promptly.</p>
   </div>
 </div>
 
 <div class="container">
-  <div class="contact-grid">
-    <!-- Left: Info -->
-    <div class="contact-info-block">
-      <div>
-        <div class="gold-line"></div>
-        <p class="eyebrow">Our Office</p>
-        <h2 class="section-h" style="margin-bottom:20px">How to Reach Us</h2>
-      </div>
-
-      <div class="ci-card">
-        <div class="ci-icon">📍</div>
-        <div>
-          <div class="ci-label">Address</div>
-          <div class="ci-value">Shop No. 2, Ucchi Sadak<br/>Arya Nagar, Jwalapur<br/>Haridwar, Uttarakhand – 249407</div>
-          <div class="ci-sub">Near Lal Mandir, Haridwar</div>
-        </div>
-      </div>
-
+  <div class="contact-grid-pg">
+    <div>
+      <div class="gold-line"></div>
+      <p class="eyebrow">Our Office</p>
+      <h2 class="section-h" style="margin-bottom:24px">How to Reach Us</h2>
       <a href="mailto:poonam.gupta@shriavadhbiharicharitabletrust.org" class="ci-card" style="text-decoration:none">
-        <div class="ci-icon">📧</div>
-        <div>
-          <div class="ci-label">Email</div>
-          <div class="ci-value">poonam.gupta@<br/>shriavadhbiharicharitabletrust.org</div>
-          <div class="ci-sub">We respond within 24 hours</div>
-        </div>
+        <div class="ci-icon">&#x1F4E7;</div>
+        <div><div class="ci-label">Email</div><div class="ci-value">poonam.gupta@<br/>shriavadhbiharicharitabletrust.org</div><div class="ci-sub">We respond within 24 hours</div></div>
       </a>
-
       <div class="ci-card">
-        <div class="ci-icon">🕐</div>
-        <div>
-          <div class="ci-label">Office Hours</div>
-          <div class="ci-value">Monday – Saturday</div>
-          <div class="ci-sub">10:00 AM – 6:00 PM IST</div>
-        </div>
+        <div class="ci-icon">&#x1F4CD;</div>
+        <div><div class="ci-label">Address</div><div class="ci-value">Shop No. 2, Ucchi Sadak, Arya Nagar<br/>Jwalapur, Haridwar &ndash; 249407</div><div class="ci-sub">Near Lal Mandir, Haridwar</div></div>
       </div>
-
       <div class="ci-card">
-        <div class="ci-icon">👩‍⚕️</div>
-        <div>
-          <div class="ci-label">Chairwoman</div>
-          <div class="ci-value">Dr. Poonam Gupta</div>
-          <div class="ci-sub">Shri Avadh Bihari Charitable Trust</div>
-        </div>
+        <div class="ci-icon">&#x1F551;</div>
+        <div><div class="ci-label">Office Hours</div><div class="ci-value">Monday &ndash; Saturday</div><div class="ci-sub">10:00 AM &ndash; 6:00 PM IST</div></div>
       </div>
-
-      <!-- Map placeholder -->
-      <div style="background:var(--gold-pale);border:1px solid rgba(200,134,10,.2);border-radius:var(--radius);padding:32px;text-align:center">
-        <div style="font-size:3rem;margin-bottom:12px">🗺️</div>
+      <div class="ci-card">
+        <div class="ci-icon">&#x1F469;&#x200D;&#x2695;&#xFE0F;</div>
+        <div><div class="ci-label">Chairwoman</div><div class="ci-value">Dr. Poonam Gupta</div><div class="ci-sub">Shri Avadh Bihari Charitable Trust</div></div>
+      </div>
+      <a href="https://instagram.com/sabct_hw" target="_blank" rel="noopener" class="ci-card" style="text-decoration:none">
+        <div class="ci-icon">&#x1F4F8;</div>
+        <div><div class="ci-label">Instagram</div><div class="ci-value">@sabct_hw</div><div class="ci-sub">Follow us for camp updates</div></div>
+      </a>
+      <div style="background:var(--gold-pale);border:1px solid rgba(200,134,10,.2);border-radius:var(--radius);padding:28px;text-align:center;margin-top:4px">
+        <div style="font-size:3rem;margin-bottom:12px">&#x1F5FA;&#xFE0F;</div>
         <div style="font-family:'Playfair Display',serif;font-weight:700;color:var(--navy);margin-bottom:6px">Jwalapur, Haridwar</div>
         <div style="font-size:.82rem;color:var(--muted);margin-bottom:16px">Arya Nagar, near Lal Mandir<br/>Uttarakhand, India</div>
         <a href="https://maps.google.com/?q=Arya+Nagar+Jwalapur+Haridwar+Uttarakhand" target="_blank" class="btn btn-gold btn-sm">Open in Google Maps</a>
       </div>
     </div>
 
-    <!-- Right: Form -->
     <div class="contact-form-card">
       <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--navy);margin-bottom:6px">Send Us a Message</h2>
-      <p style="font-size:.85rem;color:var(--muted);margin-bottom:28px">Fill in the form below and we'll get back to you as soon as possible.</p>
-
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:28px">Fill in the form and we&rsquo;ll get back to you as soon as possible.</p>
       <div id="contactForm">
         <div class="cf-row">
-          <div class="cf-group">
-            <label class="cf-label">Your Name *</label>
-            <input type="text" class="cf-input" id="cName" placeholder="Full name"/>
-          </div>
-          <div class="cf-group">
-            <label class="cf-label">Phone</label>
-            <input type="tel" class="cf-input" id="cPhone" placeholder="+91 XXXXX XXXXX"/>
-          </div>
+          <div class="cf-group"><label class="cf-label">Your Name *</label><input type="text" class="cf-input" id="cName" placeholder="Full name"/></div>
+          <div class="cf-group"><label class="cf-label">Phone</label><input type="tel" class="cf-input" id="cPhone" placeholder="+91 XXXXX XXXXX"/></div>
         </div>
-        <div class="cf-group">
-          <label class="cf-label">Email Address *</label>
-          <input type="email" class="cf-input" id="cEmail" placeholder="you@example.com"/>
-        </div>
-        <div class="cf-group">
-          <label class="cf-label">Reason for Contact *</label>
+        <div class="cf-group"><label class="cf-label">Email Address *</label><input type="email" class="cf-input" id="cEmail" placeholder="you@example.com"/></div>
+        <div class="cf-group"><label class="cf-label">Reason for Contact *</label>
           <select class="cf-input" id="cReason">
-            <option value="">Select a topic…</option>
+            <option value="">Select a topic&hellip;</option>
             <option>Donation or Sponsorship</option>
             <option>Volunteer at a Camp</option>
             <option>Corporate CSR Partnership</option>
@@ -148,31 +110,26 @@
             <option>General Inquiry</option>
           </select>
         </div>
-        <div class="cf-group">
-          <label class="cf-label">Your Message *</label>
-          <textarea class="cf-input" id="cMessage" rows="5" placeholder="Tell us how we can help you, or how you'd like to support our mission…" style="resize:vertical"></textarea>
-        </div>
-        <button class="cf-submit" onclick="submitContact()">Send Message →</button>
+        <div class="cf-group"><label class="cf-label">Your Message *</label><textarea class="cf-input" id="cMessage" rows="5" placeholder="Tell us how we can help, or how you&rsquo;d like to support our mission&hellip;" style="resize:vertical"></textarea></div>
+        <button class="cf-submit" onclick="submitContact()">Send Message &rarr;</button>
       </div>
-
       <div id="contactSuccess" style="display:none;text-align:center;padding:40px">
-        <div style="font-size:3rem;margin-bottom:12px">✅</div>
+        <div style="font-size:3rem;margin-bottom:12px">&#x2705;</div>
         <h3 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:8px">Message Received!</h3>
-        <p style="color:var(--muted);margin-bottom:20px">Thank you for reaching out. Dr. Poonam Gupta or our team will respond to you within 24 hours.</p>
+        <p style="color:var(--muted);margin-bottom:20px">Thank you for reaching out. Dr. Poonam Gupta or our team will respond within 24 hours.</p>
         <button onclick="resetContact()" style="background:var(--gold-pale);color:var(--gold);border:1.5px solid var(--gold);padding:10px 24px;border-radius:8px;font-family:inherit;font-weight:700;cursor:pointer;font-size:.88rem">Send Another Message</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Volunteer strip -->
-<div class="volunteer-strip">
-  <div class="container" style="text-align:center">
+<div style="background:var(--navy);padding:64px 0;text-align:center">
+  <div class="container">
     <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:#fff;margin-bottom:12px">Want to Volunteer?</h2>
-    <p style="color:rgba(255,255,255,.65);max-width:520px;margin:0 auto 28px">We need doctors, nurses, teachers, logistics coordinators, and community helpers. No experience required — just a willing heart.</p>
+    <p style="color:rgba(255,255,255,.65);max-width:520px;margin:0 auto 28px">We need doctors, nurses, teachers, logistics coordinators, and community helpers. No experience required &mdash; just a willing heart.</p>
     <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
-      <a href="/ngo/donate.html" class="btn btn-gold">❤️ Donate Instead</a>
-      <a href="/ngo/camps.html"  class="btn btn-outline">📅 See Upcoming Camps</a>
+      <a href="/ngo/camps.html" class="btn btn-gold">Join a Camp</a>
+      <a href="/ngo/donate.html" class="btn btn-outline">Donate Instead</a>
     </div>
   </div>
 </div>
@@ -180,21 +137,16 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-top">
-      <div class="footer-brand"><div class="foot-logo">🙏 Shri Avadh Bihari Charitable Trust</div><p style="margin-top:10px">Serving with Seva, Supporting with Heart.</p><p style="margin-top:12px;font-size:.78rem;color:rgba(255,255,255,.3)">Shop No. 2, Ucchi Sadak, Arya Nagar,<br/>Jwalapur, Haridwar – 249407</p></div>
+      <div class="footer-brand"><div class="foot-logo">Shri Avadh Bihari Charitable Trust</div><p style="margin-top:10px">Serving with Seva, Supporting with Heart.</p><p style="margin-top:12px;font-size:.78rem;color:rgba(255,255,255,.3)">Shop No. 2, Ucchi Sadak, Arya Nagar,<br/>Jwalapur, Haridwar &ndash; 249407</p><div style="margin-top:14px"><a href="https://instagram.com/sabct_hw" target="_blank" rel="noopener" style="color:var(--gold);font-size:.82rem">&#x1F4F8; @sabct_hw</a></div></div>
       <div class="footer-col"><h4>Navigate</h4><a href="/ngo/index.html">Home</a><a href="/ngo/about.html">About</a><a href="/ngo/programs.html">Programs</a><a href="/ngo/camps.html">Camps</a><a href="/ngo/donate.html">Donate</a></div>
       <div class="footer-col"><h4>Programs</h4><a href="/ngo/programs.html#education">Education</a><a href="/ngo/programs.html#health">Healthcare</a><a href="/ngo/programs.html#food">Food Distribution</a><a href="/ngo/programs.html#elderly">Elderly Care</a><a href="/ngo/programs.html#rural">Rural Dev.</a></div>
     </div>
-    <div class="footer-bottom"><div class="footer-copy">© 2026 Shri Avadh Bihari Charitable Trust. All rights reserved.</div></div>
+    <div class="footer-bottom"><div class="footer-copy">&copy; 2026 Shri Avadh Bihari Charitable Trust.</div></div>
   </div>
 </footer>
-
 <script>
 function submitContact(){
-  const name=document.getElementById('cName').value.trim();
-  const email=document.getElementById('cEmail').value.trim();
-  const reason=document.getElementById('cReason').value;
-  const msg=document.getElementById('cMessage').value.trim();
-  if(!name||!email||!reason||!msg){alert('Please fill in all required fields.');return;}
+  if(!document.getElementById('cName').value.trim()||!document.getElementById('cEmail').value.trim()||!document.getElementById('cReason').value||!document.getElementById('cMessage').value.trim()){alert('Please fill in all required fields.');return;}
   document.getElementById('contactForm').style.display='none';
   document.getElementById('contactSuccess').style.display='block';
 }

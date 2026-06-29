@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 400" fill="none">
+  <!-- Stem -->
+  <path d="M60 380 Q58 300 55 220 Q52 160 50 120 Q48 80 52 40" stroke="#007C7C" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <!-- Barbs left -->
+  <path d="M55 220 Q30 200 15 175" stroke="#007C7C" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+  <path d="M54 200 Q28 185 12 165" stroke="#007C7C" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.35"/>
+  <path d="M53 180 Q25 168 8 150" stroke="#007C7C" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.35"/>
+  <path d="M52 160 Q22 148 5 130" stroke="#007C7C" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.3"/>
+  <path d="M51 140 Q20 128 4 108" stroke="#007C7C" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.3"/>
+  <path d="M51 120 Q22 105 8 82" stroke="#007C7C" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.25"/>
+  <path d="M51 100 Q25 85 14 60" stroke="#007C7C" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.2"/>
+  <!-- Barbs right -->
+  <path d="M55 220 Q80 200 95 175" stroke="#0A1F6B" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+  <path d="M54 200 Q82 185 98 165" stroke="#0A1F6B" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.35"/>
+  <path d="M53 180 Q85 168 102 150" stroke="#0A1F6B" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.35"/>
+  <path d="M52 160 Q88 148 105 130" stroke="#0A1F6B" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.3"/>
+  <path d="M51 140 Q90 128 106 108" stroke="#0A1F6B" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.3"/>
+  <path d="M51 120 Q88 105 102 82" stroke="#0A1F6B" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.25"/>
+  <path d="M51 100 Q85 85 96 60" stroke="#0A1F6B" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.2"/>
+  <!-- Eye outer (oval) -->
+  <ellipse cx="52" cy="68" rx="22" ry="30" fill="#007C7C" opacity="0.18"/>
+  <!-- Eye mid -->
+  <ellipse cx="52" cy="68" rx="15" ry="21" fill="#0A1F6B" opacity="0.22"/>
+  <!-- Eye inner -->
+  <ellipse cx="52" cy="68" rx="9" ry="13" fill="#007C7C" opacity="0.35"/>
+  <!-- Eye gold dot -->
+  <ellipse cx="52" cy="68" rx="4" ry="5.5" fill="#C8860A" opacity="0.6"/>
+</svg>
