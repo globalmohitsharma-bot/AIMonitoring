@@ -20,14 +20,15 @@ body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(
 ──────────────────────────────────────────── */
 .hero{
   position:relative;
-  background:linear-gradient(150deg,#04102E 0%,#0A1F6B 45%,#071E5A 100%);
-  padding:48px 0 0;overflow:hidden;
+  background:linear-gradient(155deg,#010610 0%,#050E28 18%,#0B1D62 48%,#071540 76%,#020810 100%);
+  padding:0;overflow:hidden;
 }
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,134,10,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(200,134,10,.05) 1px,transparent 1px);background-size:56px 56px;pointer-events:none;animation:gMove 24s linear infinite}
-@keyframes gMove{to{background-position:0 56px}}
-.orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(72px)}
-.o1{width:420px;height:420px;background:radial-gradient(#007C7C28,transparent 70%);top:-15%;right:0}
-.o2{width:300px;height:300px;background:radial-gradient(#C8860A18,transparent 70%);bottom:-10%;left:-5%}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,134,10,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(200,134,10,.04) 1px,transparent 1px);background-size:64px 64px;pointer-events:none;animation:gMove 28s linear infinite}
+@keyframes gMove{to{background-position:0 64px}}
+.orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(80px)}
+.o1{width:580px;height:580px;background:radial-gradient(#007C7C32,transparent 70%);top:-25%;right:-8%}
+.o2{width:440px;height:440px;background:radial-gradient(#C8860A20,transparent 70%);bottom:-20%;left:-8%}
+.o3{position:absolute;width:320px;height:320px;border-radius:50%;pointer-events:none;filter:blur(80px);background:radial-gradient(#1B4B8A28,transparent 70%);top:40%;left:25%}
 
 /* Full-bleed hero — removes empty side gutters */
 .hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;min-height:540px;position:relative;z-index:2}
@@ -46,8 +47,9 @@ body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(
 .hs-n{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--gold)}
 .hs-l{font-size:.6rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
 
-/* Right: 5 Things We Do */
-.hero-what-col{background:rgba(0,0,0,.2);border-left:1px solid rgba(255,255,255,.07);padding:52px clamp(24px,8vw,140px) 52px 48px;display:flex;flex-direction:column;justify-content:center;animation:fadeIn 1s ease .3s both}
+/* Right: 5 Things We Do — near-black luxury contrast */
+.hero-what-col{background:linear-gradient(170deg,rgba(2,4,16,.97) 0%,rgba(4,8,26,.95) 100%);border-left:1px solid rgba(200,134,10,.25);padding:52px clamp(24px,8vw,140px) 52px 48px;display:flex;flex-direction:column;justify-content:center;animation:fadeIn 1s ease .3s both;position:relative}
+.hero-what-col::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,rgba(200,134,10,0),var(--gold) 50%,rgba(200,134,10,0))}
 .hwp-ey{font-size:.62rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);font-weight:700;margin-bottom:6px}
 .hwp-head{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.08)}
 .hwp-item{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.05);text-decoration:none;transition:padding-left .2s}
@@ -125,11 +127,11 @@ body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(
 /* ────────────────────────────────────────────
    QUICK ACCESS — 3 cards (first section)
 ──────────────────────────────────────────── */
-.qa-belt{padding:72px 0 64px;background:linear-gradient(180deg,#EBF0FA,#F4F8FF)}
+.qa-belt{padding:72px 0 64px;background:linear-gradient(180deg,#F5F0E8,#FAF7F2)}
 .qa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.qa-card{border-radius:24px;background:linear-gradient(145deg,#1565C0,#1976D2);text-decoration:none;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 36px rgba(21,101,192,.32);border:1px solid rgba(255,255,255,.14);transition:transform .38s cubic-bezier(.34,1.56,.64,1),box-shadow .38s;position:relative;min-height:280px}
-.qa-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0;transition:opacity .3s}
-.qa-card:hover{transform:translateY(-10px) scale(1.015);box-shadow:0 32px 72px rgba(10,31,107,.35)}
+.qa-card{border-radius:24px;background:linear-gradient(145deg,#0B1835,#101F48);text-decoration:none;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.38);border:1px solid rgba(200,134,10,.14);transition:transform .38s cubic-bezier(.34,1.56,.64,1),box-shadow .38s;position:relative;min-height:280px}
+.qa-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,rgba(200,134,10,0),var(--gold),rgba(200,134,10,0));opacity:0;transition:opacity .3s}
+.qa-card:hover{transform:translateY(-10px) scale(1.015);box-shadow:0 32px 72px rgba(0,0,0,.5),0 0 0 1px rgba(200,134,10,.28)}
 .qa-card:hover::before{opacity:1}
 .qa-body{padding:36px 28px 22px;flex:1;position:relative;z-index:1}
 .qa-glow{position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;opacity:.2;pointer-events:none}
@@ -146,7 +148,7 @@ body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(
 ──────────────────────────────────────────── */
 .sc-belt{background:#fff;padding:56px 0}
 .sc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.sc-card{background:linear-gradient(135deg,#0A1F6B,#122690);border-radius:18px;padding:28px 16px;text-align:center;border:1px solid rgba(200,134,10,.18);box-shadow:0 6px 24px rgba(10,31,107,.18);position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.sc-card{background:linear-gradient(135deg,#060F26,#0C1C42);border-radius:18px;padding:28px 16px;text-align:center;border:1px solid rgba(200,134,10,.18);box-shadow:0 6px 24px rgba(0,0,0,.28);position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}
 .sc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light))}
 .sc-card::after{content:'';position:absolute;top:-30px;right:-30px;width:90px;height:90px;border-radius:50%;background:rgba(0,124,124,.1)}
 .sc-card:hover{transform:translateY(-5px);box-shadow:0 18px 48px rgba(10,31,107,.3)}
@@ -360,6 +362,7 @@ body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(
   <div class="hero-grid"></div>
   <div class="o1 orb"></div>
   <div class="o2 orb"></div>
+  <div class="o3"></div>
   <div class="hero-inner">
 
     <!-- LEFT: heading + chips + stats -->
