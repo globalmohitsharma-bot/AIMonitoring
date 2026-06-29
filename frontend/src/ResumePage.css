@@ -78,56 +78,19 @@
 }
 .resume-btn-outline:hover { background: #1e3a5f; }
 
-/* ── Body / pages ───────────────────────────────────────────── */
-.resume-body {
+/* ── PDF iframe viewer ───────────────────────────────────────── */
+.resume-viewer {
   flex: 1;
-  padding: 24px 16px 40px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.resume-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  padding: 80px 20px;
-  color: #64748b;
-}
-.resume-spinner {
-  width: 36px; height: 36px;
-  border: 3px solid #334155;
-  border-top-color: #6366f1;
-  border-radius: 50%;
-  animation: rs-spin 0.7s linear infinite;
-}
-@keyframes rs-spin { to { transform: rotate(360deg); } }
-
-.resume-error {
-  padding: 40px;
-  color: #f87171;
-  text-align: center;
-}
-.resume-error a { color: #93c5fd; }
-
-.resume-pages {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  max-width: 860px;
-}
-.resume-page-wrap {
-  background: #fff;
-  border-radius: 6px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
   overflow: hidden;
-  line-height: 0;
 }
-.resume-page-canvas {
-  display: block;
+.resume-iframe {
+  flex: 1;
+  border: none;
   width: 100%;
-  height: auto;
+  height: 100%;
+  min-height: calc(100vh - 68px);
+  display: block;
 }
 
 /* ── Mobile ─────────────────────────────────────────────────── */
