@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1c1c2e"/>
+      <stop offset="100%" stop-color="#090912"/>
+    </radialGradient>
+    <linearGradient id="fluteGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4A020"/>
+      <stop offset="100%" stop-color="#C8860A"/>
+    </linearGradient>
+    <linearGradient id="featherGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="50%" stop-color="#14b8a6"/>
+      <stop offset="100%" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <clipPath id="circClip">
+      <circle cx="100" cy="100" r="93"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="98" fill="#111118"/>
+  <circle cx="100" cy="100" r="94" fill="url(#bgGrad)"/>
+
+  <!-- Outer ring (thin white) -->
+  <circle cx="100" cy="100" r="96" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <circle cx="100" cy="100" r="93" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+
+  <!-- Flute (bansuri) — thin golden rod diagonal, slightly right-leaning -->
+  <line x1="148" y1="35" x2="60" y2="168" stroke="url(#fluteGrad)" stroke-width="2.2" stroke-linecap="round" clip-path="url(#circClip)" opacity="0.9"/>
+  <!-- Flute holes -->
+  <circle cx="133" cy="57"  r="1.8" fill="#D4A020" opacity="0.8" clip-path="url(#circClip)"/>
+  <circle cx="124" cy="72"  r="1.8" fill="#D4A020" opacity="0.8" clip-path="url(#circClip)"/>
+  <circle cx="115" cy="87"  r="1.8" fill="#D4A020" opacity="0.8" clip-path="url(#circClip)"/>
+  <circle cx="106" cy="102" r="1.8" fill="#D4A020" opacity="0.8" clip-path="url(#circClip)"/>
+  <circle cx="97"  cy="117" r="1.8" fill="#D4A020" opacity="0.8" clip-path="url(#circClip)"/>
+
+  <!-- Peacock feather (right side, partially outside circle) -->
+  <!-- Main quill stem -->
+  <path d="M162 22 Q155 60 150 100 Q147 130 148 155" stroke="#14b8a6" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.9"/>
+  <!-- Feather barbs fanning left from stem -->
+  <path d="M162 22 Q148 30 138 42" stroke="#22c55e" stroke-width="1" fill="none" opacity="0.85"/>
+  <path d="M160 32 Q146 40 136 52" stroke="#14b8a6" stroke-width="1" fill="none" opacity="0.8"/>
+  <path d="M157 44 Q143 52 133 64" stroke="#0ea5e9" stroke-width="1" fill="none" opacity="0.75"/>
+  <path d="M155 56 Q141 63 130 74" stroke="#22c55e" stroke-width="1" fill="none" opacity="0.7"/>
+  <path d="M153 68 Q139 75 128 85" stroke="#14b8a6" stroke-width="0.8" fill="none" opacity="0.6"/>
+  <path d="M151 80 Q138 87 127 97" stroke="#0ea5e9" stroke-width="0.8" fill="none" opacity="0.55"/>
+  <!-- Feather barbs going right -->
+  <path d="M162 22 Q172 28 178 38" stroke="#22c55e" stroke-width="1" fill="none" opacity="0.7"/>
+  <path d="M160 32 Q170 38 175 48" stroke="#14b8a6" stroke-width="1" fill="none" opacity="0.65"/>
+  <path d="M157 44 Q167 50 171 62" stroke="#0ea5e9" stroke-width="0.8" fill="none" opacity="0.55"/>
+  <!-- Eye at top of feather -->
+  <ellipse cx="162" cy="22" rx="10" ry="13" fill="#1d4ed8" opacity="0.7" transform="rotate(-15 162 22)"/>
+  <ellipse cx="162" cy="22" rx="6"  ry="8"  fill="#14b8a6" opacity="0.8" transform="rotate(-15 162 22)"/>
+  <ellipse cx="162" cy="22" rx="3"  ry="4"  fill="#1d4ed8" opacity="0.9" transform="rotate(-15 162 22)"/>
+  <circle  cx="162" cy="21" r="2" fill="#D4A020" opacity="0.95"/>
+  <circle  cx="162" cy="21" r="0.8" fill="#fff" opacity="0.8"/>
+
+  <!-- "abc" stylized monogram — italic, bold white -->
+  <text
+    x="52"
+    y="107"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="54"
+    font-weight="700"
+    font-style="italic"
+    fill="#ffffff"
+    letter-spacing="-3"
+    opacity="1"
+    clip-path="url(#circClip)"
+  >abc</text>
+
+  <!-- Thin separator line -->
+  <line x1="48" y1="118" x2="152" y2="118" stroke="rgba(255,255,255,0.2)" stroke-width="0.6" clip-path="url(#circClip)"/>
+
+  <!-- "SHRI AVADH BIHARI" -->
+  <text
+    x="100" y="132"
+    text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="9.5"
+    font-weight="700"
+    fill="#ffffff"
+    letter-spacing="2"
+    opacity="0.92"
+    clip-path="url(#circClip)"
+  >SHRI AVADH BIHARI</text>
+
+  <!-- "CHARITABLE TRUST" -->
+  <text
+    x="100" y="146"
+    text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="8.5"
+    font-weight="600"
+    fill="#ffffff"
+    letter-spacing="2.2"
+    opacity="0.85"
+    clip-path="url(#circClip)"
+  >CHARITABLE TRUST</text>
+</svg>

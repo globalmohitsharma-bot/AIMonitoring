@@ -4,15 +4,21 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Our Programs | Shri Avadh Bihari Charitable Trust</title>
-  <meta name="description" content="Five core programs by Shri Avadh Bihari Charitable Trust — Education Support, Health Camps, Food Distribution, Elderly Care, and Rural Development."/>
+  <meta name="description" content="Explore all programs by Shri Avadh Bihari Charitable Trust: Education Support, Health Camps, Food Distribution, Elderly Care, and Rural Development."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/ngo/css/style.css"/>
   <link rel="stylesheet" href="/ngo/css/pages.css"/>
+  <style>
+    .prog-tab{display:inline-flex;align-items:center;padding:14px 20px;font-size:.82rem;font-weight:600;color:var(--muted);text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
+    .prog-tab:hover{color:var(--gold);border-bottom-color:var(--gold)}
+    /* Peacock feather watermark */
+    body::before{content:'';position:fixed;right:-60px;top:50%;transform:translateY(-50%);width:300px;height:620px;background:url('/ngo/peacock-feather.svg') center/contain no-repeat;opacity:.06;pointer-events:none;z-index:0}
+  </style>
 </head>
 <body>
 <nav class="navbar">
-  <a class="nav-brand" href="/ngo/index.html"><img src="/ngo/logo.png" alt="Shri Avadh Bihari Charitable Trust Logo" class="nav-logo-img"/><div><div class="nav-name">Shri Avadh Bihari</div><div class="nav-sub">Charitable Trust</div></div></a>
+  <a class="nav-brand" href="/ngo/index.html"><img src="/ngo/logo.svg" alt="Logo" class="nav-logo-img"/><div><div class="nav-name">Shri Avadh Bihari</div><div class="nav-sub">Charitable Trust</div></div></a>
   <div class="nav-links">
     <a href="/ngo/about.html">About</a>
     <a href="/ngo/programs.html" style="color:var(--gold)">Programs</a>
@@ -30,201 +36,194 @@
   <a href="/ngo/donate.html" onclick="closeMobile()" style="color:var(--gold)">Donate</a>
 </div>
 
-<!-- Page Hero -->
-<div class="page-hero" style="background:linear-gradient(135deg,var(--navy),#1B3A5C)">
+<div class="page-hero" style="background:linear-gradient(135deg,#06144D,#0A1F6B,#07236b)">
   <div class="container">
-    <div class="breadcrumb"><a href="/ngo/index.html">Home</a> <span>/</span> Programs</div>
-    <h1 class="page-hero-h">Our Programs</h1>
-    <p class="page-hero-sub">Five initiatives, one mission — serving humanity with compassion and dignity.</p>
-    <div class="prog-nav">
-      <a href="#education" class="prog-nav-btn">📚 Education</a>
-      <a href="#health"    class="prog-nav-btn">🏥 Healthcare</a>
-      <a href="#food"      class="prog-nav-btn">🍱 Food &amp; Essentials</a>
-      <a href="#elderly"   class="prog-nav-btn">👴 Elderly Care</a>
-      <a href="#rural"     class="prog-nav-btn">🌾 Rural Development</a>
-    </div>
+    <div class="breadcrumb"><a href="/ngo/index.html">Home</a><span>/</span>Our Programs</div>
+    <h1 class="page-hero-h">Programs &amp; Initiatives</h1>
+    <p class="page-hero-sub">Five core programs that directly transform lives across Haridwar and surrounding districts &mdash; from schools to fields, from villages to homes.</p>
   </div>
 </div>
 
-<!-- ── Education ─────────────────────────────────────────────── -->
-<section id="education" class="prog-full-section">
+<!-- Quick Jump -->
+<div style="background:#fff;border-bottom:1px solid var(--border);padding:0;position:sticky;top:64px;z-index:80;overflow-x:auto">
+  <div class="container" style="display:flex;gap:0">
+    <a href="#education" class="prog-tab">Education</a>
+    <a href="#health" class="prog-tab">Healthcare</a>
+    <a href="#food" class="prog-tab">Food</a>
+    <a href="#elderly" class="prog-tab">Elderly</a>
+    <a href="#rural" class="prog-tab">Rural Dev.</a>
+  </div>
+</div>
+
+<!-- 1. Education -->
+<section class="prog-full-section" id="education">
   <div class="container">
     <div class="prog-full-grid">
-      <div class="prog-full-visual" style="background:linear-gradient(135deg,#1B4B8A22,#2563eb11)">
-        <div class="pfv-icon">📚</div>
-        <div class="pfv-tag" style="background:#1B4B8A">Education Support</div>
+      <div class="prog-full-visual" style="background:linear-gradient(135deg,#1B4B8A,#0A1F6B)">
+        <div class="pfv-icon">&#x1F4DA;</div>
+        <h3>Education Support Program</h3>
         <div class="pfv-stats">
-          <div class="pfv-stat"><div class="pfv-num">100+</div><div class="pfv-lbl">Children Supported</div></div>
-          <div class="pfv-stat"><div class="pfv-num">Free</div><div class="pfv-lbl">All Materials</div></div>
-          <div class="pfv-stat"><div class="pfv-num">Annual</div><div class="pfv-lbl">Drives Held</div></div>
+          <div class="pfv-stat"><div class="pfv-n">500+</div><div class="pfv-l">Students Supported</div></div>
+          <div class="pfv-stat"><div class="pfv-n">12+</div><div class="pfv-l">Villages Covered</div></div>
+          <div class="pfv-stat"><div class="pfv-n">100%</div><div class="pfv-l">Free of Cost</div></div>
         </div>
       </div>
       <div class="prog-full-content">
         <div class="gold-line"></div>
-        <p class="eyebrow">Program 01</p>
-        <h2 class="section-h">Education Support Program</h2>
-        <p class="pfc-lead">We believe every child deserves the chance to learn — and no family should have to choose between food and their child's education.</p>
-        <p class="pfc-body">The Education Support Program provides comprehensive assistance to students from economically disadvantaged households in Haridwar and surrounding villages. Through regular distribution drives, we supply school bags, textbooks, notebooks, stationery, uniforms, and shoes — everything a child needs to attend and succeed in school.</p>
-        <p class="pfc-body">Beyond materials, we also provide financial aid to families facing extreme hardship, ensuring children can continue their education without interruption due to fees or exam costs.</p>
-        <h4 class="pfc-subh">What We Provide</h4>
+        <p class="eyebrow">Program 1</p>
+        <h2 class="section-h">Education Support</h2>
+        <p class="pfc-lead">No child should miss out on education because their family cannot afford school supplies. We distribute school kits, books, uniforms, and stationery to children from low-income families across Haridwar.</p>
         <ul class="pfc-list">
-          <li>School bags, textbooks, and notebooks</li>
-          <li>Stationery sets and drawing supplies</li>
-          <li>Uniforms and school shoes</li>
-          <li>Financial aid for fees and examinations</li>
-          <li>Guidance and mentorship sessions</li>
+          <li>Comprehensive school kit: bag, books, stationery, uniform</li>
+          <li>Targeted support for girls&rsquo; education and first-generation learners</li>
+          <li>Supplementary tuition and homework support sessions</li>
+          <li>Scholarship guidance for deserving students</li>
+          <li>Awareness campaigns to reduce school dropout rates</li>
         </ul>
-        <div class="pfc-cta">
-          <a href="/ngo/donate.html" class="btn btn-gold">Support This Program</a>
-          <a href="/ngo/contact.html" class="btn btn-dark">Get Involved</a>
+        <p class="pfc-body">Our Education Support Program ensures that every child has what they need to attend school with confidence and dignity. Because education is not a privilege &mdash; it&rsquo;s a right.</p>
+        <div class="pfc-ctas">
+          <a href="/ngo/donate.html" class="btn btn-gold">Support a Child &rarr;</a>
+          <a href="/ngo/contact.html" class="btn btn-dark">Volunteer to Teach</a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Health ─────────────────────────────────────────────────── -->
-<section id="health" class="prog-full-section alt">
+<!-- 2. Healthcare -->
+<section class="prog-full-section alt" id="health">
   <div class="container">
-    <div class="prog-full-grid prog-full-grid--reverse">
+    <div class="prog-full-grid reverse">
       <div class="prog-full-content">
         <div class="gold-line"></div>
-        <p class="eyebrow">Program 02</p>
+        <p class="eyebrow">Program 2</p>
         <h2 class="section-h">Health &amp; Wellness Camps</h2>
-        <p class="pfc-lead">Healthcare is a fundamental right — yet millions in rural India have never seen a doctor. We bring qualified medical professionals directly to communities.</p>
-        <p class="pfc-body">Our Health & Wellness Camps are organized regularly across Haridwar district and neighboring villages. Each camp includes general medical check-ups, blood pressure and sugar screening, eye examinations, and free prescription glasses for those with vision impairments.</p>
-        <p class="pfc-body">We also run hygiene and sanitation awareness sessions, mother and child health education, and distribute free medicines to those who cannot afford them.</p>
-        <h4 class="pfc-subh">Camp Services</h4>
+        <p class="pfc-lead">Preventable illness remains a leading cause of hardship in rural communities. Our free medical and eye camps bring qualified doctors and specialists directly to villages, removing every barrier to care.</p>
         <ul class="pfc-list">
-          <li>General medical examination and consultation</li>
-          <li>Eye testing with free prescription glasses</li>
-          <li>Blood pressure, diabetes, and hemoglobin screening</li>
-          <li>Free medicine distribution</li>
-          <li>Maternal and child health support</li>
-          <li>Health and hygiene awareness sessions</li>
+          <li>Free medical check-ups, diagnostics, and consultations</li>
+          <li>Specialist eye testing camps with free prescription glasses</li>
+          <li>Medicines and basic health supplies at no cost</li>
+          <li>Blood pressure, diabetes, and chronic illness screening</li>
+          <li>Women&rsquo;s health and maternal care awareness sessions</li>
+          <li>Dental check-up and hygiene awareness drives</li>
         </ul>
-        <div class="pfc-cta">
-          <a href="/ngo/camps.html" class="btn btn-gold">Upcoming Health Camps</a>
-          <a href="/ngo/donate.html" class="btn btn-dark">Fund a Camp Day</a>
+        <p class="pfc-body">We partner with medical professionals and hospitals to bring comprehensive healthcare to those who have never seen a doctor. Health is wealth &mdash; and we make sure everyone can access it.</p>
+        <div class="pfc-ctas">
+          <a href="/ngo/camps.html" class="btn btn-gold">Find a Health Camp &rarr;</a>
+          <a href="/ngo/donate.html" class="btn btn-dark">Fund a Camp</a>
         </div>
       </div>
-      <div class="prog-full-visual" style="background:linear-gradient(135deg,#15803d22,#16a34a11)">
-        <div class="pfv-icon">🏥</div>
-        <div class="pfv-tag" style="background:#15803d">Healthcare</div>
+      <div class="prog-full-visual" style="background:linear-gradient(135deg,#15803d,#166534)">
+        <div class="pfv-icon">&#x1F3E5;</div>
+        <h3>Healthcare Initiative</h3>
         <div class="pfv-stats">
-          <div class="pfv-stat"><div class="pfv-num">200+</div><div class="pfv-lbl">Patients Served</div></div>
-          <div class="pfv-stat"><div class="pfv-num">Free</div><div class="pfv-lbl">All Treatment</div></div>
-          <div class="pfv-stat"><div class="pfv-num">Regular</div><div class="pfv-lbl">Camps Held</div></div>
+          <div class="pfv-stat"><div class="pfv-n">1,000+</div><div class="pfv-l">Patients Treated</div></div>
+          <div class="pfv-stat"><div class="pfv-n">50+</div><div class="pfv-l">Doctors Engaged</div></div>
+          <div class="pfv-stat"><div class="pfv-n">Free</div><div class="pfv-l">All Services</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Food ───────────────────────────────────────────────────── -->
-<section id="food" class="prog-full-section">
+<!-- 3. Food -->
+<section class="prog-full-section" id="food">
   <div class="container">
     <div class="prog-full-grid">
-      <div class="prog-full-visual" style="background:linear-gradient(135deg,#b4530922,#d9770611)">
-        <div class="pfv-icon">🍱</div>
-        <div class="pfv-tag" style="background:#b45309">Food &amp; Essentials</div>
+      <div class="prog-full-visual" style="background:linear-gradient(135deg,#b45309,#92400e)">
+        <div class="pfv-icon">&#x1F371;</div>
+        <h3>Food &amp; Essentials Drive</h3>
         <div class="pfv-stats">
-          <div class="pfv-stat"><div class="pfv-num">300+</div><div class="pfv-lbl">Families Fed</div></div>
-          <div class="pfv-stat"><div class="pfv-num">Monthly</div><div class="pfv-lbl">Drives Held</div></div>
-          <div class="pfv-stat"><div class="pfv-num">Free</div><div class="pfv-lbl">All Items</div></div>
+          <div class="pfv-stat"><div class="pfv-n">200+</div><div class="pfv-l">Families Fed Monthly</div></div>
+          <div class="pfv-stat"><div class="pfv-n">12</div><div class="pfv-l">Distribution Points</div></div>
+          <div class="pfv-stat"><div class="pfv-n">Zero</div><div class="pfv-l">Discrimination</div></div>
         </div>
       </div>
       <div class="prog-full-content">
         <div class="gold-line"></div>
-        <p class="eyebrow">Program 03</p>
-        <h2 class="section-h">Food &amp; Essentials Distribution</h2>
-        <p class="pfc-lead">No one should go to sleep hungry. Our food distribution drives reach those who fall through every other safety net.</p>
-        <p class="pfc-body">Through regular monthly drives, we distribute ration kits, cooked meals, and essential supplies to homeless individuals, widowed women, daily-wage labourers, and families facing economic hardship in Haridwar and nearby areas.</p>
-        <p class="pfc-body">Each drive is organized by our dedicated volunteer teams, who collect, sort, package, and personally distribute supplies — ensuring maximum dignity in every interaction.</p>
-        <h4 class="pfc-subh">What We Distribute</h4>
+        <p class="eyebrow">Program 3</p>
+        <h2 class="section-h">Food &amp; Essential Supplies</h2>
+        <p class="pfc-lead">Hunger should never be the reason a family cannot thrive. We organise regular food distribution drives and provide essential household supplies to families facing economic hardship across Haridwar.</p>
         <ul class="pfc-list">
-          <li>Monthly ration kits (rice, dal, oil, spices)</li>
-          <li>Cooked meals during festivals and emergencies</li>
-          <li>Clothing and warm blankets in winter</li>
-          <li>Hygiene products (soap, toothpaste, sanitary items)</li>
-          <li>Baby food and infant supplies</li>
+          <li>Monthly ration kits: rice, dal, oil, sugar, salt, and flour</li>
+          <li>Ready cooked meals at special community events and festivals</li>
+          <li>Essential hygiene supplies: soap, toothpaste, sanitary products</li>
+          <li>Blankets and warm clothing during winter months</li>
+          <li>Emergency food relief during floods, illness, or calamity</li>
         </ul>
-        <div class="pfc-cta">
-          <a href="/ngo/donate.html" class="btn btn-gold">Donate Essentials</a>
-          <a href="/ngo/contact.html" class="btn btn-dark">Volunteer with Us</a>
+        <p class="pfc-body">No matter one&rsquo;s caste, religion, or background &mdash; when someone comes to us hungry, we feed them. That is our most fundamental promise.</p>
+        <div class="pfc-ctas">
+          <a href="/ngo/donate.html" class="btn btn-gold">Feed a Family &rarr;</a>
+          <a href="/ngo/camps.html" class="btn btn-dark">Join a Distribution Camp</a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Elderly ─────────────────────────────────────────────────── -->
-<section id="elderly" class="prog-full-section alt">
+<!-- 4. Elderly -->
+<section class="prog-full-section alt" id="elderly">
   <div class="container">
-    <div class="prog-full-grid prog-full-grid--reverse">
+    <div class="prog-full-grid reverse">
       <div class="prog-full-content">
         <div class="gold-line"></div>
-        <p class="eyebrow">Program 04</p>
-        <h2 class="section-h">Support for Elderly &amp; Widows</h2>
-        <p class="pfc-lead">The elderly and widowed are often invisible to society. We ensure they are seen, respected, and cared for with the dignity they deserve.</p>
-        <p class="pfc-body">Many senior citizens and widows in our communities live alone, without family support or pension income. Our dedicated program reaches out to these individuals through regular home visits, community gatherings, and essential supply distributions.</p>
-        <p class="pfc-body">We also organize festive celebrations and community events specifically for elders — because belonging to a community is as essential as food and medicine.</p>
-        <h4 class="pfc-subh">Our Support Includes</h4>
+        <p class="eyebrow">Program 4</p>
+        <h2 class="section-h">Elderly &amp; Widow Welfare</h2>
+        <p class="pfc-lead">Our elders deserve to age with dignity, care, and community. We provide dedicated support for senior citizens and widows who are isolated, abandoned, or unable to meet their basic needs.</p>
         <ul class="pfc-list">
-          <li>Monthly essential supply delivery to homes</li>
-          <li>Medical support and clinic visits</li>
-          <li>Community gathering and festival celebrations</li>
-          <li>Emotional support and regular check-ins</li>
-          <li>Help with government scheme enrollment</li>
+          <li>Regular welfare visits and emotional support for isolated elders</li>
+          <li>Essential supplies and medicines for elderly widows</li>
+          <li>Support navigating government welfare schemes and pensions</li>
+          <li>Community gatherings to reduce loneliness and isolation</li>
+          <li>Dedicated health camps for senior citizens</li>
         </ul>
-        <div class="pfc-cta">
-          <a href="/ngo/donate.html" class="btn btn-gold">Support an Elder</a>
-          <a href="/ngo/contact.html" class="btn btn-dark">Volunteer Today</a>
+        <p class="pfc-body">In a society that often forgets its oldest members, we choose to show up &mdash; to listen, to serve, and to remind them that they are valued, seen, and loved.</p>
+        <div class="pfc-ctas">
+          <a href="/ngo/donate.html" class="btn btn-gold">Support the Elderly &rarr;</a>
+          <a href="/ngo/contact.html" class="btn btn-dark">Become a Volunteer</a>
         </div>
       </div>
-      <div class="prog-full-visual" style="background:linear-gradient(135deg,#7c3aed22,#8b5cf611)">
-        <div class="pfv-icon">👴</div>
-        <div class="pfv-tag" style="background:#7c3aed">Elderly Care</div>
+      <div class="prog-full-visual" style="background:linear-gradient(135deg,#7c3aed,#5b21b6)">
+        <div class="pfv-icon">&#x1F9D3;</div>
+        <h3>Elderly &amp; Widow Welfare</h3>
         <div class="pfv-stats">
-          <div class="pfv-stat"><div class="pfv-num">80+</div><div class="pfv-lbl">Elders Reached</div></div>
-          <div class="pfv-stat"><div class="pfv-num">Ongoing</div><div class="pfv-lbl">Care &amp; Support</div></div>
-          <div class="pfv-stat"><div class="pfv-num">Home</div><div class="pfv-lbl">Visits Provided</div></div>
+          <div class="pfv-stat"><div class="pfv-n">150+</div><div class="pfv-l">Elders Supported</div></div>
+          <div class="pfv-stat"><div class="pfv-n">Monthly</div><div class="pfv-l">Welfare Visits</div></div>
+          <div class="pfv-stat"><div class="pfv-n">100%</div><div class="pfv-l">Dignity &amp; Respect</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Rural ──────────────────────────────────────────────────── -->
-<section id="rural" class="prog-full-section">
+<!-- 5. Rural Development -->
+<section class="prog-full-section" id="rural">
   <div class="container">
     <div class="prog-full-grid">
-      <div class="prog-full-visual" style="background:linear-gradient(135deg,#0f766e22,#0d948811)">
-        <div class="pfv-icon">🌾</div>
-        <div class="pfv-tag" style="background:#0f766e">Rural Development</div>
+      <div class="prog-full-visual" style="background:linear-gradient(135deg,#007C7C,#065F5F)">
+        <div class="pfv-icon">&#x1F33F;</div>
+        <h3>Rural Development</h3>
         <div class="pfv-stats">
-          <div class="pfv-stat"><div class="pfv-num">5+</div><div class="pfv-lbl">Villages Reached</div></div>
-          <div class="pfv-stat"><div class="pfv-num">Skills</div><div class="pfv-lbl">Training Runs</div></div>
-          <div class="pfv-stat"><div class="pfv-num">Growing</div><div class="pfv-lbl">Impact</div></div>
+          <div class="pfv-stat"><div class="pfv-n">15+</div><div class="pfv-l">Villages Reached</div></div>
+          <div class="pfv-stat"><div class="pfv-n">Skills</div><div class="pfv-l">Livelihood Training</div></div>
+          <div class="pfv-stat"><div class="pfv-n">Women</div><div class="pfv-l">Empowerment Focus</div></div>
         </div>
       </div>
       <div class="prog-full-content">
         <div class="gold-line"></div>
-        <p class="eyebrow">Program 05</p>
-        <h2 class="section-h">Rural Development &amp; Empowerment</h2>
-        <p class="pfc-lead">True change is sustainable. We work at the root — building skills, infrastructure, and self-reliance in rural communities.</p>
-        <p class="pfc-body">Our Rural Development program focuses on creating lasting improvements in villages around Haridwar. We run sanitation drives to promote hygiene awareness, skills training workshops for women and youth, and help connect rural families with government welfare schemes.</p>
-        <p class="pfc-body">By training individuals in income-generating skills — tailoring, handicrafts, basic computer literacy, farming techniques — we help communities break the cycle of poverty through their own efforts.</p>
-        <h4 class="pfc-subh">Our Initiatives</h4>
+        <p class="eyebrow">Program 5</p>
+        <h2 class="section-h">Rural Empowerment</h2>
+        <p class="pfc-lead">Lasting change requires investment in communities, not just individuals. Our rural development program builds sustainable livelihoods, improves village infrastructure, and empowers rural women to become financially independent.</p>
         <ul class="pfc-list">
-          <li>Sanitation and hygiene promotion drives</li>
-          <li>Women's skills training (tailoring, handicrafts)</li>
-          <li>Youth vocational guidance sessions</li>
-          <li>Government scheme awareness and enrollment help</li>
-          <li>Village cleanliness and tree plantation campaigns</li>
+          <li>Skill workshops: tailoring, handicrafts, digital literacy</li>
+          <li>Self-Help Group (SHG) formation and mentoring for women</li>
+          <li>Awareness on government schemes, rights, and entitlements</li>
+          <li>Basic sanitation and hygiene infrastructure support</li>
+          <li>Tree plantation drives and environmental awareness camps</li>
         </ul>
-        <div class="pfc-cta">
-          <a href="/ngo/donate.html" class="btn btn-gold">Fund Rural Programs</a>
+        <p class="pfc-body">We believe that empowering a village means empowering every person in it. When rural communities thrive, India thrives.</p>
+        <div class="pfc-ctas">
+          <a href="/ngo/donate.html" class="btn btn-gold">Empower a Village &rarr;</a>
           <a href="/ngo/contact.html" class="btn btn-dark">Partner with Us</a>
         </div>
       </div>
@@ -232,14 +231,21 @@
   </div>
 </section>
 
-<!-- CTA -->
-<div class="quote-section" style="padding:64px 0">
-  <div class="container" style="text-align:center">
-    <h2 style="font-family:'Playfair Display',serif;font-size:2rem;color:#fff;margin-bottom:12px">Ready to Make a Difference?</h2>
-    <p style="color:rgba(255,255,255,.6);margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto">Whether you donate, volunteer, or simply spread the word — you are part of our mission.</p>
-    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
-      <a href="/ngo/donate.html" class="btn btn-gold">❤️ Donate Now</a>
-      <a href="/ngo/camps.html"  class="btn btn-outline">📅 See Upcoming Camps</a>
+<!-- Stats bar -->
+<div style="background:linear-gradient(135deg,var(--navy),#122690);padding:80px 0;text-align:center">
+  <div class="container">
+    <div class="gold-line" style="margin:0 auto 12px"></div>
+    <p class="eyebrow" style="color:rgba(255,255,255,.5)">All Programs Combined</p>
+    <h2 style="font-family:'Playfair Display',serif;font-size:2rem;color:#fff;margin-bottom:48px">Our Collective Impact</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px;max-width:800px;margin:0 auto">
+      <div><div style="font-size:2.2rem;font-weight:800;color:var(--gold)">2,000+</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-top:4px">Lives Touched</div></div>
+      <div><div style="font-size:2.2rem;font-weight:800;color:var(--gold)">5</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-top:4px">Core Programs</div></div>
+      <div><div style="font-size:2.2rem;font-weight:800;color:var(--gold)">20+</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-top:4px">Villages Served</div></div>
+      <div><div style="font-size:2.2rem;font-weight:800;color:var(--gold)">100%</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-top:4px">Free Services</div></div>
+    </div>
+    <div style="margin-top:48px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a href="/ngo/camps.html" class="btn btn-gold">Join a Camp</a>
+      <a href="/ngo/donate.html" class="btn btn-outline">Support Our Work</a>
     </div>
   </div>
 </div>
@@ -247,21 +253,17 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-top">
-      <div class="footer-brand"><div class="foot-logo">🙏 Shri Avadh Bihari Charitable Trust</div><p style="margin-top:10px">Serving with Seva, Supporting with Heart.</p><p style="margin-top:12px;font-size:.78rem;color:rgba(255,255,255,.3)">Shop No. 2, Ucchi Sadak, Arya Nagar,<br/>Jwalapur, Haridwar – 249407</p></div>
+      <div class="footer-brand"><div class="foot-logo">Shri Avadh Bihari Charitable Trust</div><p style="margin-top:10px">Serving with Seva, Supporting with Heart.</p><p style="margin-top:12px;font-size:.78rem;color:rgba(255,255,255,.3)">Shop No. 2, Ucchi Sadak, Arya Nagar,<br/>Jwalapur, Haridwar &ndash; 249407</p><div style="margin-top:14px"><a href="https://instagram.com/sabct_hw" target="_blank" rel="noopener" style="color:var(--gold);font-size:.82rem">&#x1F4F8; @sabct_hw</a></div></div>
       <div class="footer-col"><h4>Navigate</h4><a href="/ngo/index.html">Home</a><a href="/ngo/about.html">About</a><a href="/ngo/programs.html">Programs</a><a href="/ngo/camps.html">Camps</a><a href="/ngo/donate.html">Donate</a></div>
-      <div class="footer-col"><h4>Programs</h4><a href="#education">Education Support</a><a href="#health">Health Camps</a><a href="#food">Food Distribution</a><a href="#elderly">Elderly Care</a><a href="#rural">Rural Development</a></div>
+      <div class="footer-col"><h4>Programs</h4><a href="#education">Education</a><a href="#health">Healthcare</a><a href="#food">Food Distribution</a><a href="#elderly">Elderly Care</a><a href="#rural">Rural Dev.</a></div>
     </div>
-    <div class="footer-bottom"><div class="footer-copy">© 2026 Shri Avadh Bihari Charitable Trust.</div></div>
+    <div class="footer-bottom"><div class="footer-copy">&copy; 2026 Shri Avadh Bihari Charitable Trust.</div></div>
   </div>
 </footer>
 <script>
-function toggleMenu(){ const m=document.getElementById('mobileMenu'); m.style.display=m.style.display==='flex'?'none':'flex'; }
-function closeMobile(){ document.getElementById('mobileMenu').style.display='none'; }
-window.addEventListener('scroll',()=>{ document.querySelector('.navbar').style.boxShadow=window.scrollY>20?'0 4px 24px rgba(0,0,0,.3)':'none'; });
-// Smooth scroll for nav links
-document.querySelectorAll('.prog-nav-btn').forEach(a=>{ a.addEventListener('click',e=>{ const t=document.querySelector(a.getAttribute('href')); if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});} }); });
-// Highlight current section
-if(window.location.hash) setTimeout(()=>{ const t=document.querySelector(window.location.hash); if(t) t.scrollIntoView({behavior:'smooth'}); },200);
+function toggleMenu(){const m=document.getElementById('mobileMenu');m.style.display=m.style.display==='flex'?'none':'flex';}
+function closeMobile(){document.getElementById('mobileMenu').style.display='none';}
+window.addEventListener('scroll',()=>{document.querySelector('.navbar').style.boxShadow=window.scrollY>20?'0 4px 24px rgba(0,0,0,.3)':'none';});
 </script>
 </body>
 </html>

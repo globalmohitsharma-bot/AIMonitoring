@@ -4,135 +4,323 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Shri Avadh Bihari Charitable Trust | Serving with Seva</title>
-  <meta name="description" content="Shri Avadh Bihari Charitable Trust &mdash; education, healthcare, food distribution, and rural development in Haridwar, Uttarakhand. Free camps open to all."/>
+  <meta name="description" content="Free education, healthcare, food distribution and rural development in Haridwar, Uttarakhand. Join Shri Avadh Bihari Charitable Trust."/>
   <link rel="canonical" href="https://shriavadhbiharicharitabletrust.org/"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/ngo/css/style.css"/>
-  <link rel="stylesheet" href="/ngo/css/home.css"/>
   <style>
-    body::before{content:'';position:fixed;right:-60px;top:50%;transform:translateY(-50%);width:300px;height:620px;background:url('/ngo/peacock-feather.svg') center/contain no-repeat;opacity:.05;pointer-events:none;z-index:0}
-    /* 2026 interactive card effects */
-    .nav-card-section{padding:56px 0 72px;background:linear-gradient(180deg,#EBF0FA 0%,#fff 100%)}
-    .nav-card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-    .nav-card{
-      position:relative;overflow:hidden;border-radius:24px;
-      background:var(--navy);border:1px solid rgba(255,255,255,.08);
-      text-decoration:none;color:inherit;
-      transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .35s;
-      cursor:pointer;display:flex;flex-direction:column;min-height:300px;
-      box-shadow:0 8px 32px rgba(10,31,107,.2);
-    }
-    .nav-card:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 40px 80px rgba(10,31,107,.35)}
-    .nav-card-header{
-      padding:40px 32px 28px;flex:1;
-      position:relative;overflow:hidden;
-    }
-    /* Peacock shimmer overlay */
-    .nav-card-header::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse 80% 60% at 80% 20%,rgba(0,124,124,.25),transparent);
-      pointer-events:none;
-    }
-    .nav-card-header::after{
-      content:'';position:absolute;
-      width:200px;height:200px;border-radius:50%;
-      border:1px solid rgba(255,255,255,.06);
-      bottom:-60px;right:-60px;pointer-events:none;
-    }
-    .nav-card-icon{font-size:3.2rem;margin-bottom:18px;display:block;position:relative;z-index:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.3))}
-    .nav-card h3{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:12px;line-height:1.2;position:relative;z-index:1}
-    .nav-card p{font-size:.86rem;color:rgba(255,255,255,.7);line-height:1.65;position:relative;z-index:1}
-    .nav-card-footer{
-      padding:18px 32px;
-      background:rgba(200,134,10,.12);
-      display:flex;align-items:center;justify-content:space-between;
-      border-top:1px solid rgba(200,134,10,.2);
-    }
-    .nav-card-cta{font-size:.84rem;font-weight:700;color:var(--gold);letter-spacing:.04em}
-    .nav-card-arrow{font-size:1.3rem;color:var(--gold);transition:transform .3s}
-    .nav-card:hover .nav-card-arrow{transform:translateX(8px)}
-    /* Gold top accent line */
-    .nav-card::after{
-      content:'';position:absolute;top:0;left:0;right:0;height:3px;
-      background:linear-gradient(90deg,var(--gold),transparent);
-      opacity:0;transition:opacity .3s;
-    }
-    .nav-card:hover::after{opacity:1}
-    /* Ripple on click */
-    .nav-card-ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.1);pointer-events:none;transform:scale(0);animation:ripple .6s linear}
-    @keyframes ripple{to{transform:scale(4);opacity:0}}
+/* ─── Peacock watermark ─── */
+body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(-50%);width:260px;height:560px;background:url('/ngo/peacock-feather.svg') center/contain no-repeat;opacity:.045;pointer-events:none;z-index:0}
 
-    /* Stat counter cards */
-    .stats-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:48px 0}
-    .stat-card{
-      background:linear-gradient(135deg,var(--navy) 0%,#122690 100%);
-      border:1px solid rgba(200,134,10,.2);border-radius:16px;
-      padding:28px 20px;text-align:center;box-shadow:0 8px 24px rgba(10,31,107,.2);
-      position:relative;overflow:hidden;transition:all .3s;
-    }
-    .stat-card::before{
-      content:'';position:absolute;top:0;left:0;right:0;height:3px;
-      background:linear-gradient(90deg,var(--gold),var(--gold-light));
-    }
-    .stat-card::after{
-      content:'';position:absolute;top:-40px;right:-40px;
-      width:100px;height:100px;border-radius:50%;
-      background:rgba(0,124,124,.12);pointer-events:none;
-    }
-    .stat-card:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(10,31,107,.3)}
-    .stat-card-num{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--gold);line-height:1;position:relative;z-index:1}
-    .stat-card-lbl{font-size:.78rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-top:8px;position:relative;z-index:1}
+/* ─── Hero ─── */
+.hero{
+  position:relative;min-height:100vh;
+  background:linear-gradient(150deg,#04102E 0%,#0A1F6B 38%,#071E5A 65%,#030C22 100%);
+  display:flex;align-items:center;overflow:hidden;
+}
+/* Animated grid overlay */
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(200,134,10,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(200,134,10,.06) 1px,transparent 1px);
+  background-size:64px 64px;
+  animation:gridMove 20s linear infinite;
+  pointer-events:none;
+}
+@keyframes gridMove{0%{transform:translateY(0)}100%{transform:translateY(64px)}}
 
-    /* Program cards 2026 style */
-    .prog-card-2026{
-      background:#fff;border:1px solid var(--border);border-radius:20px;
-      overflow:hidden;transition:all .3s cubic-bezier(.34,1.56,.64,1);
-      display:flex;flex-direction:column;
-    }
-    .prog-card-2026:hover{transform:translateY(-8px);box-shadow:0 24px 56px rgba(10,31,107,.15)}
-    .pc-top{padding:28px 24px;position:relative;min-height:140px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
-    .pc-top::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08)}
-    .pc-top::after{content:'';position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.06)}
-    .pc-emoji{font-size:2.8rem;display:block;margin-bottom:12px;position:relative;z-index:1}
-    .pc-tag{position:relative;z-index:1;display:inline-block;background:rgba(255,255,255,.2);color:#fff;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;padding:5px 14px;border-radius:40px;margin-bottom:8px}
-    .pc-title{position:relative;z-index:1;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:#fff;line-height:1.2}
-    .pc-body{padding:20px 24px;flex:1;display:flex;flex-direction:column;gap:12px}
-    .pc-desc{font-size:.83rem;color:var(--muted);line-height:1.65;flex:1}
-    .pc-stats{display:flex;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden}
-    .pc-stat{flex:1;padding:12px 8px;text-align:center;border-right:1px solid var(--border)}
-    .pc-stat:last-child{border-right:none}
-    .pc-stat-n{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--navy)}
-    .pc-stat-l{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
-    .pc-link{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--bg);border-top:1px solid var(--border);font-size:.83rem;font-weight:700;color:var(--gold);transition:background .2s}
-    .prog-card-2026:hover .pc-link{background:var(--gold-pale)}
-    .pc-link-arr{transition:transform .25s}
-    .prog-card-2026:hover .pc-link-arr{transform:translateX(6px)}
+/* Glow orbs */
+.hero-orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(80px)}
+.orb-1{width:500px;height:500px;background:radial-gradient(#007C7C33,transparent 70%);top:-10%;right:5%;animation:float 8s ease-in-out infinite}
+.orb-2{width:360px;height:360px;background:radial-gradient(#C8860A22,transparent 70%);bottom:5%;left:-5%;animation:float 11s ease-in-out infinite reverse}
+.orb-3{width:280px;height:280px;background:radial-gradient(#1B4B8A44,transparent 70%);top:30%;right:30%;animation:float 14s ease-in-out infinite 3s}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
 
-    /* Camps preview at bottom */
-    .camps-bottom{padding:80px 0;background:linear-gradient(135deg,var(--navy),#122690)}
+.hero-content{position:relative;z-index:2;padding:120px 0 80px;max-width:780px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(200,134,10,.12);color:var(--gold);
+  border:1px solid rgba(200,134,10,.28);
+  font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;
+  padding:8px 18px;border-radius:40px;margin-bottom:32px;
+  animation:fadeUp .8s ease both;
+}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
 
-    @media(max-width:900px){
-      .nav-card-grid{grid-template-columns:1fr}
-      .stats-cards{grid-template-columns:1fr 1fr}
-    }
-    @media(max-width:768px){
-      .nav-card-grid{gap:12px}
-      .nav-card{min-height:220px}
-      .stats-cards{grid-template-columns:1fr 1fr}
-    }
-    @media(max-width:480px){
-      .stats-cards{grid-template-columns:1fr 1fr}
-      .nav-card h3{font-size:1.15rem}
-    }
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.6rem,6vw,4.4rem);font-weight:800;
+  color:#fff;line-height:1.08;margin-bottom:26px;
+  animation:fadeUp .8s ease .1s both;
+}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero h1 span{display:block;font-size:clamp(1.4rem,3.2vw,2.2rem);font-weight:300;color:rgba(255,255,255,.55);margin-top:6px;font-family:'Inter',sans-serif;letter-spacing:-.01em}
+.hero-sub{
+  color:rgba(255,255,255,.6);font-size:1.05rem;max-width:560px;
+  line-height:1.75;margin-bottom:44px;font-weight:300;
+  animation:fadeUp .8s ease .2s both;
+}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp .8s ease .3s both}
+.hero-donate-link{margin-top:22px;font-size:.82rem;color:rgba(255,255,255,.35);animation:fadeUp .8s ease .4s both}
+.hero-donate-link a{color:var(--gold);font-weight:600}
+
+/* Stats bar inside hero */
+.hero-stats{
+  display:flex;gap:0;margin-top:64px;padding-top:40px;
+  border-top:1px solid rgba(255,255,255,.08);
+  animation:fadeUp .8s ease .5s both;
+}
+.hero-stat{flex:1;padding:0 28px;border-right:1px solid rgba(255,255,255,.08)}
+.hero-stat:first-child{padding-left:0}
+.hero-stat:last-child{border-right:none}
+.hero-stat-n{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold);line-height:1}
+.hero-stat-l{font-size:.7rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-top:5px}
+
+/* Right side logo display on large screens */
+.hero-logo-display{
+  position:absolute;right:8%;top:50%;transform:translateY(-50%);
+  z-index:2;text-align:center;
+  animation:fadeIn 1.2s ease .6s both;
+}
+.hero-logo-ring{
+  width:200px;height:200px;border-radius:50%;
+  border:1px solid rgba(200,134,10,.2);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  box-shadow:0 0 80px rgba(0,124,124,.15),0 0 0 1px rgba(255,255,255,.04);
+}
+.hero-logo-ring::before{
+  content:'';position:absolute;inset:-12px;border-radius:50%;
+  border:1px solid rgba(200,134,10,.1);
+  animation:ringPulse 3s ease-in-out infinite;
+}
+.hero-logo-ring::after{
+  content:'';position:absolute;inset:-24px;border-radius:50%;
+  border:1px solid rgba(200,134,10,.05);
+  animation:ringPulse 3s ease-in-out infinite .6s;
+}
+@keyframes ringPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.03)}}
+.hero-logo-img{width:160px;height:160px;border-radius:50%;object-fit:contain}
+.hero-logo-caption{font-size:.68rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.12em;margin-top:20px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ─── Marquee ─── */
+.marquee-bar{background:var(--gold);padding:18px 0;overflow:hidden;position:relative;z-index:1}
+.marquee-track{display:flex;animation:marquee 24s linear infinite}
+.marquee-item{display:inline-flex;align-items:center;gap:24px;padding:0 40px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.2)}
+.marquee-item:last-child{border-right:none}
+.mq-num{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#fff}
+.mq-lbl{font-size:.72rem;color:rgba(255,255,255,.8);font-weight:600;text-transform:uppercase;letter-spacing:.1em}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ─── Section reveals ─── */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+
+/* ─── Quick Nav Cards ─── */
+.quick-nav{padding:80px 0;background:linear-gradient(180deg,#EBF0FA,#F4F8FF)}
+.qn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.qn-card{
+  position:relative;overflow:hidden;
+  border-radius:28px;text-decoration:none;color:inherit;
+  background:var(--navy);
+  border:1px solid rgba(255,255,255,.07);
+  display:flex;flex-direction:column;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .4s;
+  box-shadow:0 12px 40px rgba(10,31,107,.25);
+  min-height:320px;
+}
+.qn-card:hover{transform:translateY(-12px) scale(1.02);box-shadow:0 40px 80px rgba(10,31,107,.4)}
+/* Gold top border on hover */
+.qn-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),rgba(200,134,10,0));
+  opacity:0;transition:opacity .35s;
+}
+.qn-card:hover::before{opacity:1}
+/* Shimmer overlay */
+.qn-card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.03),transparent 60%);
+  border-radius:28px;pointer-events:none;
+}
+.qn-body{padding:40px 32px 28px;flex:1;position:relative;z-index:1}
+.qn-glow{position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;opacity:.18;pointer-events:none}
+.qn-icon{font-size:3rem;margin-bottom:20px;display:block;filter:drop-shadow(0 4px 16px rgba(0,0,0,.4))}
+.qn-title{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:700;color:#fff;margin-bottom:12px;line-height:1.2}
+.qn-desc{font-size:.85rem;color:rgba(255,255,255,.6);line-height:1.7}
+.qn-foot{
+  padding:18px 32px;
+  background:rgba(200,134,10,.1);
+  border-top:1px solid rgba(200,134,10,.18);
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;z-index:1;
+}
+.qn-cta{font-size:.83rem;font-weight:700;color:var(--gold);letter-spacing:.03em}
+.qn-arr{font-size:1.2rem;color:var(--gold);transition:transform .3s}
+.qn-card:hover .qn-arr{transform:translateX(8px)}
+
+/* ─── Stat Counter Cards ─── */
+.stat-belt{padding:60px 0;background:#fff}
+.stat-belt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.stc{
+  background:linear-gradient(135deg,#0A1F6B,#122690);
+  border-radius:20px;padding:32px 20px;text-align:center;
+  border:1px solid rgba(200,134,10,.18);
+  box-shadow:0 8px 32px rgba(10,31,107,.2);
+  position:relative;overflow:hidden;
+  transition:transform .3s,box-shadow .3s;
+}
+.stc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light))}
+.stc::after{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(0,124,124,.1)}
+.stc:hover{transform:translateY(-6px);box-shadow:0 20px 56px rgba(10,31,107,.35)}
+.stc-num{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;color:var(--gold);line-height:1;position:relative;z-index:1}
+.stc-lbl{font-size:.72rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.12em;margin-top:8px;position:relative;z-index:1}
+
+/* ─── Programs ─── */
+.prog-belt{padding:96px 0;background:var(--bg)}
+.prog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:22px}
+.pc{background:#fff;border:1px solid var(--border);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .35s}
+.pc:hover{transform:translateY(-10px);box-shadow:0 28px 64px rgba(10,31,107,.14)}
+.pc-head{padding:32px 28px 24px;position:relative;overflow:hidden;min-height:160px;display:flex;flex-direction:column;justify-content:flex-end}
+.pc-head::before,.pc-head::after{content:'';position:absolute;border-radius:50%;pointer-events:none}
+.pc-head::before{width:140px;height:140px;background:rgba(255,255,255,.07);top:-40px;right:-40px}
+.pc-head::after{width:80px;height:80px;background:rgba(255,255,255,.05);bottom:-20px;left:-20px}
+.pc-emoji{font-size:2.8rem;margin-bottom:14px;display:block;position:relative;z-index:1}
+.pc-badge{display:inline-block;background:rgba(255,255,255,.18);color:#fff;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;padding:4px 14px;border-radius:40px;margin-bottom:8px;position:relative;z-index:1;backdrop-filter:blur(4px)}
+.pc-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:#fff;position:relative;z-index:1;line-height:1.25}
+.pc-mid{padding:22px 28px;flex:1;display:flex;flex-direction:column;gap:14px}
+.pc-desc{font-size:.83rem;color:var(--muted);line-height:1.7;flex:1}
+.pc-nums{display:flex;gap:0;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.pc-num-item{flex:1;padding:12px 8px;text-align:center;border-right:1px solid var(--border)}
+.pc-num-item:last-child{border-right:none}
+.pc-n{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--navy)}
+.pc-l{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.pc-foot{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:var(--bg);border-top:1px solid var(--border);font-size:.82rem;font-weight:700;color:var(--gold);transition:background .2s}
+.pc:hover .pc-foot{background:var(--gold-pale)}
+.pc-foot-arr{transition:transform .25s}
+.pc:hover .pc-foot-arr{transform:translateX(6px)}
+
+/* ─── Quote ─── */
+.quote-belt{
+  background:linear-gradient(150deg,#04102E,#0A1F6B 50%,#071E5A);
+  padding:96px 0;text-align:center;position:relative;overflow:hidden;
+}
+.quote-belt::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(200,134,10,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(200,134,10,.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.quote-q{font-family:'Playfair Display',serif;font-size:6rem;color:var(--gold);opacity:.2;line-height:.8;margin-bottom:-20px;position:relative;z-index:1}
+.quote-txt{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,2.8vw,1.75rem);font-style:italic;color:#fff;max-width:780px;margin:0 auto 20px;line-height:1.55;position:relative;z-index:1}
+.quote-attr{font-size:.8rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.1em;position:relative;z-index:1}
+.quote-divider{border:none;border-top:1px solid rgba(255,255,255,.07);margin:56px 0 48px}
+.quote-nums{display:flex;justify-content:center;gap:0;flex-wrap:wrap}
+.qn-stat{padding:0 48px;text-align:center;border-right:1px solid rgba(255,255,255,.07)}
+.qn-stat:last-child{border-right:none}
+.qn-n{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;color:var(--gold)}
+.qn-l{font-size:.7rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-top:6px}
+
+/* ─── Get Involved ─── */
+.involve-belt{padding:96px 0;background:var(--bg2)}
+.involve-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.inv-card{
+  background:#fff;border:1px solid var(--border);border-radius:22px;
+  padding:36px 24px;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .35s,border-color .2s;
+}
+.inv-card:hover{transform:translateY(-10px);box-shadow:0 24px 56px rgba(10,31,107,.12);border-color:rgba(200,134,10,.3)}
+.inv-icon{
+  width:64px;height:64px;border-radius:18px;
+  background:linear-gradient(135deg,var(--navy),#122690);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;margin-bottom:20px;
+  box-shadow:0 8px 24px rgba(10,31,107,.25);
+  transition:transform .3s;
+}
+.inv-card:hover .inv-icon{transform:scale(1.1) rotate(-4deg)}
+.inv-title{font-family:'Playfair Display',serif;font-weight:700;font-size:1.15rem;color:var(--navy);margin-bottom:10px}
+.inv-desc{font-size:.83rem;color:var(--muted);line-height:1.7;flex:1}
+.inv-cta{margin-top:20px;font-size:.82rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:6px}
+.inv-cta-arr{transition:transform .25s}
+.inv-card:hover .inv-cta-arr{transform:translateX(6px)}
+
+/* ─── Camps bottom ─── */
+.camps-belt{padding:96px 0;background:linear-gradient(150deg,#04102E,#0A1F6B)}
+.camps-belt-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:44px;flex-wrap:wrap;gap:16px}
+
+/* ─── Section helpers ─── */
+.s-eyebrow{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);margin-bottom:10px}
+.s-head{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:700;color:var(--navy);line-height:1.25;margin-bottom:12px}
+.s-sub{color:var(--muted);font-size:1rem;max-width:560px;line-height:1.75;margin-bottom:0}
+.s-head-white{color:#fff}
+.s-eyebrow-dim{color:rgba(255,255,255,.4)}
+.gold-bar{width:44px;height:3px;background:var(--gold);border-radius:3px;margin-bottom:16px}
+
+/* ─── Involve card spinner ─── */
+.camps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+
+/* ─── Mobile ─── */
+@media(max-width:1024px){
+  .hero-logo-display{display:none}
+  .hero-content{max-width:100%}
+}
+@media(max-width:900px){
+  .qn-grid{grid-template-columns:1fr}
+  .stat-belt-grid{grid-template-columns:1fr 1fr}
+  .involve-grid{grid-template-columns:1fr 1fr}
+  .hero-stats{gap:0;flex-wrap:wrap}
+  .hero-stat{flex:0 0 50%;padding:14px 0;border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}
+  .hero-stat:nth-child(odd){border-right:1px solid rgba(255,255,255,.08)}
+}
+@media(max-width:768px){
+  .hero{min-height:auto}
+  .hero-content{padding:100px 0 60px}
+  .hero h1{font-size:clamp(2rem,7vw,3rem)}
+  .hero-btns{flex-direction:column;gap:10px}
+  .hero-btns .btn{text-align:center;justify-content:center}
+  .qn-card{min-height:260px}
+  .qn-body{padding:28px 24px 20px}
+  .qn-foot{padding:16px 24px}
+  .stat-belt-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .stc{padding:24px 14px}
+  .stc-num{font-size:2rem}
+  .prog-grid{grid-template-columns:1fr}
+  .involve-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .inv-card{padding:24px 18px}
+  .quote-nums{gap:16px}
+  .qn-stat{padding:12px 20px;border-right:none;border-bottom:1px solid rgba(255,255,255,.07)}
+  .qn-stat:last-child{border-bottom:none}
+  .camps-belt-head{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:480px){
+  .hero-stats{display:none}
+  .stat-belt-grid{grid-template-columns:1fr 1fr}
+  .involve-grid{grid-template-columns:1fr}
+  .qn-grid{gap:12px}
+  .marquee-item{padding:0 24px}
+  .prog-grid{grid-template-columns:1fr}
+  .inv-card{flex-direction:row;align-items:flex-start;gap:16px;padding:20px 16px}
+  .inv-icon{width:48px;height:48px;min-width:48px;font-size:1.4rem;margin-bottom:0}
+  .inv-title{font-size:1rem}
+}
   </style>
 </head>
 <body>
 
-<nav class="navbar">
+<!-- ── NAVBAR ── -->
+<nav class="navbar" id="mainNav">
   <a class="nav-brand" href="/ngo/index.html">
-    <img src="/ngo/logo.svg" alt="Shri Avadh Bihari Charitable Trust" class="nav-logo-img"/>
-    <div><div class="nav-name">Shri Avadh Bihari</div><div class="nav-sub">Charitable Trust</div></div>
+    <img src="/ngo/logo.svg" alt="SABC Trust" class="nav-logo-img"/>
+    <div>
+      <div class="nav-name">Shri Avadh Bihari</div>
+      <div class="nav-sub">Charitable Trust</div>
+    </div>
   </a>
   <div class="nav-links">
     <a href="/ngo/about.html">About</a>
@@ -151,317 +339,322 @@
   <a href="/ngo/donate.html"   onclick="closeMobile()" style="color:var(--gold)">Donate</a>
 </div>
 
-<!-- ============================================================
-     HERO
-     ============================================================ -->
+<!-- ── HERO ── -->
 <section class="hero">
-  <div class="peacock-decor hero-peacock"></div>
+  <div class="hero-grid"></div>
+  <div class="orb-1 hero-orb"></div>
+  <div class="orb-2 hero-orb"></div>
+  <div class="orb-3 hero-orb"></div>
+
   <div class="container">
     <div class="hero-content">
-      <div class="hero-badge">Registered Charitable Trust &bull; Haridwar, Uttarakhand</div>
-      <h1>Serving with <em>Seva</em>,<br/>Supporting with Heart</h1>
-      <p class="hero-sub">A non-profit organisation bringing free education support, healthcare camps, food distribution, and dignity to communities across Uttarakhand &mdash; one life at a time.</p>
+      <div class="hero-badge">
+        Registered Charitable Trust &bull; Haridwar, Uttarakhand
+      </div>
+      <h1>
+        Serving with <em>Seva</em>,
+        <span>Supporting with Heart</span>
+      </h1>
+      <p class="hero-sub">A non-profit bringing free education, healthcare camps, food, and dignity to communities across Uttarakhand &mdash; one life at a time, since day one.</p>
       <div class="hero-btns">
         <a href="/ngo/camps.html" class="btn btn-gold">Join a Camp &rarr;</a>
         <a href="/ngo/about.html" class="btn btn-outline">Learn Our Story</a>
       </div>
-      <p style="margin-top:20px;font-size:.82rem;color:rgba(255,255,255,.4)">Want to contribute? <a href="/ngo/donate.html" style="color:var(--gold);font-weight:600">Donate here</a></p>
-      <div class="hero-trust">
-        <p>Dr. Poonam Gupta &bull; Chairwoman</p>
-        <div class="trust-logos"><div class="trust-dot"></div><div class="trust-dot"></div><div class="trust-dot"></div></div>
-        <p>500+ Lives Impacted</p>
+      <p class="hero-donate-link">Want to contribute financially? <a href="/ngo/donate.html">Donate here</a></p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-n">500+</div><div class="hero-stat-l">Lives Impacted</div></div>
+        <div class="hero-stat"><div class="hero-stat-n">20+</div><div class="hero-stat-l">Camps Held</div></div>
+        <div class="hero-stat"><div class="hero-stat-n">5</div><div class="hero-stat-l">Programs</div></div>
+        <div class="hero-stat"><div class="hero-stat-n">300+</div><div class="hero-stat-l">Families Fed</div></div>
       </div>
     </div>
   </div>
+
+  <!-- Logo medallion (desktop only) -->
+  <div class="hero-logo-display">
+    <div class="hero-logo-ring">
+      <img src="/ngo/logo.svg" alt="SABC Trust Logo" class="hero-logo-img"/>
+    </div>
+    <div class="hero-logo-caption">Dr. Poonam Gupta &bull; Chairwoman</div>
+  </div>
 </section>
 
-<!-- ============================================================
-     INTERACTIVE NAV CARDS  (top of page, prominent)
-     ============================================================ -->
-<div id="nav-cards" class="nav-card-section">
+<!-- ── MARQUEE ── -->
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <div class="marquee-item"><div class="mq-num">500+</div><div class="mq-lbl">Lives Impacted</div></div>
+    <div class="marquee-item"><div class="mq-num">5</div><div class="mq-lbl">Active Programs</div></div>
+    <div class="marquee-item"><div class="mq-num">20+</div><div class="mq-lbl">Camps Organised</div></div>
+    <div class="marquee-item"><div class="mq-num">100%</div><div class="mq-lbl">Free Services</div></div>
+    <div class="marquee-item"><div class="mq-num">300+</div><div class="mq-lbl">Families Fed</div></div>
+    <div class="marquee-item"><div class="mq-num">80+</div><div class="mq-lbl">Elders Cared For</div></div>
+    <!-- Duplicate for seamless loop -->
+    <div class="marquee-item"><div class="mq-num">500+</div><div class="mq-lbl">Lives Impacted</div></div>
+    <div class="marquee-item"><div class="mq-num">5</div><div class="mq-lbl">Active Programs</div></div>
+    <div class="marquee-item"><div class="mq-num">20+</div><div class="mq-lbl">Camps Organised</div></div>
+    <div class="marquee-item"><div class="mq-num">100%</div><div class="mq-lbl">Free Services</div></div>
+    <div class="marquee-item"><div class="mq-num">300+</div><div class="mq-lbl">Families Fed</div></div>
+    <div class="marquee-item"><div class="mq-num">80+</div><div class="mq-lbl">Elders Cared For</div></div>
+  </div>
+</div>
+
+<!-- ── QUICK NAV CARDS ── -->
+<div class="quick-nav">
   <div class="container">
-    <div style="text-align:center;margin-bottom:36px">
-      <div class="gold-line" style="margin:0 auto 14px"></div>
-      <p class="eyebrow">Explore Our Work</p>
-      <h2 class="section-h" style="margin-bottom:0">Everything We Do, All in One Place</h2>
+    <div style="text-align:center;margin-bottom:52px" class="reveal">
+      <div class="gold-bar" style="margin:0 auto 14px"></div>
+      <p class="s-eyebrow">Explore Our Work</p>
+      <h2 class="s-head">What We Do &amp; How You Can Help</h2>
     </div>
-    <div class="nav-card-grid">
-      <a class="nav-card" href="/ngo/about.html">
-        <div class="nav-card-header" style="background:linear-gradient(135deg,#0A1F6B,#1B4BB5)">
-          <span class="nav-card-icon">&#x1F3DB;&#xFE0F;</span>
-          <h3>About the Trust</h3>
-          <p>Learn the story of Shri Avadh Bihari Charitable Trust &mdash; our mission, values, founding journey, and the Haridwar Ratna Award.</p>
+    <div class="qn-grid">
+      <a class="qn-card reveal reveal-delay-1" href="/ngo/about.html">
+        <div class="qn-glow" style="background:radial-gradient(#007C7C,transparent 70%)"></div>
+        <div class="qn-body">
+          <span class="qn-icon">&#x1F3DB;&#xFE0F;</span>
+          <div class="qn-title">About the Trust</div>
+          <p class="qn-desc">Our founding story, mission &amp; values, the Haridwar Ratna Award, and the community behind the movement.</p>
         </div>
-        <div class="nav-card-footer">
-          <span class="nav-card-cta">Read Our Story</span>
-          <span class="nav-card-arrow">&rarr;</span>
-        </div>
+        <div class="qn-foot"><span class="qn-cta">Read Our Story</span><span class="qn-arr">&rarr;</span></div>
       </a>
-      <a class="nav-card" href="/ngo/programs.html">
-        <div class="nav-card-header" style="background:linear-gradient(135deg,#007C7C,#0D9488)">
-          <span class="nav-card-icon">&#x2764;&#xFE0F;</span>
-          <h3>Our Programs</h3>
-          <p>Five active programs: Education Support, Health Camps, Food Distribution, Elderly Care, and Rural Development. Full details inside.</p>
+      <a class="qn-card reveal reveal-delay-2" href="/ngo/programs.html">
+        <div class="qn-glow" style="background:radial-gradient(#C8860A,transparent 70%)"></div>
+        <div class="qn-body">
+          <span class="qn-icon">&#x2764;&#xFE0F;</span>
+          <div class="qn-title">Our Programs</div>
+          <p class="qn-desc">Five active programs &mdash; Education, Healthcare, Food, Elderly Care, Rural Development. All free. All community-driven.</p>
         </div>
-        <div class="nav-card-footer">
-          <span class="nav-card-cta">See All Programs</span>
-          <span class="nav-card-arrow">&rarr;</span>
-        </div>
+        <div class="qn-foot"><span class="qn-cta">See All Programs</span><span class="qn-arr">&rarr;</span></div>
       </a>
-      <a class="nav-card" href="/ngo/donate.html">
-        <div class="nav-card-header" style="background:linear-gradient(135deg,#C8860A,#E8A020)">
-          <span class="nav-card-icon">&#x1F4B0;</span>
-          <h3>Donate &amp; Support</h3>
-          <p>Your contribution directly funds camps, school kits, medicines, and food for those who need it most. Every rupee counts.</p>
+      <a class="qn-card reveal reveal-delay-3" href="/ngo/donate.html">
+        <div class="qn-glow" style="background:radial-gradient(#1B4B8A,transparent 70%)"></div>
+        <div class="qn-body">
+          <span class="qn-icon">&#x1F4AB;</span>
+          <div class="qn-title">Donate &amp; Support</div>
+          <p class="qn-desc">&#x20B9;500 feeds a child. &#x20B9;2,500 feeds a family. Every rupee funds real camps and real services for those who need it most.</p>
         </div>
-        <div class="nav-card-footer">
-          <span class="nav-card-cta">Donate Now</span>
-          <span class="nav-card-arrow">&rarr;</span>
-        </div>
+        <div class="qn-foot"><span class="qn-cta">Donate Now</span><span class="qn-arr">&rarr;</span></div>
       </a>
     </div>
   </div>
 </div>
 
-<!-- ============================================================
-     STATS STRIP
-     ============================================================ -->
-<div style="background:var(--gold);padding:22px 0;overflow:hidden">
-  <div class="stats-inner">
-    <div class="stats-scroll">
-      <div class="stat-item"><div class="stat-num">500+</div><div class="stat-lbl">Lives Impacted</div></div>
-      <div class="stat-item"><div class="stat-num">5</div><div class="stat-lbl">Active Programs</div></div>
-      <div class="stat-item"><div class="stat-num">20+</div><div class="stat-lbl">Camps Organised</div></div>
-      <div class="stat-item"><div class="stat-num">100+</div><div class="stat-lbl">Children Supported</div></div>
-      <div class="stat-item"><div class="stat-num">300+</div><div class="stat-lbl">Families Fed</div></div>
-      <div class="stat-item"><div class="stat-num">80+</div><div class="stat-lbl">Elders Cared For</div></div>
-      <div class="stat-item"><div class="stat-num">500+</div><div class="stat-lbl">Lives Impacted</div></div>
-      <div class="stat-item"><div class="stat-num">5</div><div class="stat-lbl">Active Programs</div></div>
-      <div class="stat-item"><div class="stat-num">20+</div><div class="stat-lbl">Camps Organised</div></div>
-      <div class="stat-item"><div class="stat-num">100+</div><div class="stat-lbl">Children Supported</div></div>
-      <div class="stat-item"><div class="stat-num">300+</div><div class="stat-lbl">Families Fed</div></div>
-      <div class="stat-item"><div class="stat-num">80+</div><div class="stat-lbl">Elders Cared For</div></div>
+<!-- ── ANIMATED STAT COUNTERS ── -->
+<div class="stat-belt">
+  <div class="container">
+    <div class="stat-belt-grid" id="statGrid">
+      <div class="stc reveal"><div class="stc-num" data-target="500">0</div><div class="stc-lbl">Lives Changed</div></div>
+      <div class="stc reveal reveal-delay-1"><div class="stc-num" data-target="20">0</div><div class="stc-lbl">Camps Held</div></div>
+      <div class="stc reveal reveal-delay-2"><div class="stc-num" data-target="300">0</div><div class="stc-lbl">Families Fed</div></div>
+      <div class="stc reveal reveal-delay-3"><div class="stc-num" data-target="5">0</div><div class="stc-lbl">Programs Active</div></div>
     </div>
   </div>
 </div>
 
-<!-- ============================================================
-     STAT COUNTER CARDS
-     ============================================================ -->
-<div style="background:var(--bg);padding:0 0 48px">
+<!-- ── PROGRAMS ── -->
+<div class="prog-belt">
   <div class="container">
-    <div class="stats-cards">
-      <div class="stat-card"><div class="stat-card-num" data-target="500">0</div><div class="stat-card-lbl">Lives Changed</div></div>
-      <div class="stat-card"><div class="stat-card-num" data-target="20">0</div><div class="stat-card-lbl">Camps Held</div></div>
-      <div class="stat-card"><div class="stat-card-num" data-target="100">0</div><div class="stat-card-lbl">Children Helped</div></div>
-      <div class="stat-card"><div class="stat-card-num" data-target="5">0</div><div class="stat-card-lbl">Programs Running</div></div>
+    <div style="margin-bottom:52px" class="reveal">
+      <div class="gold-bar"></div>
+      <p class="s-eyebrow">What We Do</p>
+      <h2 class="s-head">Our Five Programs</h2>
+      <p class="s-sub">From early childhood to old age &mdash; a complete circle of care, education, and opportunity.</p>
     </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     PROGRAMS (5 detailed cards)
-     ============================================================ -->
-<section style="padding:80px 0;background:var(--bg)">
-  <div class="container">
-    <div class="section-head">
-      <div class="gold-line"></div>
-      <p class="eyebrow">What We Do</p>
-      <h2 class="section-h">Our Five Programs</h2>
-      <p class="section-p">Each program targets a specific area of need &mdash; together they form a complete circle of care from childhood to old age.</p>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px">
-      <a class="prog-card-2026" href="/ngo/programs.html#education">
-        <div class="pc-top" style="background:linear-gradient(135deg,#1B4B8A,#2563eb)">
+    <div class="prog-grid">
+      <a class="pc reveal" href="/ngo/programs.html#education">
+        <div class="pc-head" style="background:linear-gradient(135deg,#1B4B8A,#2563eb)">
           <span class="pc-emoji">&#x1F4DA;</span>
-          <span class="pc-tag">Program 01</span>
-          <div class="pc-title">Education Support</div>
+          <span class="pc-badge">Program 01</span>
+          <div class="pc-name">Education Support</div>
         </div>
-        <div class="pc-body">
-          <p class="pc-desc">School kits, uniforms, books, and financial aid to children from low-income families so no child misses school.</p>
-          <div class="pc-stats">
-            <div class="pc-stat"><div class="pc-stat-n">100+</div><div class="pc-stat-l">Children</div></div>
-            <div class="pc-stat"><div class="pc-stat-n">Free</div><div class="pc-stat-l">All Items</div></div>
-            <div class="pc-stat"><div class="pc-stat-n">Annual</div><div class="pc-stat-l">Drives</div></div>
+        <div class="pc-mid">
+          <p class="pc-desc">School kits, uniforms, books, and stationery for children from low-income families so no child ever misses school.</p>
+          <div class="pc-nums">
+            <div class="pc-num-item"><div class="pc-n">100+</div><div class="pc-l">Children</div></div>
+            <div class="pc-num-item"><div class="pc-n">Free</div><div class="pc-l">All Items</div></div>
+            <div class="pc-num-item"><div class="pc-n">Annual</div><div class="pc-l">Drive</div></div>
           </div>
         </div>
-        <div class="pc-link">Explore Program <span class="pc-link-arr">&rarr;</span></div>
+        <div class="pc-foot">Explore <span class="pc-foot-arr">&rarr;</span></div>
       </a>
-      <a class="prog-card-2026" href="/ngo/programs.html#health">
-        <div class="pc-top" style="background:linear-gradient(135deg,#15803d,#22c55e)">
+      <a class="pc reveal reveal-delay-1" href="/ngo/programs.html#health">
+        <div class="pc-head" style="background:linear-gradient(135deg,#15803d,#22c55e)">
           <span class="pc-emoji">&#x1F3E5;</span>
-          <span class="pc-tag">Program 02</span>
-          <div class="pc-title">Health &amp; Wellness Camps</div>
+          <span class="pc-badge">Program 02</span>
+          <div class="pc-name">Health &amp; Wellness Camps</div>
         </div>
-        <div class="pc-body">
-          <p class="pc-desc">Free medical check-ups, eye testing, glasses, blood pressure screening, and medicine distribution in rural areas.</p>
-          <div class="pc-stats">
-            <div class="pc-stat"><div class="pc-stat-n">200+</div><div class="pc-stat-l">Patients</div></div>
-            <div class="pc-stat"><div class="pc-stat-n">Free</div><div class="pc-stat-l">Treatment</div></div>
-            <div class="pc-stat"><div class="pc-stat-n">Regular</div><div class="pc-stat-l">Camps</div></div>
+        <div class="pc-mid">
+          <p class="pc-desc">Free medical check-ups, eye testing, glasses, blood pressure screening, and medicine distribution in rural villages.</p>
+          <div class="pc-nums">
+            <div class="pc-num-item"><div class="pc-n">200+</div><div class="pc-l">Patients</div></div>
+            <div class="pc-num-item"><div class="pc-n">Free</div><div class="pc-l">Treatment</div></div>
+            <div class="pc-num-item"><div class="pc-n">Regular</div><div class="pc-l">Camps</div></div>
           </div>
         </div>
-        <div class="pc-link">Explore Program <span class="pc-link-arr">&rarr;</span></div>
+        <div class="pc-foot">Explore <span class="pc-foot-arr">&rarr;</span></div>
       </a>
-      <a class="prog-card-2026" href="/ngo/programs.html#food">
-        <div class="pc-top" style="background:linear-gradient(135deg,#b45309,#d97706)">
+      <a class="pc reveal reveal-delay-2" href="/ngo/programs.html#food">
+        <div class="pc-head" style="background:linear-gradient(135deg,#b45309,#d97706)">
           <span class="pc-emoji">&#x1F371;</span>
-          <span class="pc-tag">Program 03</span>
-          <div class="pc-title">Food &amp; Essentials</div>
+          <span class="pc-badge">Program 03</span>
+          <div class="pc-name">Food &amp; Essentials</div>
         </div>
-        <div class="pc-body">
-          <p class="pc-desc">Monthly ration kits, cooked meals, clothing, and hygiene supplies for homeless, widows, and low-income families.</p>
-          <div class="pc-stats">
-            <div class="pc-stat"><div class="pc-stat-n">300+</div><div class="pc-stat-l">Families</div></div>
-            <div class="pc-stat"><div class="pc-stat-n">Monthly</div><div class="pc-stat-l">Drives</div></div>
-            <div class="pc-stat"><div class="pc-stat-n">Free</div><div class="pc-stat-l">All Items</div></div>
+        <div class="pc-mid">
+          <p class="pc-desc">Monthly ration kits, meals at festivals, hygiene supplies, and clothing for homeless, widows, and struggling families.</p>
+          <div class="pc-nums">
+            <div class="pc-num-item"><div class="pc-n">300+</div><div class="pc-l">Families</div></div>
+            <div class="pc-num-item"><div class="pc-n">Monthly</div><div class="pc-l">Drives</div></div>
+            <div class="pc-num-item"><div class="pc-n">Free</div><div class="pc-l">All Items</div></div>
           </div>
         </div>
-        <div class="pc-link">Explore Program <span class="pc-link-arr">&rarr;</span></div>
+        <div class="pc-foot">Explore <span class="pc-foot-arr">&rarr;</span></div>
       </a>
-      <a class="prog-card-2026" href="/ngo/programs.html#elderly">
-        <div class="pc-top" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">
-          <span class="pc-emoji">&#x1F474;</span>
-          <span class="pc-tag">Program 04</span>
-          <div class="pc-title">Elderly &amp; Widow Support</div>
+      <a class="pc reveal" href="/ngo/programs.html#elderly">
+        <div class="pc-head" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">
+          <span class="pc-emoji">&#x1F9D3;</span>
+          <span class="pc-badge">Program 04</span>
+          <div class="pc-name">Elderly &amp; Widow Care</div>
         </div>
-        <div class="pc-body">
-          <p class="pc-desc">Regular home visits, essential supplies, emotional support, and community gatherings for seniors living alone.</p>
-          <div class="pc-stats">
-            <div class="pc-stat"><div class="pc-stat-n">80+</div><div class="pc-stat-l">Elders</div></div>
-            <div class="pc-stat"><div class="pc-stat-n">Ongoing</div><div class="pc-stat-l">Care</div></div>
-            <div class="pc-stat"><div class="pc-stat-n">Home</div><div class="pc-stat-l">Visits</div></div>
+        <div class="pc-mid">
+          <p class="pc-desc">Home visits, essential supplies, medicines, and community gatherings for senior citizens and widows living alone.</p>
+          <div class="pc-nums">
+            <div class="pc-num-item"><div class="pc-n">80+</div><div class="pc-l">Elders</div></div>
+            <div class="pc-num-item"><div class="pc-n">Monthly</div><div class="pc-l">Visits</div></div>
+            <div class="pc-num-item"><div class="pc-n">100%</div><div class="pc-l">Care</div></div>
           </div>
         </div>
-        <div class="pc-link">Explore Program <span class="pc-link-arr">&rarr;</span></div>
+        <div class="pc-foot">Explore <span class="pc-foot-arr">&rarr;</span></div>
       </a>
-      <a class="prog-card-2026" href="/ngo/programs.html#rural">
-        <div class="pc-top" style="background:linear-gradient(135deg,#0f766e,#14b8a6)">
-          <span class="pc-emoji">&#x1F33E;</span>
-          <span class="pc-tag">Program 05</span>
-          <div class="pc-title">Rural Development</div>
+      <a class="pc reveal reveal-delay-1" href="/ngo/programs.html#rural">
+        <div class="pc-head" style="background:linear-gradient(135deg,#0f766e,#14b8a6)">
+          <span class="pc-emoji">&#x1F33F;</span>
+          <span class="pc-badge">Program 05</span>
+          <div class="pc-name">Rural Empowerment</div>
         </div>
-        <div class="pc-body">
-          <p class="pc-desc">Skills training, sanitation drives, government scheme enrollment, and tree plantation across 5+ villages.</p>
-          <div class="pc-stats">
-            <div class="pc-stat"><div class="pc-stat-n">5+</div><div class="pc-stat-l">Villages</div></div>
-            <div class="pc-stat"><div class="pc-stat-n">Skills</div><div class="pc-stat-l">Training</div></div>
-            <div class="pc-stat"><div class="pc-stat-n">Growing</div><div class="pc-stat-l">Impact</div></div>
+        <div class="pc-mid">
+          <p class="pc-desc">Skills training, women&rsquo;s Self-Help Groups, sanitation, and government scheme enrollment across villages.</p>
+          <div class="pc-nums">
+            <div class="pc-num-item"><div class="pc-n">15+</div><div class="pc-l">Villages</div></div>
+            <div class="pc-num-item"><div class="pc-n">Skills</div><div class="pc-l">Training</div></div>
+            <div class="pc-num-item"><div class="pc-n">Women</div><div class="pc-l">Led</div></div>
           </div>
         </div>
-        <div class="pc-link">Explore Program <span class="pc-link-arr">&rarr;</span></div>
+        <div class="pc-foot">Explore <span class="pc-foot-arr">&rarr;</span></div>
       </a>
-      <!-- Haridwar Ratna Award card -->
-      <a class="prog-card-2026" href="/ngo/about.html#awards">
-        <div class="pc-top" style="background:linear-gradient(135deg,#92400e,#C8860A)">
+      <a class="pc reveal reveal-delay-2" href="/ngo/about.html#awards">
+        <div class="pc-head" style="background:linear-gradient(135deg,#92400e,#C8860A)">
           <span class="pc-emoji">&#x1F3C6;</span>
-          <span class="pc-tag">Special Initiative</span>
-          <div class="pc-title">Haridwar Ratna Award</div>
+          <span class="pc-badge">Special Initiative</span>
+          <div class="pc-name">Haridwar Ratna Award</div>
         </div>
-        <div class="pc-body">
-          <p class="pc-desc">The Trust confers this prestigious award to recognise exceptional service and performance of the highest order in any field of human endeavour.</p>
-          <div class="pc-stats">
-            <div class="pc-stat"><div class="pc-stat-n">Annual</div><div class="pc-stat-l">Award</div></div>
-            <div class="pc-stat"><div class="pc-stat-n">Any</div><div class="pc-stat-l">Field</div></div>
-            <div class="pc-stat"><div class="pc-stat-n">Pride</div><div class="pc-stat-l">of Haridwar</div></div>
+        <div class="pc-mid">
+          <p class="pc-desc">Awarded by the Trust to individuals who demonstrate exceptional service and performance of the highest order in any field of human endeavour.</p>
+          <div class="pc-nums">
+            <div class="pc-num-item"><div class="pc-n">Annual</div><div class="pc-l">Award</div></div>
+            <div class="pc-num-item"><div class="pc-n">Any</div><div class="pc-l">Field</div></div>
+            <div class="pc-num-item"><div class="pc-n">Pride</div><div class="pc-l">of City</div></div>
           </div>
         </div>
-        <div class="pc-link">Learn More <span class="pc-link-arr">&rarr;</span></div>
+        <div class="pc-foot">Learn More <span class="pc-foot-arr">&rarr;</span></div>
       </a>
     </div>
-    <div style="text-align:center;margin-top:36px">
+    <div style="text-align:center;margin-top:40px" class="reveal">
       <a href="/ngo/programs.html" class="btn btn-dark">View All Programs in Detail &rarr;</a>
     </div>
   </div>
-</section>
+</div>
 
-<!-- ============================================================
-     QUOTE / IMPACT
-     ============================================================ -->
-<div class="quote-section">
+<!-- ── QUOTE ── -->
+<div class="quote-belt">
   <div class="container">
-    <div class="quote-mark">&ldquo;</div>
-    <p class="quote-text">There is a lot that happens around the world we cannot control&hellip; but when we know where the hungry, the homeless and the sick exist, then we can help.</p>
-    <div class="quote-author">&mdash; Jan Schakowsky</div>
-    <div style="display:flex;gap:40px;justify-content:center;flex-wrap:wrap;margin-top:48px;padding-top:40px;border-top:1px solid rgba(255,255,255,.08)">
-      <div style="text-align:center"><div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--gold)">500+</div><div style="font-size:.78rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em;margin-top:4px">Lives Changed</div></div>
-      <div style="text-align:center"><div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--gold)">20+</div><div style="font-size:.78rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em;margin-top:4px">Camps Organised</div></div>
-      <div style="text-align:center"><div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--gold)">300+</div><div style="font-size:.78rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em;margin-top:4px">Families Fed</div></div>
-      <div style="text-align:center"><div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--gold)">5</div><div style="font-size:.78rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em;margin-top:4px">Active Programs</div></div>
+    <div class="reveal">
+      <div class="quote-q">&ldquo;</div>
+      <p class="quote-txt">There is a lot that happens around the world we cannot control &mdash; but when we know where the hungry, the homeless, and the sick exist, then we can help.</p>
+      <p class="quote-attr">&mdash; Jan Schakowsky</p>
+    </div>
+    <hr class="quote-divider"/>
+    <div class="quote-nums reveal">
+      <div class="qn-stat"><div class="qn-n">500+</div><div class="qn-l">Lives Changed</div></div>
+      <div class="qn-stat"><div class="qn-n">20+</div><div class="qn-l">Camps Held</div></div>
+      <div class="qn-stat"><div class="qn-n">300+</div><div class="qn-l">Families Fed</div></div>
+      <div class="qn-stat"><div class="qn-n">5</div><div class="qn-l">Programs</div></div>
     </div>
   </div>
 </div>
 
-<!-- ============================================================
-     GET INVOLVED
-     ============================================================ -->
-<section style="padding:80px 0;background:var(--bg2)">
+<!-- ── GET INVOLVED ── -->
+<div class="involve-belt">
   <div class="container">
-    <div class="section-head">
-      <div class="gold-line"></div>
-      <p class="eyebrow">Join the Mission</p>
-      <h2 class="section-h">Get Involved</h2>
+    <div style="margin-bottom:52px" class="reveal">
+      <div class="gold-bar"></div>
+      <p class="s-eyebrow">Join the Mission</p>
+      <h2 class="s-head">Get Involved</h2>
+      <p class="s-sub">There are many ways to make a difference. Pick the one that fits you.</p>
     </div>
     <div class="involve-grid">
-      <a class="involve-card" href="/ngo/donate.html">
-        <div class="involve-icon">&#x2764;&#xFE0F;</div>
-        <h3>Donate</h3>
-        <p>Every rupee you give funds real camps, real kits, and real meals for people who need it most.</p>
-        <div style="margin-top:auto;font-size:.83rem;font-weight:700;color:var(--gold)">Donate Now &rarr;</div>
+      <a class="inv-card reveal" href="/ngo/donate.html">
+        <div class="inv-icon">&#x1F4B0;</div>
+        <div class="inv-title">Donate</div>
+        <p class="inv-desc">Every rupee you give funds real camps, real kits, and real meals. See exactly what your donation achieves.</p>
+        <div class="inv-cta">Donate Now <span class="inv-cta-arr">&rarr;</span></div>
       </a>
-      <a class="involve-card" href="/ngo/contact.html">
-        <div class="involve-icon">&#x1F91D;</div>
-        <h3>Volunteer</h3>
-        <p>Join our team of dedicated volunteers at camps, drives, and community events. No experience required.</p>
-        <div style="margin-top:auto;font-size:.83rem;font-weight:700;color:var(--gold)">Sign Up &rarr;</div>
+      <a class="inv-card reveal reveal-delay-1" href="/ngo/camps.html">
+        <div class="inv-icon">&#x1F3D5;&#xFE0F;</div>
+        <div class="inv-title">Register for a Camp</div>
+        <p class="inv-desc">Find and register for an upcoming health camp, eye testing, or food distribution event near you &mdash; all free.</p>
+        <div class="inv-cta">Find Camps <span class="inv-cta-arr">&rarr;</span></div>
       </a>
-      <a class="involve-card" href="https://instagram.com/sabct_hw" target="_blank" rel="noopener">
-        <div class="involve-icon">&#x1F4F1;</div>
-        <h3>Follow Us</h3>
-        <p>Stay updated with our latest camps and activities on Instagram @sabct_hw and share our work.</p>
-        <div style="margin-top:auto;font-size:.83rem;font-weight:700;color:var(--gold)">@sabct_hw &rarr;</div>
+      <a class="inv-card reveal reveal-delay-2" href="/ngo/contact.html">
+        <div class="inv-icon">&#x1F91D;</div>
+        <div class="inv-title">Volunteer</div>
+        <p class="inv-desc">Doctors, teachers, organisers, or simply a willing heart. No experience required. Just show up and serve.</p>
+        <div class="inv-cta">Sign Up <span class="inv-cta-arr">&rarr;</span></div>
       </a>
-      <a class="involve-card" href="/ngo/contact.html">
-        <div class="involve-icon">&#x1F3E2;</div>
-        <h3>Corporate CSR</h3>
-        <p>Partner with us for CSR activities. We provide full documentation, impact reports, and visibility.</p>
-        <div style="margin-top:auto;font-size:.83rem;font-weight:700;color:var(--gold)">Partner with Us &rarr;</div>
+      <a class="inv-card reveal reveal-delay-3" href="https://instagram.com/sabct_hw" target="_blank" rel="noopener">
+        <div class="inv-icon">&#x1F4F8;</div>
+        <div class="inv-title">Follow @sabct_hw</div>
+        <p class="inv-desc">Stay updated on our latest camps, activities, and impact stories. Share our work and amplify the mission.</p>
+        <div class="inv-cta">Open Instagram <span class="inv-cta-arr">&rarr;</span></div>
       </a>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     UPCOMING CAMPS  (at bottom as requested)
-     ============================================================ -->
-<div class="camps-bottom">
-  <div class="container">
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:16px">
-      <div>
-        <div class="gold-line"></div>
-        <p class="eyebrow" style="color:rgba(255,255,255,.55)">Join Us</p>
-        <h2 class="section-h" style="color:#fff;margin-bottom:0">Upcoming Camps</h2>
-      </div>
-      <a href="/ngo/camps.html" class="btn btn-ghost btn-sm">View All Camps &rarr;</a>
-    </div>
-    <div class="camps-grid" id="campsPreviewGrid">
-      <div style="grid-column:1/-1;text-align:center;padding:48px;color:rgba(255,255,255,.4)">Loading camps&hellip;</div>
-    </div>
-    <div style="text-align:center;margin-top:36px">
-      <a href="/ngo/camps.html" class="btn btn-gold" style="font-size:1rem;padding:16px 40px">Register for a Camp &rarr;</a>
     </div>
   </div>
 </div>
 
+<!-- ── UPCOMING CAMPS ── -->
+<div class="camps-belt">
+  <div class="container">
+    <div class="camps-belt-head reveal">
+      <div>
+        <div class="gold-bar"></div>
+        <p class="s-eyebrow s-eyebrow-dim">Join Us</p>
+        <h2 class="s-head s-head-white" style="margin-bottom:0">Upcoming Camps</h2>
+      </div>
+      <a href="/ngo/camps.html" class="btn btn-ghost btn-sm">View All &rarr;</a>
+    </div>
+    <div class="camps-grid" id="campsPreviewGrid">
+      <div style="grid-column:1/-1;text-align:center;padding:56px 0;color:rgba(255,255,255,.35)">
+        <div class="spinner" style="margin:0 auto 14px;border-color:rgba(255,255,255,.1);border-top-color:var(--gold)"></div>
+        Loading camps&hellip;
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px" class="reveal">
+      <a href="/ngo/camps.html" class="btn btn-gold" style="font-size:1rem;padding:16px 44px">Register for a Camp &rarr;</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
 <footer>
   <div class="footer-inner">
     <div class="footer-top">
       <div class="footer-brand">
+        <img src="/ngo/logo.svg" alt="SABC Trust" style="width:52px;height:52px;border-radius:50%;object-fit:contain;background:#fff;padding:4px;margin-bottom:12px;box-shadow:0 0 0 2px rgba(200,134,10,.3)"/>
         <div class="foot-logo">Shri Avadh Bihari Charitable Trust</div>
-        <p style="margin-top:10px">Serving with Seva, Supporting with Heart.</p>
-        <p style="margin-top:12px;font-size:.78rem;color:rgba(255,255,255,.3)">Shop No. 2, Ucchi Sadak, Arya Nagar,<br/>Jwalapur, Haridwar &ndash; 249407</p>
+        <p style="margin-top:8px">Serving with Seva, Supporting with Heart.</p>
+        <p style="margin-top:10px;font-size:.75rem;color:rgba(255,255,255,.28);line-height:1.7">Shop No. 2, Ucchi Sadak, Arya Nagar,<br/>Jwalapur, Haridwar &ndash; 249407</p>
         <div style="margin-top:16px">
-          <a href="https://instagram.com/sabct_hw" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);padding:8px 16px;border-radius:40px;font-size:.8rem;font-weight:600;transition:all .2s">&#x1F4F8; @sabct_hw on Instagram</a>
+          <a href="https://instagram.com/sabct_hw" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.65);padding:8px 16px;border-radius:40px;font-size:.78rem;font-weight:600;transition:all .2s;text-decoration:none">
+            &#x1F4F8; @sabct_hw on Instagram
+          </a>
         </div>
       </div>
       <div class="footer-col">
@@ -475,11 +668,11 @@
       </div>
       <div class="footer-col">
         <h4>Programs</h4>
-        <a href="/ngo/programs.html#education">Education Support</a>
-        <a href="/ngo/programs.html#health">Health Camps</a>
+        <a href="/ngo/programs.html#education">Education</a>
+        <a href="/ngo/programs.html#health">Healthcare</a>
         <a href="/ngo/programs.html#food">Food Distribution</a>
         <a href="/ngo/programs.html#elderly">Elderly Care</a>
-        <a href="/ngo/programs.html#rural">Rural Development</a>
+        <a href="/ngo/programs.html#rural">Rural Dev.</a>
         <a href="/ngo/about.html#awards">Haridwar Ratna Award</a>
       </div>
     </div>
@@ -491,77 +684,92 @@
 </footer>
 
 <script>
-function toggleMenu(){ const m=document.getElementById('mobileMenu'); m.style.display=m.style.display==='flex'?'none':'flex'; }
-function closeMobile(){ document.getElementById('mobileMenu').style.display='none'; }
-window.addEventListener('scroll',()=>{ document.querySelector('.navbar').style.boxShadow=window.scrollY>20?'0 4px 24px rgba(0,0,0,.3)':'none'; });
+/* ── Nav scroll effect ── */
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  nav.style.boxShadow = window.scrollY > 20 ? '0 4px 28px rgba(0,0,0,.4)' : 'none';
+  nav.style.background = window.scrollY > 60
+    ? 'rgba(10,31,107,.98)'
+    : 'rgba(10,31,107,.94)';
+});
 
-/* ── Counter animation ─── */
-function animateCounters() {
-  document.querySelectorAll('.stat-card-num[data-target]').forEach(el => {
+/* ── Mobile menu ── */
+function toggleMenu() {
+  const m = document.getElementById('mobileMenu');
+  m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+}
+function closeMobile() { document.getElementById('mobileMenu').style.display = 'none'; }
+
+/* ── Scroll reveal ── */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+/* ── Counter animation ── */
+function runCounters() {
+  document.querySelectorAll('.stc-num[data-target]').forEach(el => {
     const target = +el.dataset.target;
-    const suffix = target > 10 ? '+' : '';
-    let current = 0;
-    const step = Math.max(1, Math.floor(target / 40));
-    const timer = setInterval(() => {
-      current = Math.min(current + step, target);
-      el.textContent = current + (current === target ? suffix : '');
-      if (current >= target) clearInterval(timer);
-    }, 30);
+    const suffix = target > 5 ? '+' : '';
+    let cur = 0;
+    const step = Math.max(1, Math.ceil(target / 50));
+    const t = setInterval(() => {
+      cur = Math.min(cur + step, target);
+      el.textContent = cur + (cur === target ? suffix : '');
+      if (cur >= target) clearInterval(t);
+    }, 25);
   });
 }
-const counterObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { animateCounters(); counterObs.disconnect(); } });
+const cntObs = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) { runCounters(); cntObs.disconnect(); }
 }, { threshold: 0.3 });
-const statSection = document.querySelector('.stats-cards');
-if (statSection) counterObs.observe(statSection);
+const sg = document.getElementById('statGrid');
+if (sg) cntObs.observe(sg);
 
-/* ── Load camps preview ─── */
-async function loadCampsPreview() {
+/* ── Ripple on quick-nav cards ── */
+document.querySelectorAll('.qn-card').forEach(card => {
+  card.addEventListener('click', function(e) {
+    const r = document.createElement('span');
+    const rect = card.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    r.style.cssText = `position:absolute;border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none;transform:scale(0);animation:ripple .7s linear;width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px`;
+    card.appendChild(r);
+    setTimeout(() => r.remove(), 700);
+  });
+});
+
+/* ── Load camps preview ── */
+async function loadCamps() {
   const grid = document.getElementById('campsPreviewGrid');
   try {
     const res = await fetch('/api/ngo/events');
     const camps = (await res.json()).filter(c => c.isActive !== false).slice(0, 3);
     if (!camps.length) {
-      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px;color:rgba(255,255,255,.4)">No upcoming camps right now. <a href="/ngo/contact.html" style="color:var(--gold)">Contact us</a> for updates.</div>';
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:56px;color:rgba(255,255,255,.35)">No upcoming camps right now. <a href="/ngo/contact.html" style="color:var(--gold)">Contact us</a> for updates.</div>';
       return;
     }
-    const typeColors = {'Eye Camp':'#1B4B8A','Medical Camp':'#15803d','Food Camp':'#b45309','Education':'#7c3aed','General':'#0f766e'};
-    const typeIcons  = {'Eye Camp':'&#x1F441;','Medical Camp':'&#x1F3E5;','Food Camp':'&#x1F371;','Education':'&#x1F4DA;','General':'&#x1F91D;'};
+    const colors = {'Eye Camp':'#1B4B8A','Medical Camp':'#15803d','Food Camp':'#b45309','Education':'#7c3aed','General':'#0f766e'};
     grid.innerHTML = camps.map(c => {
-      const color = typeColors[c.campType] || '#0A1F6B';
-      const icon  = typeIcons[c.campType] || '&#x1F3D5;';
-      const date  = c.campDate ? new Date(c.campDate).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}) : 'Date TBD';
+      const col = colors[c.campType] || '#0A1F6B';
+      const dt = c.campDate ? new Date(c.campDate).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}) : 'Date TBD';
       return `<div class="camp-card" style="background:#fff">
-        <div class="camp-card-top" style="background:linear-gradient(135deg,${color},${color}cc)">
-          <div class="camp-type-tag">${c.campType||'Camp'}</div>
-          <h3 class="camp-card-top" style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:#fff;margin:0">${c.name}</h3>
+        <div class="camp-card-top" style="background:linear-gradient(135deg,${col},${col}bb)">
+          <div class="camp-type-tag">${c.campType || 'Camp'}</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:#fff;margin:8px 0 0">${c.name}</h3>
         </div>
         <div class="camp-card-body">
-          <div class="camp-detail"><span>&#x1F4C5;</span><span>${date}</span></div>
-          ${c.location?`<div class="camp-detail"><span>&#x1F4CD;</span><span>${c.location}</span></div>`:''}
-          ${c.description?`<div class="camp-detail"><span>&#x2139;&#xFE0F;</span><span style="line-height:1.5">${c.description}</span></div>`:''}
+          <div class="camp-detail"><span>&#x1F4C5;</span><span>${dt}</span></div>
+          ${c.location ? `<div class="camp-detail"><span>&#x1F4CD;</span><span>${c.location}</span></div>` : ''}
+          ${c.description ? `<div class="camp-detail"><span>&#x2139;&#xFE0F;</span><span style="line-height:1.5">${c.description}</span></div>` : ''}
           <a href="/ngo/register.html?eventId=${c.id}" class="btn btn-gold" style="width:100%;justify-content:center;margin-top:14px;font-size:.88rem">Register Free &rarr;</a>
         </div>
       </div>`;
     }).join('');
   } catch(e) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px;color:rgba(255,255,255,.4)">Could not load camps. <a href="/ngo/camps.html" style="color:var(--gold)">View all camps</a></div>';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:56px;color:rgba(255,255,255,.35)">Could not load camps. <a href="/ngo/camps.html" style="color:var(--gold)">View all camps &rarr;</a></div>';
   }
 }
-loadCampsPreview();
-
-/* ── Nav card ripple ─── */
-document.querySelectorAll('.nav-card').forEach(card => {
-  card.addEventListener('click', function(e) {
-    const r = document.createElement('span');
-    r.className = 'nav-card-ripple';
-    const rect = card.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px;position:absolute`;
-    card.appendChild(r);
-    setTimeout(() => r.remove(), 700);
-  });
-});
+loadCamps();
 </script>
 </body>
 </html>
