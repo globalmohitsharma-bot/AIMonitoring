@@ -2,11 +2,11 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 .resume-root {
+  min-height: 100vh;
+  background: #1a1a2e;
+  font-family: 'Inter', system-ui, sans-serif;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  background: #0f172a;
-  font-family: 'Inter', system-ui, sans-serif;
 }
 
 /* ── Header ─────────────────────────────────────────────────── */
@@ -14,93 +14,125 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
-  background: #1e293b;
-  border-bottom: 1px solid #334155;
-  flex-shrink: 0;
+  padding: 12px 24px;
+  background: #16213e;
+  border-bottom: 1px solid #0f3460;
+  position: sticky;
+  top: 0;
+  z-index: 10;
   gap: 12px;
   flex-wrap: wrap;
 }
 .resume-header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
-.resume-avatar {
-  font-size: 2rem;
-  background: #334155;
-  width: 44px; height: 44px;
+.resume-avatar-wrap {
+  width: 48px; height: 48px;
   border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  border: 2px solid #6366f1;
+  background: #334155;
   flex-shrink: 0;
+}
+.resume-avatar-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
 }
 .resume-name {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: #f1f5f9;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 .resume-role {
-  font-size: 0.75rem;
-  color: #64748b;
+  font-size: 0.72rem;
+  color: #94a3b8;
   margin-top: 2px;
 }
-.resume-download {
-  background: #6366f1;
-  color: #fff;
-  text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  white-space: nowrap;
-  transition: background 0.15s;
+.resume-header-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
   flex-shrink: 0;
 }
-.resume-download:hover { background: #4f46e5; }
+.resume-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, opacity 0.15s;
+  white-space: nowrap;
+}
+.resume-btn-primary {
+  background: #6366f1;
+  color: #fff;
+}
+.resume-btn-primary:hover { background: #4f46e5; }
+.resume-btn-outline {
+  background: transparent;
+  color: #93c5fd;
+  border: 1px solid #1d4ed8;
+}
+.resume-btn-outline:hover { background: #1e3a5f; }
 
-/* ── PDF viewer ─────────────────────────────────────────────── */
-.resume-viewer {
+/* ── Body / pages ───────────────────────────────────────────── */
+.resume-body {
   flex: 1;
-  overflow: hidden;
-  background: #1e293b;
-}
-.resume-object {
-  width: 100%;
-  height: 100%;
-  border: none;
-  display: block;
-}
-
-/* ── Fallback (mobile) ──────────────────────────────────────── */
-.resume-fallback {
+  padding: 24px 16px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
-  height: 100%;
-  min-height: 60vh;
-  padding: 40px 20px;
-  color: #94a3b8;
+}
+.resume-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 80px 20px;
+  color: #64748b;
+}
+.resume-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid #334155;
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: rs-spin 0.7s linear infinite;
+}
+@keyframes rs-spin { to { transform: rotate(360deg); } }
+
+.resume-error {
+  padding: 40px;
+  color: #f87171;
   text-align: center;
 }
-.resume-fallback-icon { font-size: 4rem; }
-.resume-fallback p    { font-size: 0.95rem; }
-.resume-fallback-btn {
-  display: inline-block;
-  background: #6366f1;
-  color: #fff;
-  text-decoration: none;
-  padding: 12px 28px;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  transition: background 0.15s;
+.resume-error a { color: #93c5fd; }
+
+.resume-pages {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 860px;
 }
-.resume-fallback-btn:hover { background: #4f46e5; }
-.resume-fallback-dl {
-  background: #334155;
-  color: #e2e8f0;
+.resume-page-wrap {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  overflow: hidden;
+  line-height: 0;
 }
-.resume-fallback-dl:hover { background: #475569; }
+.resume-page-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ── Mobile ─────────────────────────────────────────────────── */
+@media (max-width: 500px) {
+  .resume-header { padding: 10px 14px; }
+  .resume-name   { font-size: 0.9rem; }
+  .resume-role   { display: none; }
+}
