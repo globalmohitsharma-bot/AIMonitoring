@@ -59,6 +59,33 @@ body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
+/* ── Rotating hero word ── */
+.type-word{color:var(--gold);display:inline-block;transition:opacity .24s ease,transform .24s ease;min-width:200px}
+.type-word.fade{opacity:0;transform:translateY(-10px)}
+
+/* ── Program chips in hero ── */
+.prog-chips{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 28px}
+.p-chip{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border-radius:40px;font-size:.77rem;font-weight:600;text-decoration:none;transition:transform .22s,filter .22s,box-shadow .22s;white-space:nowrap}
+.p-chip:hover{transform:translateY(-3px);filter:brightness(1.18);box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.p-chip-h{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.p-chip-e{background:rgba(96,165,250,.15);color:#93c5fd;border:1px solid rgba(96,165,250,.3)}
+.p-chip-f{background:rgba(251,146,60,.15);color:#fb923c;border:1px solid rgba(251,146,60,.3)}
+.p-chip-o{background:rgba(196,130,214,.15);color:#d8b4fe;border:1px solid rgba(196,130,214,.3)}
+.p-chip-r{background:rgba(52,211,153,.15);color:#6ee7b7;border:1px solid rgba(52,211,153,.3)}
+
+/* ── Eye-catching navbar links ── */
+.nav-links a:not(.nav-cta){position:relative;padding:9px 15px;border-radius:10px;transition:background .22s,color .22s}
+.nav-links a:not(.nav-cta)::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:0;height:2px;background:var(--gold);border-radius:2px;transition:width .3s ease}
+.nav-links a:not(.nav-cta):hover{background:rgba(200,134,10,.1);color:var(--gold)!important}
+.nav-links a:not(.nav-cta):hover::after{width:55%}
+.navbar .nav-cta{background:linear-gradient(135deg,#C8860A,#E09A18)!important;color:#fff!important;padding:10px 24px!important;border-radius:10px!important;font-weight:700!important;box-shadow:0 4px 18px rgba(200,134,10,.35),0 0 0 0 rgba(200,134,10,.25)!important;animation:navPulse 3s ease-in-out infinite!important;letter-spacing:.02em}
+@keyframes navPulse{0%,100%{box-shadow:0 4px 18px rgba(200,134,10,.35),0 0 0 0 rgba(200,134,10,.2)}55%{box-shadow:0 4px 28px rgba(200,134,10,.55),0 0 0 9px rgba(200,134,10,.04)}}
+.navbar .nav-cta:hover{transform:translateY(-2px)!important;box-shadow:0 8px 30px rgba(200,134,10,.5)!important}
+
+/* ── Donate support CTA ── */
+.btn-ghost-gold{background:transparent;color:var(--gold);border:2px solid rgba(200,134,10,.4);padding:13px 28px;font-weight:700;border-radius:10px;font-size:.92rem;transition:all .22s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.btn-ghost-gold:hover{background:rgba(200,134,10,.1);border-color:var(--gold);transform:translateY(-2px)}
+
 /* ────────────────────────────────────────────
    MARQUEE
 ──────────────────────────────────────────── */
@@ -276,18 +303,18 @@ body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(
 ═══════════════════════════════════════ -->
 <nav class="navbar" id="mainNav">
   <a class="nav-brand" href="/ngo/index.html">
-    <img src="/ngo/logo.svg" alt="SABC Trust" class="nav-logo-img"/>
+    <img src="/ngo/logo.jpeg" alt="SABC Trust" class="nav-logo-img"/>
     <div>
       <div class="nav-name">Shri Avadh Bihari</div>
       <div class="nav-sub">Charitable Trust</div>
     </div>
   </a>
   <div class="nav-links">
-    <a href="/ngo/about.html">About</a>
-    <a href="/ngo/programs.html">Programs</a>
-    <a href="/ngo/camps.html">Camps</a>
-    <a href="/ngo/contact.html">Contact</a>
-    <a href="/ngo/donate.html" class="nav-cta">Donate</a>
+    <a href="/ngo/about.html">&#x1F3DB;&#xFE0F; About Us</a>
+    <a href="/ngo/programs.html">&#x2764;&#xFE0F; Programs</a>
+    <a href="/ngo/camps.html">&#x1F3D5;&#xFE0F; Free Camps</a>
+    <a href="/ngo/contact.html">&#x1F4AC; Contact</a>
+    <a href="/ngo/donate.html" class="nav-cta">&#x2728; Donate Now</a>
   </div>
   <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
@@ -309,14 +336,20 @@ body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(
   <div class="container">
     <div class="hero-inner">
       <div class="hero-left">
-        <div class="hero-badge"><span class="hero-badge-dot"></span>Registered NGO &bull; Haridwar, Uttarakhand</div>
-        <h1>Serving with <em>Seva</em>,<br/>Supporting with Heart</h1>
-        <p class="hero-sub">Free education, healthcare camps, food, and dignity for communities across Uttarakhand &mdash; driven by compassion, not profit.</p>
-        <div class="hero-actions">
-          <a href="/ngo/camps.html" class="btn btn-gold">Join a Camp &rarr;</a>
-          <a href="/ngo/about.html" class="btn btn-outline">Learn Our Story</a>
+        <div class="hero-badge"><span class="hero-badge-dot"></span>Registered NGO &bull; Haridwar, Uttarakhand &bull; Est. 2024</div>
+        <h1>We Organise Free<br/><span class="type-word" id="typeWord">Eye Camps</span><br/>for Communities in Need</h1>
+        <p class="hero-sub">Every month, our team travels to underserved villages and urban slums in Uttarakhand to deliver <strong style="color:#fff;font-weight:600">100% free</strong> healthcare, education kits, food drives, and elderly support &mdash; zero cost to beneficiaries, always.</p>
+        <div class="prog-chips">
+          <a href="/ngo/programs.html#health" class="p-chip p-chip-h">&#x1F3E5; Health Camps</a>
+          <a href="/ngo/programs.html#education" class="p-chip p-chip-e">&#x1F4DA; Education Kits</a>
+          <a href="/ngo/programs.html#food" class="p-chip p-chip-f">&#x1F371; Food Drives</a>
+          <a href="/ngo/programs.html#elderly" class="p-chip p-chip-o">&#x1F9D3; Elderly Care</a>
+          <a href="/ngo/programs.html#rural" class="p-chip p-chip-r">&#x1F33F; Rural Dev</a>
         </div>
-        <p style="margin-top:14px;font-size:.78rem;color:rgba(255,255,255,.3)">Want to help financially? <a href="/ngo/donate.html" style="color:var(--gold);font-weight:600">Donate here</a></p>
+        <div class="hero-actions">
+          <a href="/ngo/camps.html" class="btn btn-gold">Find a Free Camp Near You &rarr;</a>
+          <a href="/ngo/donate.html" class="btn-ghost-gold">Support This Mission</a>
+        </div>
         <div class="hero-stats">
           <div class="hs"><div class="hs-n">500+</div><div class="hs-l">Lives Touched</div></div>
           <div class="hs"><div class="hs-n">20+</div><div class="hs-l">Camps Held</div></div>
@@ -328,7 +361,7 @@ body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(
         <div class="logo-badge">
           <div class="logo-ring"></div>
           <div class="logo-ring2"></div>
-          <img src="/ngo/logo.svg" alt="SABC Trust Logo"/>
+          <img src="/ngo/logo.jpeg" alt="SABC Trust Logo"/>
         </div>
         <div style="text-align:center;margin-top:16px;font-size:.65rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em">Dr. Poonam Gupta &bull; Chairwoman</div>
       </div>
@@ -753,7 +786,7 @@ body::before{content:'';position:fixed;right:-40px;top:50%;transform:translateY(
   <div class="footer-inner">
     <div class="footer-top">
       <div class="footer-brand">
-        <img src="/ngo/logo.svg" alt="SABC Trust" style="width:56px;height:56px;border-radius:50%;object-fit:contain;background:#1565C0;padding:3px;margin-bottom:12px;box-shadow:0 0 0 2px rgba(200,134,10,.35)"/>
+        <img src="/ngo/logo.jpeg" alt="SABC Trust" style="width:56px;height:56px;border-radius:50%;object-fit:contain;background:#1565C0;padding:3px;margin-bottom:12px;box-shadow:0 0 0 2px rgba(200,134,10,.35)"/>
         <div class="foot-logo">Shri Avadh Bihari Charitable Trust</div>
         <p style="margin-top:8px">Serving with Seva, Supporting with Heart.</p>
         <p style="margin-top:10px;font-size:.75rem;color:rgba(255,255,255,.28);line-height:1.7">Shop No. 2, Ucchi Sadak, Arya Nagar,<br/>Jwalapur, Haridwar &ndash; 249407</p>
@@ -834,6 +867,22 @@ function toggleFaq(btn){
   document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
   if(!wasOpen) item.classList.add('open');
 }
+
+/* ── Rotating hero word ── */
+(function(){
+  const words = ['Eye Camps','Health Camps','Education Kits','Food Drives','Elderly Care','Rural Help'];
+  let idx = 0;
+  const el = document.getElementById('typeWord');
+  if(!el) return;
+  setInterval(()=>{
+    el.classList.add('fade');
+    setTimeout(()=>{
+      idx = (idx+1)%words.length;
+      el.textContent = words[idx];
+      el.classList.remove('fade');
+    },260);
+  },2800);
+})();
 
 /* ── Ripple on QA cards ── */
 document.querySelectorAll('.qa-card').forEach(card => {
